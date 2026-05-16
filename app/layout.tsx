@@ -11,6 +11,9 @@ export const metadata: Metadata = {
   description:
     "Tire Depot - Shop tires online with in-store pickup in Memphis, TN. Premium tires, unbeatable prices. Browse inventory & order now!",
   keywords: "tires, Memphis, TN, tire shop, buy tires online, tire pickup",
+  icons: {
+    icon: "./favicon.ico",
+  },
 };
 
 export default function RootLayout({

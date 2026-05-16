@@ -83,25 +83,34 @@ export default function HowItWorks() {
           Getting your tires has never been easier
         </p>
       </div>
-      <div className="flex justify-center items-center  relative">
+      <div className="flex flex-col sm:flex-row justify-center items-center relative">
         {steps.map((step, i) => (
           <div
             key={i}
             onClick={() => setActiveIndex(i)}
             style={{
-              width: i === activeIndex ? "450px" : "200px", // replace 332px/160px with your w-83/w-40 equivalent
-              transition: "width 0.5s ease-in-out",
+              width:
+                window.innerWidth >= 640
+                  ? i === activeIndex
+                    ? "450px"
+                    : "200px"
+                  : "80%", // sm breakpoint
+              height:
+                window.innerWidth < 640
+                  ? i === activeIndex
+                    ? "400px"
+                    : "200px"
+                  : "384px",
+              transition: "width 0.5s ease-in-out, height 0.5s ease-in-out",
             }}
-            className="relative cursor-pointer h-96 z-10"
+            className="relative cursor-pointer z-10"
           >
-            {/* Image */}
             <img
               src={step.img}
               alt={step.title}
               className={`object-cover w-full h-full rounded-lg ${i !== activeIndex ? "brightness-50" : ""}`}
             />
 
-            {/* Text overlay */}
             {i === activeIndex && (
               <div className="absolute bottom-4 left-4 right-4 text-white">
                 <h3 className="font-bold text-lg">{step.title}</h3>
@@ -109,14 +118,12 @@ export default function HowItWorks() {
               </div>
             )}
 
-            {/* Vertical label for inactive */}
             {i !== activeIndex && (
-              <span className="absolute left-1 top-1/2 -translate-y-1/2 text-white text-lg rotate-90">
+              <span className="absolute sm:left-1 left-5 top-1/2 -translate-y-1/2 text-white text-lg sm:rotate-90">
                 {step.title}
               </span>
             )}
 
-            {/* Numbered circle */}
             <div
               className={`absolute top-2 left-2 w-6 h-6 rounded-full flex items-center justify-center bg-brand-red   text-black font-bold text-sm`}
             >
