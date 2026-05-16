@@ -72,7 +72,7 @@ export default function Hero() {
         <div className="inline-flex items-center gap-2 bg-brand-red/10 border border-brand-red/30 px-3 py-1 mb-6">
           <div className="w-2 h-2 bg-brand-red rounded-full animate-pulse" />
           <span className="font-mono text-xs text-brand-red tracking-widest uppercase">
-            Memphis&apos;s #1 Tire Shop
+            Memphis's #1 Tire Shop
           </span>
         </div>
 
