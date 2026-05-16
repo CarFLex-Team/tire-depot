@@ -19,7 +19,7 @@ export default function Home() {
       <main>
         <Hero />
         <MarqueeBanner />
-        <ShopSection />
+        {/* <ShopSection /> */}
         <ServicesSection />
         <HowItWorksSection />
         <AboutSection />

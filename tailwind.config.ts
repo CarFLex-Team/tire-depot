@@ -11,7 +11,7 @@ const config: Config = {
       fontFamily: {
         display: ["'Barlow Condensed'", "sans-serif"],
         body: ["'DM Sans'", "sans-serif"],
-        mono: ["'DM Mono'", "monospace"],
+        mono: ["var(--font-anton)", "monospace"],
       },
       colors: {
         brand: {
@@ -30,8 +30,19 @@ const config: Config = {
         marquee2: "marquee2 25s linear infinite",
         counter: "fadeUp 0.6s ease forwards",
         spinSlow: "spin 3s linear infinite",
+        bounce: "bounce 2s infinite",
       },
       keyframes: {
+        bounce: {
+          "0%, 100%": {
+            transform: "translateY(-25%)",
+            "animation-timing-function": "cubic-bezier(0.8,0,1,1)",
+          },
+          "50%": {
+            transform: "none",
+            "animation-timing-function": "cubic-bezier(0,0,0.2,1)",
+          },
+        },
         marquee: {
           "0%": { transform: "translateX(0%)" },
           "100%": { transform: "translateX(-100%)" },

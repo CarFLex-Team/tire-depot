@@ -63,7 +63,7 @@ export default function AboutSection() {
               <br />
               Tire Depot
             </h2>
-            <p className="font-body text-brand-muted leading-relaxed mb-10">
+            <p className="font-body text-[#6B6B6B] leading-relaxed mb-10">
               We're not just another tire shop. We're your neighbors who happen
               to be tire experts. With unbeatable prices, fast service, and a
               commitment to quality that keeps our customers coming back.
@@ -79,7 +79,7 @@ export default function AboutSection() {
                   <h4 className="font-display font-bold text-sm uppercase tracking-wide text-white mb-1">
                     {f.title}
                   </h4>
-                  <p className="font-body text-xs text-brand-muted leading-relaxed">
+                  <p className="font-body text-xs text-[#6B6B6B] leading-relaxed">
                     {f.desc}
                   </p>
                 </div>
@@ -98,7 +98,7 @@ export default function AboutSection() {
                   <span className="font-display font-black text-4xl text-white mb-1">
                     {s.value}
                   </span>
-                  <span className="font-mono text-xs text-brand-muted uppercase tracking-widest">
+                  <span className="font-mono text-xs text-[#6B6B6B] uppercase tracking-widest">
                     {s.label}
                   </span>
                 </div>
@@ -107,7 +107,7 @@ export default function AboutSection() {
 
             {/* Brand marquee */}
             <div>
-              <p className="font-mono text-[10px] text-brand-muted uppercase tracking-widest mb-4">
+              <p className="font-mono text-[10px] text-[#6B6B6B] uppercase tracking-widest mb-4">
                 Brands We Carry
               </p>
               <div className="overflow-hidden border border-brand-gray py-3">

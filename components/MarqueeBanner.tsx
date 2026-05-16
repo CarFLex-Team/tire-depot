@@ -15,7 +15,7 @@ export default function MarqueeBanner() {
       <span className="font-display font-bold text-sm tracking-widest text-brand-red">
         ◆
       </span>
-      <span className="font-display font-bold text-sm tracking-widest text-white">
+      <span className="font-display font-semibold tracking-widest text-white/50 hover:text-brand-red transition-colors ">
         {item}
       </span>
     </span>

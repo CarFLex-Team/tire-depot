@@ -1,6 +1,11 @@
 import type { Metadata } from "next";
+import { Anton } from "next/font/google";
 import "./globals.css";
-
+const anton = Anton({
+  subsets: ["latin"],
+  variable: "--font-anton",
+  weight: "400",
+});
 export const metadata: Metadata = {
   title: "Tire Depot | Shop Tires Online - Memphis, TN",
   description:
@@ -15,7 +20,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body className={anton.variable}>{children}</body>
     </html>
   );
 }

@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import { useCart } from "@/lib/cart";
+import { Phone, ShoppingCart } from "lucide-react";
 
 export default function Navbar() {
   const { totalItems, dispatch } = useCart();
@@ -38,8 +39,8 @@ export default function Navbar() {
               alt="logo"
               className="animate-spinSlow w-10 h-10"
             />
-            <span className="font-display font-900 text-xl tracking-widest text-white uppercase">
-              Tire Depot
+            <span className="font-mono font-900 text-xl tracking-widest text-white uppercase">
+              Tire <span className="text-brand-red">Depot</span>
             </span>
           </a>
 
@@ -60,43 +61,25 @@ export default function Navbar() {
           <div className="flex items-center gap-4">
             <a
               href="tel:9017794183"
-              className="hidden sm:flex items-center gap-2 text-sm font-medium text-brand-red hover:text-white transition-colors"
+              className="hidden sm:flex items-center gap-2 text-sm font-medium hover:text-brand-red text-white transition-colors"
             >
-              <svg
-                width="14"
-                height="14"
-                viewBox="0 0 24 24"
-                fill="currentColor"
-              >
-                <path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.6 21 3 13.4 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8z" />
-              </svg>
+              <Phone size={14} />
               (901) 779-4183
             </a>
 
             {/* Cart button */}
-            <button
+            {/* <button
               onClick={() => dispatch({ type: "SET_OPEN", open: true })}
-              className="relative flex items-center gap-2 bg-brand-red hover:bg-[#cc1215] text-white px-4 py-2 text-sm font-medium transition-colors"
+              className="relative flex items-center gap-2 bg-brand-red hover:bg-[#cc1215] text-white px-4 py-2 text-sm font-medium transition-colors rounded-full"
             >
-              <svg
-                width="16"
-                height="16"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-              >
-                <path d="M6 2 3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" />
-                <line x1="3" y1="6" x2="21" y2="6" />
-                <path d="M16 10a4 4 0 01-8 0" />
-              </svg>
+              <ShoppingCart size={16} />
               Cart
               {totalItems > 0 && (
                 <span className="absolute -top-2 -right-2 bg-white text-brand-red text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center">
                   {totalItems}
                 </span>
               )}
-            </button>
+            </button> */}
 
             {/* Mobile menu */}
             <button
