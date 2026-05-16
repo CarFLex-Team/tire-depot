@@ -1,0 +1,147 @@
+@import url("https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,700&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=DM+Mono:wght@400;500&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --red: #e8161a;
+  --dark: #0a0a0a;
+  --charcoal: #111111;
+  --gray: #1c1c1c;
+  --mid: #2a2a2a;
+  --muted: #6b6b6b;
+  --light: #f0ede8;
+  --cream: #faf8f5;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--dark);
+  color: var(--cream);
+  font-family: "DM Sans", sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 4px;
+}
+::-webkit-scrollbar-track {
+  background: var(--dark);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--red);
+  border-radius: 2px;
+}
+
+/* Marquee */
+.marquee-wrapper {
+  display: flex;
+  overflow: hidden;
+  white-space: nowrap;
+}
+.marquee-inner {
+  display: flex;
+  animation: marquee 30s linear infinite;
+  flex-shrink: 0;
+  min-width: 100%;
+}
+.marquee-inner-2 {
+  display: flex;
+  animation: marquee 30s linear infinite;
+  animation-delay: -15s;
+  flex-shrink: 0;
+  min-width: 100%;
+}
+
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-100%);
+  }
+}
+
+/* Number counter animation */
+@keyframes countUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.count-animate {
+  animation: countUp 0.7s ease forwards;
+}
+
+/* Cart slide-in */
+.cart-panel {
+  transform: translateX(100%);
+  transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.cart-panel.open {
+  transform: translateX(0);
+}
+
+/* Overlay */
+.overlay {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.35s ease;
+}
+.overlay.open {
+  opacity: 1;
+  pointer-events: all;
+}
+
+/* Tire card hover */
+.tire-card {
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease;
+}
+.tire-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 60px rgba(232, 22, 26, 0.15);
+}
+
+/* Filter select */
+select {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236B6B6B' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+}
+
+/* Steps */
+.step-line {
+  position: relative;
+}
+.step-line::after {
+  content: "";
+  position: absolute;
+  top: 28px;
+  left: calc(50% + 28px);
+  right: calc(-50% + 28px);
+  height: 1px;
+  background: var(--mid);
+}
+
+@media (max-width: 768px) {
+  .step-line::after {
+    display: none;
+  }
+}
