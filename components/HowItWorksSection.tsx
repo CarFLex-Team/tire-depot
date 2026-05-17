@@ -48,10 +48,15 @@
 
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import Image from "next/image";
 
 export default function HowItWorks() {
   const [activeIndex, setActiveIndex] = useState(0);
+  const [width, setWidth] = useState(0);
+  useEffect(() => {
+    setWidth(window.innerWidth); // safe here
+  }, []);
 
   const steps = [
     {
@@ -90,24 +95,18 @@ export default function HowItWorks() {
             onClick={() => setActiveIndex(i)}
             style={{
               width:
-                window.innerWidth >= 640
-                  ? i === activeIndex
-                    ? "450px"
-                    : "200px"
-                  : "80%", // sm breakpoint
+                width >= 640 ? (i === activeIndex ? "450px" : "200px") : "80%", // sm breakpoint
               height:
-                window.innerWidth < 640
-                  ? i === activeIndex
-                    ? "400px"
-                    : "200px"
-                  : "384px",
+                width < 640 ? (i === activeIndex ? "400px" : "200px") : "384px",
               transition: "width 0.5s ease-in-out, height 0.5s ease-in-out",
             }}
             className="relative cursor-pointer z-10"
           >
-            <img
+            <Image
               src={step.img}
               alt={step.title}
+              fill
+              sizes="(max-width: 639px) 80vw, (max-width: 1024px) 450px, 450px"
               className={`object-cover w-full h-full rounded-lg ${i !== activeIndex ? "brightness-50" : ""}`}
             />
 
