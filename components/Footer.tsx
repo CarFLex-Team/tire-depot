@@ -1,3 +1,6 @@
+import { MapPin } from "lucide-react";
+import AnimatedLogo from "./AnimatedLogo";
+
 export default function Footer() {
   return (
     <footer className="bg-brand-dark border-t border-brand-gray pt-16 pb-8">
@@ -6,25 +9,18 @@ export default function Footer() {
           {/* Brand */}
           <div className="md:col-span-1">
             <div className="flex items-center gap-2 mb-4">
-              <img
-                src="/logo.png"
-                alt="logo"
-                className="animate-spinSlow w-10 h-10"
-              />
-              <span className="font-display font-black text-xl tracking-widest text-white uppercase">
-                Tire Depot
-              </span>
+              <AnimatedLogo />
             </div>
             <p className="font-body text-sm text-brand-muted leading-relaxed mb-5">
-              Memphis&apos;s trusted tire shop. Shop tires online, pick up at
-              our location. Quality tires, unbeatable prices.
+              Memphis's trusted tire shop. Shop tires online, pick up at our
+              location. Quality tires, unbeatable prices.
             </p>
             <div className="flex gap-3">
               <a
                 href="https://www.facebook.com/p/Tire-depot-61559823449146/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-9 h-9 border border-brand-mid flex items-center justify-center text-brand-muted hover:text-white hover:border-brand-red transition-colors"
+                className="w-9 h-9 border border-brand-mid flex items-center justify-center text-brand-muted hover:text-brand-red  hover:border-brand-red transition-colors"
               >
                 <svg
                   width="16"
@@ -39,26 +35,16 @@ export default function Footer() {
                 href="https://maps.app.goo.gl/d8Kbg1n3MqMF2i7o6"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-9 h-9 border border-brand-mid flex items-center justify-center text-brand-muted hover:text-white hover:border-brand-red transition-colors"
+                className="w-9 h-9 border border-brand-mid flex items-center justify-center text-brand-muted  hover:border-brand-red hover:text-brand-red transition-colors"
               >
-                <svg
-                  width="16"
-                  height="16"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                >
-                  <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z" />
-                  <circle cx="12" cy="10" r="3" />
-                </svg>
+                <MapPin size={16} />
               </a>
             </div>
           </div>
 
           {/* Shop */}
           <div>
-            <h4 className="font-mono text-[10px] text-brand-muted uppercase tracking-widest mb-4">
+            <h4 className="font-mono text-xs  text-brand-muted uppercase tracking-widest mb-4">
               Shop
             </h4>
             <ul className="flex flex-col gap-2">
@@ -83,7 +69,7 @@ export default function Footer() {
 
           {/* Services */}
           <div>
-            <h4 className="font-mono text-[10px] text-brand-muted uppercase tracking-widest mb-4">
+            <h4 className="font-mono text-xs  text-brand-muted uppercase tracking-widest mb-4">
               Services
             </h4>
             <ul className="flex flex-col gap-2">
@@ -108,7 +94,7 @@ export default function Footer() {
 
           {/* Contact */}
           <div>
-            <h4 className="font-mono text-[10px] text-brand-muted uppercase tracking-widest mb-4">
+            <h4 className="font-mono text-xs  text-brand-muted uppercase tracking-widest mb-4">
               Contact / Pickup
             </h4>
             <ul className="flex flex-col gap-2">

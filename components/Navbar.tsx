@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import { useCart } from "@/lib/cart";
 import { Phone, ShoppingCart } from "lucide-react";
+import AnimatedLogo from "./AnimatedLogo";
 
 export default function Navbar() {
   const { totalItems, dispatch } = useCart();
@@ -33,16 +34,8 @@ export default function Navbar() {
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 flex items-center justify-between h-16">
           {/* Logo */}
-          <a href="#home" className="flex items-center gap-2 group">
-            <img
-              src="/logo.png"
-              alt="logo"
-              className="animate-spinSlow w-10 h-10"
-            />
-            <span className="font-mono font-900 text-xl tracking-widest text-white uppercase">
-              Tire <span className="text-brand-red">Depot</span>
-            </span>
-          </a>
+
+          <AnimatedLogo />
 
           {/* Desktop Nav */}
           <nav className="hidden md:flex items-center gap-8">
