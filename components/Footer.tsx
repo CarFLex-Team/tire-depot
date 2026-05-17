@@ -57,7 +57,7 @@ export default function Footer() {
               ].map((l) => (
                 <li key={l}>
                   <a
-                    href="#shop"
+                    href="/tires"
                     className="font-body text-sm text-brand-muted hover:text-white transition-colors"
                   >
                     {l}
@@ -119,24 +119,24 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="border-t border-brand-gray pt-6 flex flex-col sm:flex-row items-center justify-between gap-3">
-          <p className="font-mono text-xs text-brand-muted">
+        <div className="border-t border-brand-gray pt-6 flex flex-col sm:flex-row items-center justify-center gap-3">
+          <p className="font-display  text-brand-muted">
             © {new Date().getFullYear()} Tire Depot. All Rights Reserved.
           </p>
-          <div className="flex gap-4">
+          {/* <div className="flex gap-4">
             <a
               href="#"
-              className="font-mono text-xs text-brand-muted hover:text-white transition-colors"
+              className="font-display text-xs text-brand-muted hover:text-white transition-colors"
             >
               Privacy Policy
             </a>
             <a
               href="#"
-              className="font-mono text-xs text-brand-muted hover:text-white transition-colors"
+              className="font-display text-xs text-brand-muted hover:text-white transition-colors"
             >
               Terms of Service
             </a>
-          </div>
+          </div> */}
         </div>
       </div>
     </footer>

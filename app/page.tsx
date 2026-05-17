@@ -13,20 +13,15 @@ import CartPanel from "@/components/CartPanel";
 
 export default function Home() {
   return (
-    <CartProvider>
-      <Navbar />
-      <CartPanel />
-      <main>
-        <Hero />
-        <MarqueeBanner />
-        {/* <ShopSection /> */}
-        <ServicesSection />
-        <HowItWorksSection />
-        {/* <AboutSection /> */}
-        <ContactSection />
-        <CtaBanner />
-      </main>
-      <Footer />
-    </CartProvider>
+    <main>
+      <Hero />
+      <MarqueeBanner />
+      {/* <ShopSection /> */}
+      <ServicesSection />
+      <HowItWorksSection />
+      {/* <AboutSection /> */}
+      <ContactSection />
+      <CtaBanner />
+    </main>
   );
 }

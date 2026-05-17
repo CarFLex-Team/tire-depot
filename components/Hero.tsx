@@ -90,7 +90,7 @@ export default function Hero() {
 
         <div className="flex flex-wrap gap-4 mb-16">
           <a
-            href="#shop"
+            href="/tires"
             className="inline-flex items-center gap-3 bg-brand-red hover:shadow-lg hover:shadow-brand-red/50 hover:-translate-y-1 text-white px-8 py-4 font-display font-bold text-lg uppercase tracking-widest transition-transform duration-500 ease-out  rounded-full"
           >
             Shop Tires Now
