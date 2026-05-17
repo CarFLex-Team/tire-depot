@@ -17,8 +17,8 @@ export default function Navbar() {
   }, []);
 
   const links = [
-    { label: "Home", href: "#home" },
-    { label: "Shop Tires", href: "#shop" },
+    // { label: "Home", href: "#home" },
+    { label: "Shop Tires", href: "/tires" },
     { label: "Services", href: "#services" },
     { label: "About", href: "#about" },
     { label: "Contact", href: "#contact" },
@@ -62,18 +62,18 @@ export default function Navbar() {
             </a>
 
             {/* Cart button */}
-            {/* <button
-              onClick={() => dispatch({ type: "SET_OPEN", open: true })}
-              className="relative flex items-center gap-2 bg-brand-red hover:bg-[#cc1215] text-white px-4 py-2 text-sm font-medium transition-colors rounded-full"
+            <button
+              // onClick={() => dispatch({ type: "SET_OPEN", open: true })}
+              className="relative flex items-center gap-2 bg-brand-red hover:bg-brand-red/90 text-white p-2 text-sm font-medium transition-colors rounded-full"
             >
-              <ShoppingCart size={16} />
-              Cart
-              {totalItems > 0 && (
+              <ShoppingCart size={20} />
+
+              {totalItems >= 0 && (
                 <span className="absolute -top-2 -right-2 bg-white text-brand-red text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center">
                   {totalItems}
                 </span>
               )}
-            </button> */}
+            </button>
 
             {/* Mobile menu */}
             <HamburgerX
@@ -93,10 +93,10 @@ export default function Navbar() {
             initial="hidden"
             animate="visible"
             exit="hidden"
-            className="md:hidden bg-brand-charcoal border-t border-brand-gray px-4 py-4 h-screen"
+            className="md:hidden bg-brand-charcoal border-t border-brand-gray px-4 py-8 h-screen"
           >
             <motion.div
-              className="flex flex-col items-center gap-7 text-2xl font-medium"
+              className="flex flex-col items-center gap-9 text-2xl font-medium"
               initial="hidden"
               animate="visible"
               exit="hidden"
