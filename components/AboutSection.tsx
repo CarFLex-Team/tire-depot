@@ -64,9 +64,10 @@ export default function AboutSection() {
               Tire Depot
             </h2>
             <p className="font-body text-[#6B6B6B] leading-relaxed mb-10">
-              We're not just another tire shop. We're your neighbors who happen
-              to be tire experts. With unbeatable prices, fast service, and a
-              commitment to quality that keeps our customers coming back.
+              We&apos;re not just another tire shop. We&apos;re your neighbors
+              who happen to be tire experts. With unbeatable prices, fast
+              service, and a commitment to quality that keeps our customers
+              coming back.
             </p>
 
             <div className="grid grid-cols-2 gap-4">
