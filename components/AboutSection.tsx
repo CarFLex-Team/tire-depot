@@ -1,5 +1,9 @@
 "use client";
 
+import { Clock, Shield, TicketPercent, Users } from "lucide-react";
+import StatsCard from "./Cards/StatsCard";
+import FeaturesCard from "./Cards/FeaturesCard";
+
 const brands = [
   "ZETA",
   "ROADONE",
@@ -21,121 +25,75 @@ const features = [
   {
     title: "Quality Guaranteed",
     desc: "Every tire we sell meets our strict quality standards",
+    icon: <Shield size={24} />,
   },
   {
     title: "Best Prices in Memphis",
     desc: "We match or beat any competitor's price, guaranteed",
+    icon: <TicketPercent size={24} />,
   },
   {
     title: "Fast Service",
     desc: "Most installations completed within 30 minutes",
+    icon: <Clock size={24} />,
   },
   {
     title: "Expert Team",
     desc: "Certified technicians with years of experience",
+    icon: <Users size={24} />,
   },
 ];
 
 const stats = [
-  { value: "7", label: "Days a Week" },
-  { value: "15+", label: "Tire Brands" },
-  { value: "100%", label: "Satisfaction" },
-  { value: "10+", label: "Years Experience" },
+  { value: 7, label: "Days a Week", sign: "" },
+  { value: 15, label: "Tire Brands", sign: "+" },
+  { value: 100, label: "Satisfaction", sign: "%" },
+  { value: 10, label: "Years Experience", sign: "+" },
 ];
 
 export default function AboutSection() {
-  const brandRow = [...brands, ...brands];
-
   return (
     <section
       id="about"
       className="bg-brand-dark py-20 border-t border-brand-gray"
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
+      <div className="max-w-7xl mx-auto px-5 sm:px-10">
+        <div className="grid grid-cols-1 lg:grid-cols-2  gap-16 items-center">
           {/* Left */}
-          <div>
-            <p className="font-mono text-xs text-brand-red tracking-widest uppercase mb-2">
+          <div className="">
+            <p className="font-display text-lg text-brand-red tracking-widest uppercase mb-2">
               Why Tire Depot?
             </p>
-            <h2 className="font-display font-black text-4xl sm:text-5xl text-white uppercase tracking-tight mb-6">
+            <h2 className="font-mono  text-4xl sm:text-5xl text-white uppercase tracking-tight mb-6">
               Memphis Trusts
-              <br />
-              Tire Depot
+              <span className="text-brand-red"> Tire Depot</span>
             </h2>
-            <p className="font-body text-[#6B6B6B] leading-relaxed mb-10">
+            <p className="font-body text-brand-muted leading-relaxed mb-10">
               We&apos;re not just another tire shop. We&apos;re your neighbors
               who happen to be tire experts. With unbeatable prices, fast
               service, and a commitment to quality that keeps our customers
               coming back.
             </p>
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className="">
               {features.map((f) => (
-                <div
-                  key={f.title}
-                  className="border border-brand-gray p-4 hover:border-brand-red/30 transition-colors"
-                >
-                  <div className="w-6 h-0.5 bg-brand-red mb-3" />
-                  <h4 className="font-display font-bold text-sm uppercase tracking-wide text-white mb-1">
-                    {f.title}
-                  </h4>
-                  <p className="font-body text-xs text-[#6B6B6B] leading-relaxed">
-                    {f.desc}
-                  </p>
+                <div key={f.title}>
+                  <FeaturesCard feature={f} />
                 </div>
               ))}
             </div>
           </div>
 
           {/* Right */}
-          <div>
-            <div className="grid grid-cols-2 gap-px bg-brand-gray mb-8">
-              {stats.map((s) => (
-                <div
-                  key={s.label}
-                  className="bg-brand-dark p-6 flex flex-col items-center text-center"
-                >
-                  <span className="font-display font-black text-4xl text-white mb-1">
-                    {s.value}
-                  </span>
-                  <span className="font-mono text-xs text-[#6B6B6B] uppercase tracking-widest">
-                    {s.label}
-                  </span>
-                </div>
-              ))}
-            </div>
-
-            {/* Brand marquee */}
-            <div>
-              <p className="font-mono text-[10px] text-[#6B6B6B] uppercase tracking-widest mb-4">
-                Brands We Carry
-              </p>
-              <div className="overflow-hidden border border-brand-gray py-3">
-                <div className="marquee-wrapper">
-                  <div className="marquee-inner gap-8 pr-8">
-                    {brandRow.map((b, i) => (
-                      <span
-                        key={i}
-                        className="font-display font-bold text-xs tracking-widest text-brand-mid hover:text-brand-red transition-colors whitespace-nowrap"
-                      >
-                        {b}
-                      </span>
-                    ))}
-                  </div>
-                  <div className="marquee-inner-2 gap-8 pr-8" aria-hidden>
-                    {brandRow.map((b, i) => (
-                      <span
-                        key={i}
-                        className="font-display font-bold text-xs tracking-widest text-brand-mid whitespace-nowrap"
-                      >
-                        {b}
-                      </span>
-                    ))}
-                  </div>
-                </div>
+          <div className="flex flex-wrap gap-4 justify-between h-full ">
+            {stats.map((s) => (
+              <div
+                key={s.label}
+                className={` w-full ${s.label === "Satisfaction" ? "md:w-full" : "md:w-[48%]"}`}
+              >
+                <StatsCard stat={s} />
               </div>
-            </div>
+            ))}
           </div>
         </div>
       </div>

@@ -1,15 +1,4 @@
-export default function MarqueeBanner() {
-  const items = [
-    "SHOP ONLINE",
-    "FREE PICKUP",
-    "ALL-SEASON TIRES",
-    "MUD-TERRAIN",
-    "ALL-TERRAIN",
-    "TRAILER TIRES",
-    "PASSENGER TIRES",
-    "TIRE INSTALLATION",
-  ];
-
+export default function MarqueeBanner({ items }: { items: string[] }) {
   const content = items.map((item, i) => (
     <span key={i} className="flex items-center gap-4">
       <span className="font-display font-bold text-sm tracking-widest text-brand-red">

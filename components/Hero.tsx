@@ -1,43 +1,7 @@
 "use client";
 import { ArrowRight, Phone } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-
-function CountUp({ target, suffix = "" }: { target: number; suffix?: string }) {
-  const [count, setCount] = useState(0);
-  const ref = useRef<HTMLSpanElement>(null);
-  const started = useRef(false);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting && !started.current) {
-          started.current = true;
-          let start = 0;
-          const step = Math.ceil(target / 60);
-          const timer = setInterval(() => {
-            start += step;
-            if (start >= target) {
-              setCount(target);
-              clearInterval(timer);
-            } else {
-              setCount(start);
-            }
-          }, 20);
-        }
-      },
-      { threshold: 0.5 },
-    );
-    if (ref.current) observer.observe(ref.current);
-    return () => observer.disconnect();
-  }, [target]);
-
-  return (
-    <span ref={ref}>
-      {count.toLocaleString()}
-      {suffix}
-    </span>
-  );
-}
+import CountUp from "./CountUp";
 
 export default function Hero() {
   return (
@@ -114,7 +78,8 @@ export default function Hero() {
           ].map((stat) => (
             <div key={stat.label} className="flex flex-col">
               <span className="font-mono text-3xl text-white">
-                <CountUp target={stat.value} suffix={stat.suffix} />
+                <CountUp target={stat.value} />
+                {stat.suffix}
               </span>
               <span className="font-mono text-xs text-brand-muted uppercase tracking-widest mt-1">
                 {stat.label}

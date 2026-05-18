@@ -60,12 +60,12 @@ export default function ServicesSection() {
       className="bg-brand-dark py-20 border-t border-brand-gray"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
-        <div className="mb-12">
+        <div className="mb-12 text-center">
           <p className="font-display text-lg text-brand-red tracking-widest uppercase mb-2">
             What We Do
           </p>
           <h2 className="font-mono text-4xl sm:text-5xl text-white uppercase tracking-tight">
-            Our Services
+            Our <span className="text-brand-red">Services</span>
           </h2>
           <p className="font-body text-brand-muted mt-2">
             Complete tire solutions for every vehicle and every budget
