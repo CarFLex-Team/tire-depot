@@ -12,7 +12,7 @@ export default function ContactSection() {
             Pickup Location
           </p>
           <h2 className="font-mono text-4xl sm:text-5xl text-white uppercase tracking-tight">
-            Visit Tire Depot
+            Visit <span className="text-brand-red">Tire Depot</span>
           </h2>
           <p className="font-body text-brand-muted mt-2">
             Order online and pick up your tires here

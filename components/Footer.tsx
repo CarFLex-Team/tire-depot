@@ -1,5 +1,6 @@
 import { MapPin } from "lucide-react";
 import AnimatedLogo from "./AnimatedLogo";
+import FacebookIcon from "./Icons/FacebookIcon";
 
 export default function Footer() {
   return (
@@ -22,14 +23,7 @@ export default function Footer() {
                 rel="noopener noreferrer"
                 className="w-9 h-9 border border-brand-mid flex items-center justify-center text-brand-muted hover:text-brand-red  hover:border-brand-red transition-colors"
               >
-                <svg
-                  width="16"
-                  height="16"
-                  viewBox="0 0 24 24"
-                  fill="currentColor"
-                >
-                  <path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z" />
-                </svg>
+                <FacebookIcon />
               </a>
               <a
                 href="https://maps.app.goo.gl/d8Kbg1n3MqMF2i7o6"
