@@ -81,7 +81,7 @@ export default function AnimatedRating() {
         className="  font-display text-3xl md:text-7xl font-semibold"
         //   ref={ref}
       >
-        {displayRating.toFixed(1)}
+        {displayRating === 0 ? rating.toFixed(1) : displayRating.toFixed(1)}
       </span>
       <div className="flex md:items-center flex-col ">
         <div className="flex items-center ">

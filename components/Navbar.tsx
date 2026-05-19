@@ -62,7 +62,7 @@ export default function Navbar() {
             </a>
 
             {/* Cart button */}
-            <button
+            {/* <button
               // onClick={() => dispatch({ type: "SET_OPEN", open: true })}
               className="relative flex items-center gap-2 bg-brand-red hover:bg-brand-red/90 text-white p-2 text-sm font-medium transition-colors rounded-full"
             >
@@ -73,7 +73,7 @@ export default function Navbar() {
                   {totalItems}
                 </span>
               )}
-            </button>
+            </button> */}
 
             {/* Mobile menu */}
             <HamburgerX

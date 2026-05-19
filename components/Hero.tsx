@@ -73,7 +73,7 @@ export default function Hero() {
 
           <div className="flex flex-wrap gap-12">
             {[
-              { value: 500, suffix: "+", label: "Tires In Stock" },
+              { value: 50, suffix: "+", label: "Tires In Stock" },
               { value: 15, suffix: "+", label: "Tire Brands" },
               { value: 2000, suffix: "+", label: "Happy Customers" },
             ].map((stat) => (
