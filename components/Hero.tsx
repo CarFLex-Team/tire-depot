@@ -93,12 +93,12 @@ export default function Hero() {
           <AnimatedRating />
         </div>
       </div>
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2">
+      {/* <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2">
         <div className="w-px h-12 bg-gradient-to-b from-brand-red to-transparent animate-bounce" />
         <span className="font-mono text-[10px] text-brand-muted tracking-widest uppercase">
           Scroll to Shop
         </span>
-      </div>
+      </div> */}
     </section>
   );
 }
