@@ -19,7 +19,7 @@ export default function AnimatedRating() {
         if (entry.isIntersecting && !started.current) {
           started.current = true;
           let start = 0;
-          const step = rating / 50;
+          const step = rating / 30;
           const timer = setInterval(() => {
             start += step;
             if (start >= rating) {
@@ -28,7 +28,7 @@ export default function AnimatedRating() {
             } else {
               setDisplayRating(parseFloat(start.toFixed(1)));
             }
-          }, 50);
+          }, 80);
         }
       },
       { threshold: 0.5 },

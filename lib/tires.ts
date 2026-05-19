@@ -279,8 +279,8 @@ export const TIRES: Tire[] = [
   },
 ];
 
-export const BRANDS = [...TIRES.map((t) => t.brand)].sort();
-export const TYPES = [...TIRES.map((t) => t.type)].sort();
-export const DIAMETERS = [...TIRES.map((t) => t.diameter)].sort(
+export const BRANDS = [...new Set(TIRES.map((t) => t.brand))].sort();
+export const TYPES = [...new Set(TIRES.map((t) => t.type))].sort();
+export const DIAMETERS = [...new Set(TIRES.map((t) => t.diameter))].sort(
   (a, b) => a - b,
 );
