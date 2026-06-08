@@ -44,7 +44,7 @@ export default function Home() {
       <Hero />
       <MarqueeBanner items={typeItems} />
       {/* <ShopSection /> */}
-      <ServicesSection />
+      {/* <ServicesSection /> */}
       <HowItWorksSection />
       <AboutSection />
       <MarqueeBrandBanner items={brands} />

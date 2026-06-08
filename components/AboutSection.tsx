@@ -34,12 +34,12 @@ const features = [
   },
   {
     title: "Fast Service",
-    desc: "Most installations completed within 30 minutes",
+    desc: "Most orders ready for pickup within 2 hours",
     icon: <Clock size={24} />,
   },
   {
     title: "Expert Team",
-    desc: "Certified technicians with years of experience",
+    desc: "Our knowledgeable staff is here to help you find the perfect tires",
     icon: <Users size={24} />,
   },
 ];

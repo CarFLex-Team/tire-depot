@@ -62,7 +62,7 @@ export default function Footer() {
           </div>
 
           {/* Services */}
-          <div>
+          {/* <div>
             <h4 className="font-mono text-xs  text-brand-muted uppercase tracking-widest mb-4">
               Services
             </h4>
@@ -84,7 +84,7 @@ export default function Footer() {
                 </li>
               ))}
             </ul>
-          </div>
+          </div> */}
 
           {/* Contact */}
           <div>

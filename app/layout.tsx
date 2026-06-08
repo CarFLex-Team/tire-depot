@@ -1,10 +1,7 @@
 import type { Metadata } from "next";
 import { Anton } from "next/font/google";
 import "./globals.css";
-import CartPanel from "@/components/CartPanel";
-import Navbar from "@/components/Navbar";
-import { CartProvider } from "@/lib/cart";
-import Footer from "@/components/Footer";
+
 const anton = Anton({
   subsets: ["latin"],
   variable: "--font-anton",
@@ -27,14 +24,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={anton.variable}>
-        <CartProvider>
-          <Navbar />
-          <CartPanel />
-          {children}
-          <Footer />
-        </CartProvider>
-      </body>
+      <body className={anton.variable}>{children}</body>
     </html>
   );
 }

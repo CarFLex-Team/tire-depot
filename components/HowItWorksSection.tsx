@@ -76,7 +76,10 @@ export default function HowItWorks() {
     },
   ];
   return (
-    <section className="bg-brand-charcoal py-20 border-t border-brand-gray">
+    <section
+      className="bg-brand-charcoal py-20 border-t border-brand-gray"
+      id="how-it-works"
+    >
       <div className="mb-16 text-center">
         <p className="font-display text-lg text-brand-red tracking-widest uppercase mb-2 ">
           How It Works
