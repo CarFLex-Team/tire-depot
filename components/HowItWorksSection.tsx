@@ -66,11 +66,11 @@ export default function HowItWorks() {
     },
     {
       title: "Schedule Pickup",
-      desc: "At checkout, schedule your preferred installation appointment time",
+      desc: "At checkout, schedule your preferred pickup appointment time",
       img: "/img2.png",
     },
     {
-      title: "Pick Up & Install",
+      title: "Pick Up",
       desc: "Come pick up your tires at our Memphis shop. We'll have them ready for you!",
       img: "/img3.png",
     },
