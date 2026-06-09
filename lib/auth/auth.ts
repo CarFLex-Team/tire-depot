@@ -1,0 +1,63 @@
+import { betterAuth } from "better-auth";
+
+import { db } from "../db";
+export const auth = betterAuth({
+  database: db,
+
+  // Email & Password
+  emailAndPassword: {
+    enabled: true,
+
+    sendResetPassword: async ({ user, url }) => {
+      // Wire up your email provider here (Resend, Nodemailer, etc.)
+      // Example with Resend:
+      // await resend.emails.send({
+      //   from: "no-reply@yourdomain.com",
+      //   to: user.email,
+      //   subject: "Reset your password",
+      //   html: `<a href="${url}">Reset password</a>`,
+      // })
+      console.log(`Password reset link for ${user.email}: ${url}`);
+    },
+  },
+
+  // Email Verification
+  //   emailVerification: {
+  //     sendVerificationEmail: async ({ user, url }) => {
+  //       // Example with Resend:
+  //       // await resend.emails.send({
+  //       //   from: "no-reply@yourdomain.com",
+  //       //   to: user.email,
+  //       //   subject: "Verify your email",
+  //       //   html: `<a href="${url}">Verify email</a>`,
+  //       // })
+  //       console.log(`Verification link for ${user.email}: ${url}`);
+  //     },
+  //   },
+
+  // Social Providers
+  socialProviders: {
+    google: {
+      clientId: process.env.GOOGLE_CLIENT_ID!,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+    },
+  },
+
+  // Session
+  session: {
+    expiresIn: 60 * 60 * 24 * 30, // 30 days
+    updateAge: 60 * 60 * 24, // Refresh every 24h
+    cookieCache: {
+      enabled: true,
+      maxAge: 5 * 60, // 5 min client-side cache
+    },
+  },
+
+  // Trusted origins (add your production domain)
+  trustedOrigins: [
+    "http://localhost:3000",
+    process.env.NEXT_PUBLIC_APP_URL ?? "",
+  ],
+});
+
+export type Session = typeof auth.$Infer.Session;

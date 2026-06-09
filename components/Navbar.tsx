@@ -1,12 +1,20 @@
 "use client";
 import { useState, useEffect } from "react";
 import { useCart } from "@/lib/cart";
-import { Phone, ShoppingCart } from "lucide-react";
+import { Phone, ShoppingCart, UserRound } from "lucide-react";
+import { authClient } from "@/lib/auth/auth-client";
 import AnimatedLogo from "./AnimatedLogo";
 import { motion, AnimatePresence } from "framer-motion";
 import HamburgerX from "./HamburgerX";
-export default function Navbar() {
-  const { totalItems, dispatch } = useCart();
+export default function Navbar({ withCart = true }: { withCart?: boolean }) {
+  const { data: session } = authClient.useSession();
+  let { totalItems, dispatch } = {
+    totalItems: 0,
+    dispatch: (_action: any) => {},
+  };
+  if (withCart) {
+    ({ totalItems, dispatch } = useCart());
+  }
   const [mobileOpen, setMobileOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
@@ -60,7 +68,23 @@ export default function Navbar() {
               <Phone size={14} />
               (901) 779-4183
             </a>
-
+            {session ? (
+              <div className="hidden sm:flex items-center gap-2 text-sm font-medium hover:text-brand-red text-white transition-colors">
+                <UserRound size={20} />
+                <button
+                  onClick={async () => {
+                    await authClient.signOut();
+                  }}
+                >
+                  Hello, {session.user.name}
+                </button>
+              </div>
+            ) : (
+              <div className="hidden sm:flex items-center gap-2 text-sm font-medium hover:text-brand-red text-white transition-colors">
+                <UserRound size={20} />
+                <a href="/login">Sign In</a>
+              </div>
+            )}
             {/* Cart button */}
             {/* <button
               // onClick={() => dispatch({ type: "SET_OPEN", open: true })}

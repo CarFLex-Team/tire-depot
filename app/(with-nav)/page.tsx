@@ -19,7 +19,6 @@ const typeItems = [
   "ALL-TERRAIN",
   "TRAILER TIRES",
   "PASSENGER TIRES",
-  "TIRE INSTALLATION",
 ];
 const brands = [
   "ZETA",

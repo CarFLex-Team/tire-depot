@@ -1,4 +1,3 @@
-import "../globals.css";
 import CartPanel from "@/components/CartPanel";
 import Navbar from "@/components/Navbar";
 import { CartProvider } from "@/lib/cart";
