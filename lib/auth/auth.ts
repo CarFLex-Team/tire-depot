@@ -1,6 +1,9 @@
 import { betterAuth } from "better-auth";
 
 import { db } from "../db";
+
+import { sendResetPasswordEmail } from "../email";
+
 export const auth = betterAuth({
   database: db,
 
@@ -8,16 +11,8 @@ export const auth = betterAuth({
   emailAndPassword: {
     enabled: true,
 
-    sendResetPassword: async ({ user, url }) => {
-      // Wire up your email provider here (Resend, Nodemailer, etc.)
-      // Example with Resend:
-      // await resend.emails.send({
-      //   from: "no-reply@yourdomain.com",
-      //   to: user.email,
-      //   subject: "Reset your password",
-      //   html: `<a href="${url}">Reset password</a>`,
-      // })
-      console.log(`Password reset link for ${user.email}: ${url}`);
+    sendResetPassword: async ({ user, token }) => {
+      return sendResetPasswordEmail(user, token);
     },
   },
 

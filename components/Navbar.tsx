@@ -65,20 +65,23 @@ export default function Navbar() {
               (901) 779-4183
             </a>
             {session ? (
-              <div className="hidden sm:flex items-center gap-2 text-sm font-medium hover:text-brand-red text-white transition-colors">
+              <div
+                onClick={async () => {
+                  await authClient.signOut();
+                }}
+                className="flex items-center gap-2 text-sm font-medium hover:text-brand-red text-white transition-colors"
+              >
                 <UserRound size={20} />
-                <button
-                  onClick={async () => {
-                    await authClient.signOut();
-                  }}
-                >
-                  Hello, {session.user.name}
+                <button className=" max-[320px]:hidden">
+                  Hello, {session.user.name.split(" ")[0]}
                 </button>
               </div>
             ) : (
-              <div className="hidden sm:flex items-center gap-2 text-sm font-medium hover:text-brand-red text-white transition-colors">
+              <div className=" flex items-center gap-2 text-sm font-medium hover:text-brand-red text-white transition-colors">
                 <UserRound size={20} />
-                <a href="/login">Sign In</a>
+                <a href="/login" className=" max-[320px]:hidden">
+                  Sign In
+                </a>
               </div>
             )}
             {/* Cart button */}

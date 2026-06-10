@@ -4,56 +4,58 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import FormInput from "@/components/Auth/FormInput";
 import AuthButton from "@/components/Auth/AuthButton";
-import { signinSchema, SigninFormData } from "@/lib/validations/signinSchema";
-import { signIn } from "@/lib/auth/auth-client";
+import { ResetFormData, resetSchema } from "@/lib/validations/resetSchema";
+import { requestPasswordReset } from "@/lib/auth/auth-client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import AnimatedLogo from "@/components/AnimatedLogo";
 
 export default function ForgotPasswordPage() {
-  const router = useRouter();
   const [authError, setAuthError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
-  const [googleLoading, setGoogleLoading] = useState(false);
 
+  const [googleLoading, setGoogleLoading] = useState(false);
+  const [sent, setSent] = useState(false);
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-  } = useForm<SigninFormData>({
-    resolver: zodResolver(signinSchema),
+  } = useForm<ResetFormData>({
+    resolver: zodResolver(resetSchema),
   });
 
-  const onSubmit = async (data: SigninFormData) => {
+  const onSubmit = async (data: ResetFormData) => {
     setAuthError(null);
     setLoading(true);
-    const { error } = await signIn.email({
+    const { error } = await requestPasswordReset({
       email: data.email,
-      password: data.password,
-      callbackURL: "/",
+      // redirectTo: "/login",
     });
-
     if (error) {
-      setAuthError(error.message ?? "Invalid email or password.");
+      setAuthError(error.message ?? "Invalid email .");
       setLoading(false);
     } else {
-      router.push("/dashboard");
+      setLoading(false);
+      setSent(true);
     }
-
-    // // success
-    // const sessionRes = await fetch("/api/auth/session");
-    // const session = await sessionRes.json();
-
-    // const role = session?.user?.role;
-    // router.push(role === "OWNER" ? "/owner/dashboard" : "/dashboard");
   };
-  async function handleGoogle() {
-    setGoogleLoading(true);
-    await signIn.social({ provider: "google", callbackURL: "/" });
-    setGoogleLoading(false);
-  }
-  return (
+  return sent ? (
+    <div className="flex min-h-screen items-center justify-center bg-brand-dark p-4">
+      <div className="w-full max-w-md rounded-2xl bg-brand-dark p-8 shadow-xl border border-gray-200">
+        <div className="mb-4 flex justify-center">
+          <AnimatedLogo size={2} />
+        </div>
+
+        <h1 className="mb-4 text-center text-2xl font-semibold text-gray-100">
+          Forgot Password
+        </h1>
+        <p className="text-center text-gray-400">
+          If you provided a valid email address, Please check your email for a
+          reset link.
+        </p>
+      </div>
+    </div>
+  ) : (
     <div className="flex min-h-screen items-center justify-center bg-brand-dark p-4">
       <div className="w-full max-w-md rounded-2xl bg-brand-dark p-8 shadow-xl border border-gray-200">
         <div className="mb-4 flex justify-center">
@@ -80,10 +82,10 @@ export default function ForgotPasswordPage() {
           <AuthButton
             // type="submit"
             className="w-full bg-brand-red text-white py-2 rounded-lg hover:bg-brand-red/80 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
-            disabled={isSubmitting}
+            disabled={isSubmitting || loading}
             onClick={handleSubmit(onSubmit)}
           >
-            {isSubmitting ? "Sending..." : "Send Reset Link"}
+            {isSubmitting || loading ? "Sending..." : "Send Reset Link"}
           </AuthButton>
         </form>
       </div>
