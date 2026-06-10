@@ -20,10 +20,6 @@ export default function ResetPasswordPage() {
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const token = searchParams.get("token");
-  if (!token) {
-    return router.push("/forgot-password");
-  }
-
   const {
     register,
     handleSubmit,
@@ -31,6 +27,9 @@ export default function ResetPasswordPage() {
   } = useForm<ResetPassFormData>({
     resolver: zodResolver(resetPassSchema),
   });
+  if (!token) {
+    return router.push("/forgot-password");
+  }
 
   const onSubmit = async (data: ResetPassFormData) => {
     setAuthError(null);
