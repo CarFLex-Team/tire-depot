@@ -108,7 +108,7 @@ export default function SignInPage() {
             {isSubmitting ? "Processing..." : "Sign in"}
           </AuthButton>
           <p className="font-medium text-primary text-sm text-gray-400 mb-4 block mt-2 text-center">
-            Don't have an account?{" "}
+            Don&apos;t have an account?{" "}
             <a
               href="/signup"
               className="underline underline-offset-4 hover:no-underline"
