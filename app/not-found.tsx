@@ -4,7 +4,7 @@ import Navbar from "@/components/Navbar";
 export default function NotFound() {
   return (
     <>
-      <Navbar withCart={false} />
+      <Navbar />
       <div className="flex min-h-screen flex-col items-center justify-center bg-brand-dark p-4">
         <h1 className="mb-4 text-center text-4xl font-bold text-gray-100">
           404 - Page Not Found

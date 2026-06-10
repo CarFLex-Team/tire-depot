@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 
 import { Anton } from "next/font/google";
 import "./globals.css";
+import { CartProvider } from "@/lib/cart";
 
 const anton = Anton({
   subsets: ["latin"],
@@ -25,7 +26,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={anton.variable}>{children}</body>
+      <body className={anton.variable}>
+        <CartProvider>{children}</CartProvider>
+      </body>
     </html>
   );
 }

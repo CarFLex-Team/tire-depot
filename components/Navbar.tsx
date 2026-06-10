@@ -6,15 +6,11 @@ import { authClient } from "@/lib/auth/auth-client";
 import AnimatedLogo from "./AnimatedLogo";
 import { motion, AnimatePresence } from "framer-motion";
 import HamburgerX from "./HamburgerX";
-export default function Navbar({ withCart = true }: { withCart?: boolean }) {
+export default function Navbar() {
   const { data: session } = authClient.useSession();
-  let { totalItems, dispatch } = {
-    totalItems: 0,
-    dispatch: (_action: any) => {},
-  };
-  if (withCart) {
-    ({ totalItems, dispatch } = useCart());
-  }
+
+  const { totalItems, dispatch } = useCart();
+
   const [mobileOpen, setMobileOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
