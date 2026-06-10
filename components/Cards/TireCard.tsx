@@ -87,16 +87,16 @@ export default function TireCard({ tire }: { tire: Tire }) {
         </div>
       </div>
 
-      {/* <button
+      <button
         onClick={handleAdd}
-        className={`w-full py-2.5 font-display font-bold text-sm uppercase tracking-widest transition-all ${
+        className={`w-full py-2.5 font-display font-bold text-sm uppercase tracking-widest transition-all rounded-full ${
           added
             ? "bg-green-500 text-white"
-            : "bg-brand-red hover:bg-[#cc1215] text-white"
+            : "bg-brand-red hover:bg-brand-red/90 text-white"
         }`}
       >
         {added ? "✓ Added!" : "Add to Cart"}
-      </button> */}
+      </button>
     </div>
   );
 }
