@@ -42,7 +42,87 @@ export default function ShopSection() {
     "bg-brand-charcoal border border-brand-mid text-brand-light text-sm font-body px-3 py-2 pr-8 focus:outline-none focus:border-brand-red transition-colors cursor-pointer rounded-full";
 
   return (
-    <section id="shop" className="bg-brand-dark py-20">
+    <section className="bg-brand-dark py-20 sm:flex">
+      <div className=" border-r-4 border-brand-charcoal rounded-2xl hidden md:block sm:w-1/4 flex-shrink-0 bg-brand-charcoal/20  sticky top-20 h-screen overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+        <h3 className="font-display font-semibold text-3xl text-white uppercase tracking-tight sticky top-0 left-0 w-full bg-brand-dark py-4 px-10 border-b border-brand-charcoal">
+          Filter & Sort
+        </h3>
+        <div className="flex flex-col gap-6 p-8 pb-24 ">
+          <div className="flex flex-col gap-1">
+            <label className="font-display font-bold text-xs text-brand-muted uppercase tracking-widest">
+              Category
+            </label>
+            <select
+              className={selectClass}
+              value={filterType}
+              onChange={(e) => setFilterType(e.target.value)}
+            >
+              <option>All Types</option>
+              {TYPES.map((t) => (
+                <option key={t}>{t}</option>
+              ))}
+            </select>
+          </div>
+
+          <div className="flex flex-col gap-1">
+            <label className="font-display font-bold text-xs text-brand-muted uppercase tracking-widest">
+              Diameter
+            </label>
+            <select
+              className={selectClass}
+              value={filterDiameter}
+              onChange={(e) => setFilterDiameter(e.target.value)}
+            >
+              <option>All Sizes</option>
+              {DIAMETERS.map((d) => (
+                <option key={d}>{d}&quot;</option>
+              ))}
+            </select>
+          </div>
+          <div className="flex flex-col gap-1">
+            <label className="font-display font-bold text-xs text-brand-muted uppercase tracking-widest">
+              Brand
+            </label>
+            <select
+              className={selectClass}
+              value={filterBrand}
+              onChange={(e) => setFilterBrand(e.target.value)}
+            >
+              <option>All Brands</option>
+              {BRANDS.map((b) => (
+                <option key={b}>{b}</option>
+              ))}
+            </select>
+          </div>
+          <div className="flex flex-col gap-1">
+            <label className="font-display font-bold text-xs text-brand-muted uppercase tracking-widest">
+              Sort
+            </label>
+            <select
+              className={selectClass}
+              value={sort}
+              onChange={(e) => setSort(e.target.value)}
+            >
+              {[
+                "Price: Low - High",
+                "Price: High - Low",
+                "Size: Small - Large",
+                "Size: Large - Small",
+                "Brand: A - Z",
+              ].map((s) => (
+                <option key={s}>{s}</option>
+              ))}
+            </select>
+          </div>
+          <button
+            onClick={reset}
+            className="font-display font-bold text-xs rounded-full text-brand-muted hover:text-brand-red uppercase tracking-widest transition-colors py-2 px-3 border border-transparent hover:border-brand-mid"
+          >
+            Reset
+          </button>
+        </div>
+      </div>
+
       <div className="max-w-7xl mx-auto px-6 sm:px-10">
         {/* Header */}
         <div className="flex items-end justify-between mb-12 gap-4 flex-wrap">
@@ -64,7 +144,7 @@ export default function ShopSection() {
         </div>
 
         {/* Filters */}
-        <div className="flex flex-wrap gap-3 mb-10 pb-6 border-b border-brand-gray">
+        <div className="flex flex-wrap gap-3 mb-10 pb-6 border-b border-brand-gray md:hidden">
           <div className="flex flex-col gap-1">
             <label className="font-display font-bold text-xs text-brand-muted uppercase tracking-widest">
               Category
@@ -157,7 +237,7 @@ export default function ShopSection() {
             </button>
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {filtered.map((tire) => (
               <TireCard key={tire.id} tire={tire} />
             ))}
