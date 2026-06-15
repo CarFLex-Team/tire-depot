@@ -1,35 +1,86 @@
 "use client";
-import { useState, useMemo } from "react";
-import { TIRES, BRANDS, TYPES, DIAMETERS } from "@/lib/tires";
+import { useState, useMemo, useEffect } from "react";
+import { Tire } from "@/lib/tires";
 import TireCard from "./Cards/TireCard";
+import AnimatedLogo from "./AnimatedLogo";
 
 export default function ShopSection() {
   const [filterType, setFilterType] = useState("All Types");
   const [filterDiameter, setFilterDiameter] = useState("All Sizes");
   const [filterBrand, setFilterBrand] = useState("All Brands");
+  const [openSections, setOpenSections] = useState<Record<string, boolean>>({
+    brand: false,
+    type: true,
+    diameter: false,
+    price: true,
+  });
+  const [selectedBrands, setSelectedBrands] = useState<string[]>([]);
+  const [selectedTypes, setSelectedTypes] = useState<string[]>([]);
+  const [selectedDiameters, setSelectedDiameters] = useState<number[]>([]);
+  const [priceRange, setPriceRange] = useState<[number, number]>([0, 100]);
   const [sort, setSort] = useState("Price: Low - High");
-
+  const [tires, setTires] = useState([] as Tire[]);
+  const [BRANDS, setBRANDS] = useState([] as string[]);
+  const [TYPES, setTYPES] = useState([] as string[]);
+  const [DIAMETERS, setDIAMETERS] = useState([] as number[]);
+  const [loading, setLoading] = useState(true);
+  useEffect(() => {
+    async function fetchTires() {
+      setLoading(true);
+      const res = await fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/tires`, {
+        cache: "no-store",
+      });
+      if (!res.ok) {
+        throw new Error("Failed to fetch tires");
+      }
+      const data = await res.json();
+      const fetchedTires = data.tires.map((t: any) => ({
+        ...t,
+        speedRating: t.speed_rating,
+        supplierItemNo: t.supplier_item_no,
+        LoadIndex: t.load_index,
+        imageUrl: t.image_url,
+        inStock: t.in_stock,
+        class: t.tire_class,
+        diameter: parseInt(t.rim_diameter),
+        price: parseFloat(t.public_price),
+      })) as Tire[];
+      setTires(fetchedTires);
+      setLoading(false);
+    }
+    fetchTires();
+  }, []);
+  const brandCounts = useMemo(
+    () =>
+      tires.reduce(
+        (acc, t) => ({ ...acc, [t.brand]: (acc[t.brand] || 0) + 1 }),
+        {} as Record<string, number>,
+      ),
+    [tires],
+  );
   const filtered = useMemo(() => {
-    let tires = [...TIRES];
-
-    if (filterType !== "All Types")
-      tires = tires.filter((t) => t.type === filterType);
-    if (filterDiameter !== "All Sizes")
-      tires = tires.filter((t) => t.diameter === parseInt(filterDiameter));
-    if (filterBrand !== "All Brands")
-      tires = tires.filter((t) => t.brand === filterBrand);
-
-    tires.sort((a, b) => {
-      if (sort === "Price: Low - High") return a.price - b.price;
-      if (sort === "Price: High - Low") return b.price - a.price;
-      if (sort === "Size: Small - Large") return a.diameter - b.diameter;
-      if (sort === "Size: Large - Small") return b.diameter - a.diameter;
-      if (sort === "Brand: A - Z") return a.brand.localeCompare(b.brand);
-      return 0;
-    });
-
-    return tires;
-  }, [filterType, filterDiameter, filterBrand, sort]);
+    return tires
+      .filter(
+        (t) => selectedBrands.length === 0 || selectedBrands.includes(t.brand),
+      )
+      .filter(
+        (t) => selectedTypes.length === 0 || selectedTypes.includes(t.terrain),
+      )
+      .filter(
+        (t) =>
+          selectedDiameters.length === 0 ||
+          selectedDiameters.includes(t.diameter),
+      )
+      .filter((t) => t.price >= priceRange[0] && t.price <= priceRange[1])
+      .sort(/* your sort logic */);
+  }, [
+    tires,
+    selectedBrands,
+    selectedTypes,
+    selectedDiameters,
+    priceRange,
+    sort,
+  ]);
 
   const reset = () => {
     setFilterType("All Types");
@@ -50,7 +101,7 @@ export default function ShopSection() {
         <div className="flex flex-col gap-6 p-8 pb-24 ">
           <div className="flex flex-col gap-1">
             <label className="font-display font-bold text-xs text-brand-muted uppercase tracking-widest">
-              Category
+              Brand
             </label>
             <select
               className={selectClass}
@@ -139,7 +190,7 @@ export default function ShopSection() {
             </p>
           </div>
           <div className="font-display font-semibold text-sm text-brand-muted uppercase tracking-widest">
-            Showing {filtered.length} tires · In-Store Pickup Only
+            Showing {tires.length} tires · In-Store Pickup Only
           </div>
         </div>
 
@@ -221,7 +272,13 @@ export default function ShopSection() {
         </div>
 
         {/* Grid */}
-        {filtered.length === 0 ? (
+        {loading ? (
+          <div className="text-center py-24">
+            <p className="font-body text-brand-muted mt-2 flex items-center justify-center gap-2">
+              <AnimatedLogo size={2} withText={false} width={20} height={20} />
+            </p>
+          </div>
+        ) : tires.length === 0 ? (
           <div className="text-center py-24">
             <p className="font-display font-bold text-2xl text-brand-mid uppercase">
               No tires found
@@ -237,8 +294,8 @@ export default function ShopSection() {
             </button>
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {filtered.map((tire) => (
+          <div className="grid grid-cols-1  gap-4">
+            {tires.map((tire) => (
               <TireCard key={tire.id} tire={tire} />
             ))}
           </div>
