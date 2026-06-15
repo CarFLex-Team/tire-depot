@@ -40,13 +40,6 @@ export default function SignInPage() {
     } else {
       router.push("/");
     }
-
-    // // success
-    // const sessionRes = await fetch("/api/auth/session");
-    // const session = await sessionRes.json();
-
-    // const role = session?.user?.role;
-    // router.push(role === "OWNER" ? "/owner/dashboard" : "/dashboard");
   };
   async function handleGoogle() {
     setGoogleLoading(true);
