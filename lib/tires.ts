@@ -13,9 +13,9 @@ export interface Tire {
   priceType: "per set" | "each";
   inStock: boolean; // in_stock
   quantity: number;
-  speedRating?: string;
+  speedRating: string;
   imageUrl: string;
-  LoadIndex?: number;
+  LoadIndex: string;
 }
 
 // export const BRANDS = [...new Set(TIRES.map((t) => t.brand))].sort();

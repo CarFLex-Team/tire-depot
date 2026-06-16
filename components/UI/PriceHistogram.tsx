@@ -1,110 +1,5 @@
 import { Tire } from "@/lib/tires";
-import { useMemo, useState } from "react";
-
-export type SortOption =
-  | "Price: Low - High"
-  | "Price: High - Low"
-  | "Size: Small - Large"
-  | "Size: Large - Small"
-  | "Brand: A - Z";
-
-export type AccordionKey = "brand" | "type" | "diameter" | "price";
-
-// ─── Tire type metadata ───────────────────────────────────────────────────────
-
-export const TYPE_DESCRIPTIONS: Record<string, string> = {
-  "All Season": "Good handle on dry, wet or snow",
-  "All Weather":
-    "Combines All Season and Winter tire traits for strong traction year-round",
-  "All Terrain":
-    "All-terrain tires offer drivers traction on- and off-road, ideal for SUV and light truck drivers",
-};
-
-export function AccordionSection({
-  id,
-  label,
-  open,
-  onToggle,
-  children,
-}: {
-  id: AccordionKey;
-  label: string;
-  open: boolean;
-  onToggle: (id: AccordionKey) => void;
-  children: React.ReactNode;
-}) {
-  return (
-    <div className="border-b border-brand-charcoal">
-      <button
-        onClick={() => onToggle(id)}
-        className="w-full flex items-center justify-between px-6 py-4 text-left text-brand-light hover:bg-white/5 transition-colors"
-      >
-        <span className="font-display font-semibold text-base">{label}</span>
-        <svg
-          className={`w-4 h-4 text-brand-muted transition-transform duration-200 ${open ? "rotate-180" : ""}`}
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-          strokeWidth={2}
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            d="M19 9l-7 7-7-7"
-          />
-        </svg>
-      </button>
-      {open && <div className="px-6 pb-5">{children}</div>}
-    </div>
-  );
-}
-
-export function CheckboxOption({
-  label,
-  count,
-  description,
-  checked,
-  onChange,
-}: {
-  label: string;
-  count: number;
-  description?: string;
-  checked: boolean;
-  onChange: () => void;
-}) {
-  return (
-    <label className="flex items-start gap-3 py-2 cursor-pointer group">
-      <div
-        onClick={onChange}
-        className={`mt-0.5 w-[18px] h-[18px] flex-shrink-0 rounded border transition-colors duration-150 flex items-center justify-center
-          ${checked ? "bg-brand-red border-brand-red" : "border-brand-mid group-hover:border-brand-muted"}`}
-      >
-        {checked && (
-          <svg className="w-3 h-3 text-white" viewBox="0 0 12 12" fill="none">
-            <path
-              d="M2 6l3 3 5-5"
-              stroke="currentColor"
-              strokeWidth={2}
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
-        )}
-      </div>
-      <div className="flex-1 min-w-0" onClick={onChange}>
-        <div className="flex items-baseline gap-1.5">
-          <span className="font-body text-sm text-brand-light">{label}</span>
-          <span className="font-body text-xs text-brand-muted">({count})</span>
-        </div>
-        {description && (
-          <p className="font-body text-xs text-brand-muted mt-0.5 leading-snug">
-            {description}
-          </p>
-        )}
-      </div>
-    </label>
-  );
-}
+import { useMemo } from "react";
 
 export function PriceHistogram({
   tires,
@@ -125,7 +20,6 @@ export function PriceHistogram({
 }) {
   const BAR_COUNT = 28;
 
-  const [activeThumb, setActiveThumb] = useState<"min" | "max" | null>(null);
   const bars = useMemo(() => {
     if (tires.length === 0) return Array(BAR_COUNT).fill(0);
     const range = absoluteMax - absoluteMin || 1;
