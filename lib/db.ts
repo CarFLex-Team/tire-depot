@@ -1,6 +1,16 @@
 import { Pool } from "pg";
 
-export const db = new Pool({
-  connectionString: process.env.DATABASE_URL,
-  connectionTimeoutMillis: 10000, // 10 seconds
-});
+declare global {
+  var pgPool: Pool | undefined;
+}
+
+const pool =
+  global.pgPool ??
+  new Pool({
+    connectionString: process.env.DATABASE_URL,
+    ssl: { rejectUnauthorized: false },
+  });
+
+if (!global.pgPool) global.pgPool = pool;
+
+export default pool;

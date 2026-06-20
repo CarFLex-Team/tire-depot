@@ -1,8 +1,15 @@
-import { db } from "@/lib/db";
+import db from "@/lib/db";
 import { NextResponse } from "next/server";
 export async function GET(req: Request) {
+  const url = new URL(req.url);
+  const width = url.searchParams.get("width");
+  const ratio = url.searchParams.get("ratio");
+  const diameter = url.searchParams.get("diameter");
   try {
-    const { rows } = await db.query("SELECT * FROM tires_new LIMIT 100");
+    const { rows } = await db.query(
+      "SELECT * FROM tires_new WHERE width = $1 AND aspect_ratio = $2 AND rim_diameter = $3 ",
+      [width, ratio + ".0", diameter],
+    );
     return NextResponse.json({ tires: rows });
   } catch (err) {
     return NextResponse.json(

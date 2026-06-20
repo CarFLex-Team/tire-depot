@@ -22,7 +22,7 @@ export default function Navbar() {
 
   const links = [
     // { label: "Home", href: "#home" },
-    { label: "Shop Tires", href: "/tires" },
+    { label: "Shop Tires", href: "/#search-section" },
     { label: "Service", href: "/#how-it-works" },
     { label: "About", href: "/#about" },
     { label: "Contact", href: "/#contact" },

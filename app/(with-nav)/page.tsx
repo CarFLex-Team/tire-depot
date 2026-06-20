@@ -1,16 +1,12 @@
-import { CartProvider } from "@/lib/cart";
-import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
 import MarqueeBanner from "@/components/MarqueeBanner";
-import ShopSection from "@/components/ShopSection";
-import ServicesSection from "@/components/ServicesSection";
 import HowItWorksSection from "@/components/HowItWorksSection";
 import AboutSection from "@/components/AboutSection";
 import ContactSection from "@/components/ContactSection";
 import CtaBanner from "@/components/CtaBanner";
-import Footer from "@/components/Footer";
-import CartPanel from "@/components/CartPanel";
+
 import MarqueeBrandBanner from "@/components/MarqueeBrandBanner";
+import SearchSection from "@/components/SearchSection";
 const typeItems = [
   "SHOP ONLINE",
   "FREE PICKUP",
@@ -42,7 +38,7 @@ export default function Home() {
     <main>
       <Hero />
       <MarqueeBanner items={typeItems} />
-      {/* <ShopSection /> */}
+      <SearchSection />
       {/* <ServicesSection /> */}
       <HowItWorksSection />
       <AboutSection />

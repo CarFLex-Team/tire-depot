@@ -51,7 +51,7 @@ export default function Footer() {
               ].map((l) => (
                 <li key={l}>
                   <a
-                    href="/tires"
+                    href="/#search-section"
                     className="font-body text-sm text-brand-muted hover:text-white transition-colors"
                   >
                     {l}

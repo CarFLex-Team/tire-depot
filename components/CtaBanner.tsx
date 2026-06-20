@@ -15,7 +15,7 @@ export default function CtaBanner() {
         </div>
         <div className="flex flex-wrap gap-3">
           <a
-            href="/tires"
+            href="/#search-section"
             className="inline-flex items-center gap-2 bg-white text-brand-red px-8 py-4 
             font-display font-bold uppercase tracking-widest
             hover:bg-brand-light transition-colors rounded-full"

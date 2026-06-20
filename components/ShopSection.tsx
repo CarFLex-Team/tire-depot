@@ -2,14 +2,18 @@
 import { useEffect, useMemo, useState } from "react";
 import TireCard from "./Cards/TireCard";
 import { Tire } from "@/lib/tires";
-
-import AnimatedLogo from "./AnimatedLogo";
+import { useSearchParams } from "next/navigation";
 import FilterSidebar, { SortOption } from "./FilterSidebar";
 import { ListFilter } from "lucide-react";
 import Modal from "./UI/Modal";
 import LoadingSkeleton from "./UI/LoadingSkeleton";
 
 export default function ShopSection() {
+  const searchParams = useSearchParams();
+
+  const width = searchParams.get("width");
+  const ratio = searchParams.get("ratio");
+  const diameter = searchParams.get("diameter");
   const [tires, setTires] = useState<Tire[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedBrands, setSelectedBrands] = useState<string[]>([]);
@@ -20,6 +24,9 @@ export default function ShopSection() {
   const [priceMaxPct, setPriceMaxPct] = useState(100);
   const [sort, setSort] = useState<SortOption>("Price: Low - High");
   const [showFilters, setShowFilters] = useState(false);
+  const [tireSize, setTireSize] = useState(
+    `${width || "???"}/${ratio || "???"}R${diameter || "???"}`,
+  );
   const selectClass =
     "bg-brand-charcoal border border-brand-mid text-brand-light text-sm font-body px-4 py-2  focus:outline-none focus:border-brand-red transition-colors cursor-pointer rounded-full";
 
@@ -94,9 +101,12 @@ export default function ShopSection() {
   useEffect(() => {
     async function fetchTires() {
       setLoading(true);
-      const res = await fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/tires`, {
-        cache: "no-store",
-      });
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_APP_URL}/api/tires?width=${width}&ratio=${ratio}&diameter=${diameter}`,
+        {
+          cache: "no-store",
+        },
+      );
       if (!res.ok) throw new Error("Failed to fetch tires");
       const data = await res.json();
       const fetchedTires = data.tires.map((t: any) => ({
@@ -171,10 +181,10 @@ export default function ShopSection() {
           <div className="flex items-end justify-between mb-12 gap-4 flex-wrap">
             <div>
               <p className="font-display text-brand-red tracking-widest uppercase mb-2">
-                Our Inventory
+                Shop Tires
               </p>
               <h2 className="font-mono text-4xl sm:text-5xl text-white uppercase tracking-tight">
-                Shop Tires
+                {tireSize} Tires
               </h2>
               <p className="font-body text-brand-muted mt-2">
                 Browse our real-time inventory — all prices shown per set unless

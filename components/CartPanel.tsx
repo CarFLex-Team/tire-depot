@@ -116,7 +116,7 @@ export default function CartPanel() {
                     Your cart is empty
                   </p>
                   <a
-                    href="/tires"
+                    href="/#search-section"
                     onClick={close}
                     className="font-mono text-xs text-brand-red uppercase tracking-widest"
                   >

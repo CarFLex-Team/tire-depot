@@ -14,7 +14,7 @@ const services = [
     title: "Online Tire Shop",
     desc: "Browse our full inventory, add to cart, and check out online. Pick up at our Memphis location.",
     cta: "Shop Now",
-    href: "/tires",
+    href: "/#search-section",
   },
   {
     icon: <LifeBuoy size={28} />,

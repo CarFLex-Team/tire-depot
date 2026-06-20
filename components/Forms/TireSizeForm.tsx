@@ -1,0 +1,132 @@
+import useSWR from "swr";
+import { useRouter } from "next/navigation";
+import { useEffect, useState, useRef } from "react";
+const fetcher = (url: string) =>
+  fetch(url)
+    .then((res) => res.json())
+    .catch((err) => console.error(err));
+
+export default function TireSizeForm() {
+  const [width, setWidth] = useState<string>("");
+  const [ratio, setRatio] = useState<string>("");
+  const [diameter, setDiameter] = useState<string>("");
+  const [showHelp, setShowHelp] = useState(false);
+  const hoverTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const [disabled, setDisabled] = useState(true);
+  useEffect(() => {
+    if (width && ratio && diameter) {
+      setDisabled(false);
+    } else {
+      setDisabled(true);
+    }
+  }, [width, ratio, diameter]);
+  const selectClass =
+    "bg-brand-charcoal border border-brand-mid text-brand-light text-center max-md:w-full text-sm md:text-lg font-body  py-1  disabled:opacity-50 disabled:cursor-not-allowed  focus:outline-none focus:border-brand-red transition-colors placeholder:text-brand-muted  rounded-full";
+  const router = useRouter();
+
+  // mouse leaves fast on trackpads; small delay avoids flicker when
+  // moving from the icon into the popover
+  const openHelp = () => {
+    if (hoverTimeout.current) clearTimeout(hoverTimeout.current);
+    setShowHelp(true);
+  };
+  const closeHelp = () => {
+    hoverTimeout.current = setTimeout(() => setShowHelp(false), 150);
+  };
+
+  return (
+    <form
+      className="flex flex-col md:flex-row items-center justify-between gap-4"
+      onSubmit={(e) => {
+        e.preventDefault();
+        if (disabled) return;
+        if (width && ratio && diameter) {
+          router.push(
+            "/tires?width=" +
+              width +
+              "&ratio=" +
+              ratio +
+              "&diameter=" +
+              diameter,
+          );
+        }
+      }}
+    >
+      <div className="flex items-center gap-2 relative">
+        <input
+          className={selectClass}
+          value={width}
+          placeholder="185"
+          onChange={(e) => {
+            setWidth(e.target.value);
+          }}
+          required
+        />
+        <p className="text-brand-light text-lg ">/</p>
+        <input
+          className={selectClass}
+          value={ratio}
+          placeholder="75"
+          onChange={(e) => {
+            setRatio(e.target.value);
+          }}
+          required
+        />
+        <p className="text-brand-light  md:text-lg ">/</p>
+        <input
+          className={selectClass}
+          value={diameter}
+          placeholder="14"
+          onChange={(e) => {
+            setDiameter(e.target.value);
+          }}
+          required
+        />
+
+        <div
+          className="relative"
+          onMouseEnter={openHelp}
+          onMouseLeave={closeHelp}
+        >
+          <button
+            type="button"
+            aria-label="Where do I find my tire size?"
+            onClick={() => setShowHelp((s) => !s)}
+            className="w-6 h-6 flex items-center justify-center rounded-full border border-brand-mid text-brand-light text-xs hover:border-brand-red hover:text-brand-red transition-colors cursor-pointer"
+          >
+            i
+          </button>
+
+          {showHelp && (
+            <div
+              onMouseEnter={openHelp}
+              onMouseLeave={closeHelp}
+              className="absolute z-50 left-1/2 -translate-x-1/2 top-full mt-2 w-72 bg-brand-charcoal border border-brand-mid rounded-2xl p-4 shadow-xl"
+            >
+              <div className="absolute -top-1.5 left-1/2 -translate-x-1/2 w-3 h-3 bg-brand-charcoal border-t border-l border-brand-mid rotate-45" />
+              <p className="text-brand-light text-sm font-body mb-2">
+                Find this code on your tire's sidewall
+              </p>
+              <img
+                src="/tire-side.png"
+                alt="Diagram of a tire sidewall showing where the width, aspect ratio, and wheel diameter numbers are printed"
+                className="w-full h-auto mb-2"
+              />
+              <p className="text-brand-light/70 text-xs font-body">
+                Look on the outer edge, near the rim — it reads like 225/40R18.
+              </p>
+            </div>
+          )}
+        </div>
+      </div>
+      <button
+        type="submit"
+        className="bg-brand-red border border-brand-mid text-brand-light  font-body px-4 py-2 w-full disabled:bg-brand-charcoal disabled:opacity-50 disabled:cursor-not-allowed  hover:bg-brand-red/90 transition-colors cursor-pointer rounded-full"
+        disabled={disabled}
+      >
+        Search
+      </button>
+    </form>
+  );
+}

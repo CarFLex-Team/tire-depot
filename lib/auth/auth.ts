@@ -1,6 +1,6 @@
 import { betterAuth } from "better-auth";
 
-import { db } from "../db";
+import db from "../db";
 
 import { sendResetPasswordEmail } from "../email";
 
