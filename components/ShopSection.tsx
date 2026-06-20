@@ -7,6 +7,7 @@ import AnimatedLogo from "./AnimatedLogo";
 import FilterSidebar, { SortOption } from "./FilterSidebar";
 import { ListFilter } from "lucide-react";
 import Modal from "./UI/Modal";
+import LoadingSkeleton from "./UI/LoadingSkeleton";
 
 export default function ShopSection() {
   const [tires, setTires] = useState<Tire[]>([]);
@@ -119,7 +120,8 @@ export default function ShopSection() {
     <>
       <Modal isOpen={showFilters} onClose={() => setShowFilters(false)}>
         <FilterSidebar
-          tires={tires}
+          isLoading={loading}
+          tires={filtered}
           reset={reset}
           selectedBrands={selectedBrands}
           setSelectedBrands={setSelectedBrands}
@@ -142,7 +144,8 @@ export default function ShopSection() {
         {/* ── Desktop sidebar ── */}
         <div className="border-r-4 border-brand-charcoal rounded-2xl hidden md:flex md:flex-col sm:w-1/4 flex-shrink-0 bg-brand-charcoal/20 sticky top-20 h-screen overflow-hidden">
           <FilterSidebar
-            tires={tires}
+            isLoading={loading}
+            tires={filtered}
             reset={reset}
             selectedBrands={selectedBrands}
             setSelectedBrands={setSelectedBrands}
@@ -203,31 +206,32 @@ export default function ShopSection() {
               value={sort}
               onChange={(e) => setSort(e.target.value as SortOption)}
             >
-              {(
-                [
-                  "Price: Low - High",
-                  "Price: High - Low",
-                  "Size: Small - Large",
-                  "Size: Large - Small",
-                  "Brand: A - Z",
-                ] as SortOption[]
-              ).map((s) => (
-                <option key={s}>{s}</option>
-              ))}
+              {(["Price: Low - High", "Price: High - Low"] as SortOption[]).map(
+                (s) => (
+                  <option key={s}>{s}</option>
+                ),
+              )}
             </select>
           </div>
 
           {/* ── Grid ── */}
           {loading ? (
-            <div className="text-center py-24">
-              <p className="font-body text-brand-muted mt-2 flex items-center justify-center gap-2">
-                <AnimatedLogo
-                  size={2}
-                  withText={false}
-                  width={20}
-                  height={20}
-                />
-              </p>
+            <div className="grid grid-cols-1 gap-4 ">
+              <div>
+                <LoadingSkeleton height={12} />
+                <LoadingSkeleton height={12} />
+                <LoadingSkeleton height={12} />
+              </div>
+              <div>
+                <LoadingSkeleton height={12} />
+                <LoadingSkeleton height={12} />
+                <LoadingSkeleton height={12} />
+              </div>
+              <div>
+                <LoadingSkeleton height={12} />
+                <LoadingSkeleton height={12} />
+                <LoadingSkeleton height={12} />
+              </div>
             </div>
           ) : filtered.length === 0 ? (
             <div className="text-center py-24">

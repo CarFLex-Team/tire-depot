@@ -4,12 +4,7 @@ import { Tire } from "@/lib/tires";
 import { AccordionKey, AccordionSection } from "./UI/AccordionSection";
 import { CheckboxOption } from "./UI/CheckboxOptoin";
 import { PriceHistogram } from "./UI/PriceHistogram";
-export type SortOption =
-  | "Price: Low - High"
-  | "Price: High - Low"
-  | "Size: Small - Large"
-  | "Size: Large - Small"
-  | "Brand: A - Z";
+export type SortOption = "Price: Low - High" | "Price: High - Low";
 
 export const TYPE_DESCRIPTIONS: Record<string, string> = {
   "All Season": "Good handle on dry, wet or snow",
@@ -37,6 +32,7 @@ export default function FilterSidebar({
   setSelectedSpeeds,
   setPriceMinPct,
   setPriceMaxPct,
+  isLoading,
 }: {
   reset: () => void;
   tires: Tire[];
@@ -55,6 +51,7 @@ export default function FilterSidebar({
   setSelectedSpeeds: React.Dispatch<React.SetStateAction<string[]>>;
   setPriceMinPct: (pct: number) => void;
   setPriceMaxPct: (pct: number) => void;
+  isLoading: boolean;
 }) {
   // Filter state
 
@@ -65,11 +62,22 @@ export default function FilterSidebar({
     Record<AccordionKey, boolean>
   >({
     brand: false,
-    type: true,
+    type: false,
     load: false,
-    price: true,
+    price: false,
     speed: false,
   });
+  useEffect(() => {
+    if (!isLoading) {
+      setOpenSections({
+        brand: false,
+        type: false,
+        load: false,
+        price: true,
+        speed: false,
+      });
+    }
+  }, [isLoading]);
 
   const allBrands = useMemo(
     () => [...new Set(tires.map((t) => t.brand))].sort(),
@@ -87,7 +95,7 @@ export default function FilterSidebar({
     () => [...new Set(tires.map((t) => t.speedRating).filter(Boolean))].sort(),
     [tires],
   );
-  // ── Counts (from full list so numbers don't shrink as you filter) ──────────
+
   useEffect(() => {
     if (searchTerm.trim() === "") return setFilteredBrands(allBrands);
     const lower = searchTerm.toLowerCase();
@@ -169,7 +177,7 @@ export default function FilterSidebar({
     priceMaxPct < 100;
 
   return (
-    <div className="flex flex-col h-full">
+    <div className="flex flex-col h-full pb-6">
       {/* Header */}
       <div className="flex items-center justify-between px-6 py-4 border-b border-brand-charcoal sticky top-0 bg-brand-dark z-10">
         <h3 className="font-display font-semibold text-xl text-white uppercase tracking-tight">
@@ -191,13 +199,14 @@ export default function FilterSidebar({
       </div>
 
       {/* Accordions */}
-      <div className="flex-1 overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+      <div className="flex-1 overflow-y-auto pb-10 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
         {/* Brand */}
         <AccordionSection
           id="brand"
           label="Brand"
           open={openSections.brand}
           onToggle={toggleAccordion}
+          isLoading={isLoading}
         >
           <div className="flex items-center justify-between my-2">
             <input
@@ -209,15 +218,17 @@ export default function FilterSidebar({
               }}
             />
           </div>
-          {filteredBrands.map((brand) => (
-            <CheckboxOption
-              key={brand}
-              label={brand}
-              count={brandCounts[brand] || 0}
-              checked={selectedBrands.includes(brand)}
-              onChange={() => toggleBrand(brand)}
-            />
-          ))}
+          <div className="max-h-60 overflow-y-auto">
+            {filteredBrands.map((brand) => (
+              <CheckboxOption
+                key={brand}
+                label={brand}
+                count={brandCounts[brand] || 0}
+                checked={selectedBrands.includes(brand)}
+                onChange={() => toggleBrand(brand)}
+              />
+            ))}
+          </div>
         </AccordionSection>
 
         {/* Tire type */}
@@ -226,17 +237,20 @@ export default function FilterSidebar({
           label="Tire type"
           open={openSections.type}
           onToggle={toggleAccordion}
+          isLoading={isLoading}
         >
-          {allTypes.map((type) => (
-            <CheckboxOption
-              key={type}
-              label={type}
-              count={typeCounts[type] || 0}
-              description={TYPE_DESCRIPTIONS[type]}
-              checked={selectedTypes.includes(type)}
-              onChange={() => toggleType(type)}
-            />
-          ))}
+          <div className="max-h-60 overflow-y-auto">
+            {allTypes.map((type) => (
+              <CheckboxOption
+                key={type}
+                label={type}
+                count={typeCounts[type] || 0}
+                description={TYPE_DESCRIPTIONS[type]}
+                checked={selectedTypes.includes(type)}
+                onChange={() => toggleType(type)}
+              />
+            ))}
+          </div>
         </AccordionSection>
 
         {/* Price */}
@@ -245,6 +259,7 @@ export default function FilterSidebar({
           label="Price"
           open={openSections.price}
           onToggle={toggleAccordion}
+          isLoading={isLoading}
         >
           <PriceHistogram
             tires={tires}
@@ -262,16 +277,19 @@ export default function FilterSidebar({
           label="Load"
           open={openSections.load}
           onToggle={toggleAccordion}
+          isLoading={isLoading}
         >
-          {allLoads.map((load) => (
-            <CheckboxOption
-              key={load}
-              label={`${load}`}
-              count={loadCounts[load] || 0}
-              checked={selectedLoads.includes(load)}
-              onChange={() => toggleLoad(load)}
-            />
-          ))}
+          <div className="max-h-60 overflow-y-auto">
+            {allLoads.map((load) => (
+              <CheckboxOption
+                key={load}
+                label={`${load}`}
+                count={loadCounts[load] || 0}
+                checked={selectedLoads.includes(load)}
+                onChange={() => toggleLoad(load)}
+              />
+            ))}
+          </div>
         </AccordionSection>
         {/* Speed */}
         <AccordionSection
@@ -279,16 +297,19 @@ export default function FilterSidebar({
           label="Speed Rating"
           open={openSections.speed}
           onToggle={toggleAccordion}
+          isLoading={isLoading}
         >
-          {allSpeeds.map((speed) => (
-            <CheckboxOption
-              key={speed}
-              label={`${speed}`}
-              count={speedCounts[speed] || 0}
-              checked={selectedSpeeds.includes(speed)}
-              onChange={() => toggleSpeed(speed)}
-            />
-          ))}
+          <div className="max-h-60 overflow-y-auto">
+            {allSpeeds.map((speed) => (
+              <CheckboxOption
+                key={speed}
+                label={`${speed}`}
+                count={speedCounts[speed] || 0}
+                checked={selectedSpeeds.includes(speed)}
+                onChange={() => toggleSpeed(speed)}
+              />
+            ))}
+          </div>
         </AccordionSection>
       </div>
     </div>
