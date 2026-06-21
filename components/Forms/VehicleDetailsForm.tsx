@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Modal from "../UI/Modal";
 import { CarIcon } from "lucide-react";
 import allMakes from "@/public/allMakes.json";
+import Image from "next/image";
 const fetcher = (url: string) =>
   fetch(url)
     .then((res) => res.json())
@@ -469,7 +470,7 @@ export default function VehicleDetailsForm() {
     } else {
       setDisabled(true);
     }
-  }, [year, make, model, trim]);
+  }, [year, make, model, trim, trims]);
 
   // console.log("makesData", makesData);
   const { data: modelsData } = useSWR(
@@ -625,9 +626,9 @@ export default function VehicleDetailsForm() {
         >
           <div className="flex flex-col items-center gap-4 p-6">
             <p className="text-brand-light  font-body mb-2">
-              Find this code on your tire's sidewall
+              Find this code on your tire&apos;s sidewall
             </p>
-            <img
+            <Image
               src="/tire-side.png"
               alt="Diagram of a tire sidewall showing where the width, aspect ratio, and wheel diameter numbers are printed"
               className="w-full h-auto mb-2"

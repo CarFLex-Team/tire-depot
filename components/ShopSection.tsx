@@ -84,7 +84,6 @@ export default function ShopSection() {
     selectedBrands,
     selectedTypes,
     selectedLoads,
-    selectedSpeeds,
     priceMin,
     priceMax,
     sort,
@@ -102,6 +101,10 @@ export default function ShopSection() {
 
   useEffect(() => {
     async function fetchTires() {
+      if (!width || !ratio || !diameter) {
+        setLoading(false);
+        return;
+      }
       setLoading(true);
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_APP_URL}/api/tires?width=${width}&ratio=${ratio}&diameter=${diameter}`,
@@ -126,7 +129,7 @@ export default function ShopSection() {
       setLoading(false);
     }
     fetchTires();
-  }, []);
+  }, [width, ratio, diameter]);
 
   return (
     <>

@@ -1,6 +1,7 @@
 import useSWR from "swr";
 import { useRouter } from "next/navigation";
 import { useEffect, useState, useRef } from "react";
+import Image from "next/image";
 const fetcher = (url: string) =>
   fetch(url)
     .then((res) => res.json())
@@ -117,9 +118,9 @@ export default function TireSizeForm() {
             >
               <div className="absolute -top-1.5 left-1/2 -translate-x-1/2 w-3 h-3 bg-brand-charcoal border-t border-l border-brand-mid rotate-45" />
               <p className="text-brand-light text-sm font-body mb-2">
-                Find this code on your tire's sidewall
+                Find this code on your tire&apos;s sidewall
               </p>
-              <img
+              <Image
                 src="/tire-side.png"
                 alt="Diagram of a tire sidewall showing where the width, aspect ratio, and wheel diameter numbers are printed"
                 className="w-full h-auto mb-2"
