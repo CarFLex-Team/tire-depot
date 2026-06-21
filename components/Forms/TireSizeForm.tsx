@@ -22,7 +22,7 @@ export default function TireSizeForm() {
     }
   }, [width, ratio, diameter]);
   const selectClass =
-    "bg-brand-charcoal border border-brand-mid text-brand-light text-center max-md:w-full text-sm md:text-lg font-body  py-1  disabled:opacity-50 disabled:cursor-not-allowed  focus:outline-none focus:border-brand-red transition-colors placeholder:text-brand-muted  rounded-full";
+    "bg-brand-charcoal border border-brand-mid text-brand-light text-center w-full text-sm md:text-lg font-body  py-1  disabled:opacity-50 disabled:cursor-not-allowed  focus:outline-none focus:border-brand-red transition-colors placeholder:text-brand-muted  rounded-full";
   const router = useRouter();
 
   // mouse leaves fast on trackpads; small delay avoids flicker when
@@ -37,7 +37,7 @@ export default function TireSizeForm() {
 
   return (
     <form
-      className="flex flex-col md:flex-row items-center justify-between gap-4"
+      className="flex flex-col md:flex-row items-end justify-between gap-4"
       onSubmit={(e) => {
         e.preventDefault();
         if (disabled) return;
@@ -53,36 +53,47 @@ export default function TireSizeForm() {
         }
       }}
     >
-      <div className="flex items-center gap-2 relative">
-        <input
-          className={selectClass}
-          value={width}
-          placeholder="185"
-          onChange={(e) => {
-            setWidth(e.target.value);
-          }}
-          required
-        />
+      <div className="flex items-end gap-2 relative">
+        <div className="flex flex-col gap-1 max-md:w-full">
+          <p className="text-brand-muted text-xs ">Width </p>
+          <input
+            className={selectClass}
+            value={width}
+            placeholder="205"
+            onChange={(e) => {
+              setWidth(e.target.value);
+            }}
+            required
+          />
+        </div>
         <p className="text-brand-light text-lg ">/</p>
-        <input
-          className={selectClass}
-          value={ratio}
-          placeholder="75"
-          onChange={(e) => {
-            setRatio(e.target.value);
-          }}
-          required
-        />
+        <div className="flex flex-col gap-1 max-md:w-full">
+          <p className="text-brand-muted text-xs ">
+            <span className="hidden sm:inline">Aspect</span> Ratio{" "}
+          </p>
+          <input
+            className={selectClass}
+            value={ratio}
+            placeholder="75"
+            onChange={(e) => {
+              setRatio(e.target.value);
+            }}
+            required
+          />
+        </div>
         <p className="text-brand-light  md:text-lg ">/</p>
-        <input
-          className={selectClass}
-          value={diameter}
-          placeholder="14"
-          onChange={(e) => {
-            setDiameter(e.target.value);
-          }}
-          required
-        />
+        <div className="flex flex-col gap-1 max-md:w-full">
+          <p className="text-brand-muted text-xs ">Diameter </p>
+          <input
+            className={selectClass}
+            value={diameter}
+            placeholder="15"
+            onChange={(e) => {
+              setDiameter(e.target.value);
+            }}
+            required
+          />
+        </div>
 
         <div
           className="relative"
@@ -93,7 +104,7 @@ export default function TireSizeForm() {
             type="button"
             aria-label="Where do I find my tire size?"
             onClick={() => setShowHelp((s) => !s)}
-            className="w-6 h-6 flex items-center justify-center rounded-full border border-brand-mid text-brand-light text-xs hover:border-brand-red hover:text-brand-red transition-colors cursor-pointer"
+            className="w-6 h-6 md:mb-2 flex items-center justify-center rounded-full border border-brand-mid text-brand-light text-xs hover:border-brand-red hover:text-brand-red transition-colors cursor-pointer"
           >
             i
           </button>
@@ -122,7 +133,7 @@ export default function TireSizeForm() {
       </div>
       <button
         type="submit"
-        className="bg-brand-red border border-brand-mid text-brand-light  font-body px-4 py-2 w-full disabled:bg-brand-charcoal disabled:opacity-50 disabled:cursor-not-allowed  hover:bg-brand-red/90 transition-colors cursor-pointer rounded-full"
+        className="bg-brand-red border border-brand-mid text-brand-light  font-body px-4 py-2 max-md:w-full disabled:bg-brand-charcoal disabled:opacity-50 disabled:cursor-not-allowed  hover:bg-brand-red/90 transition-colors cursor-pointer rounded-full"
         disabled={disabled}
       >
         Search

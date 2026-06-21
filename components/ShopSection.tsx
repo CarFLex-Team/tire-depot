@@ -14,6 +14,8 @@ export default function ShopSection() {
   const width = searchParams.get("width");
   const ratio = searchParams.get("ratio");
   const diameter = searchParams.get("diameter");
+  // const loadIndex = searchParams.get("loadIndex");
+  // const speedIndex = searchParams.get("speedIndex");
   const [tires, setTires] = useState<Tire[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedBrands, setSelectedBrands] = useState<string[]>([]);
