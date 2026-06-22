@@ -36,7 +36,7 @@ export function Combobox({
 
   const selectedLabel = options.find((o) => o.value === value)?.label ?? "";
   const selectClass =
-    "bg-brand-charcoal border border-brand-mid text-brand-light w-full text-sm font-body px-4 py-2 pr-8 disabled:opacity-50 disabled:cursor-not-allowed  focus:outline-none focus:border-brand-red transition-colors cursor-pointer rounded-full";
+    "bg-brand-charcoal border border-brand-mid text-brand-light w-full text-sm font-body px-4 py-2   focus:outline-none focus:border-brand-red transition-colors cursor-pointer rounded-full";
   const filtered = useMemo(() => {
     if (!query) return options;
     return options.filter((o) =>
@@ -86,9 +86,12 @@ export function Combobox({
   }
 
   return (
-    <div ref={wrapperRef} className={`relative w-full ${className}`}>
+    <div
+      ref={wrapperRef}
+      className={`relative w-full ${selectClass} ${className}`}
+    >
       <div
-        className={`flex items-center justify-between ${selectClass}`}
+        className={`flex items-center justify-between `}
         onClick={() => {
           if (disabled) return;
           setIsOpen((o) => !o);
@@ -110,13 +113,15 @@ export function Combobox({
             disabled={disabled}
           />
         ) : (
-          <span className={selectedLabel ? "" : "text-brand-light/50"}>
+          <span
+            className={`text-brand-light ${disabled ? "opacity-50 cursor-not-allowed" : ""}  overflow-hidden text-ellipsis whitespace-nowrap`}
+          >
             {selectedLabel || placeholder}
           </span>
         )}
 
-        <div className="flex items-center gap-2 shrink-0">
-          {value && !disabled && (
+        <div className=" shrink-0">
+          {/* {value && !disabled && (
             <X
               size={14}
               className="opacity-60 hover:opacity-100"
@@ -126,15 +131,14 @@ export function Combobox({
                 setQuery("");
               }}
             />
-          )}
+          )} */}
           <ChevronDown
             size={16}
-            className={`transition-transform ${isOpen ? "rotate-180" : ""}`}
+            className={`transition-transform ${isOpen ? "rotate-180" : ""} ${disabled ? "opacity-50" : ""}`}
           />
         </div>
       </div>
 
-      {/* hidden input to preserve native form `required` validation */}
       <input
         type="text"
         value={value}
@@ -145,7 +149,7 @@ export function Combobox({
       />
 
       {isOpen && !disabled && (
-        <ul className="absolute z-50 mt-1 max-h-60 w-full overflow-auto rounded-2xl border border-brand-mid bg-brand-charcoal py-1 shadow-lg">
+        <ul className="absolute z-50 mt-3 max-h-60 w-full  left-0 overflow-auto rounded-2xl border border-brand-mid bg-brand-charcoal py-1 shadow-lg">
           {filtered.length === 0 ? (
             <li className="px-4 py-2 text-sm text-brand-light/50">
               No results
