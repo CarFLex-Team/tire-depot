@@ -10,7 +10,6 @@ import LoadingSkeleton from "./UI/LoadingSkeleton";
 
 export default function ShopSection() {
   const searchParams = useSearchParams();
-
   const width = searchParams.get("width");
   const ratio = searchParams.get("ratio");
   const diameter = searchParams.get("diameter");
