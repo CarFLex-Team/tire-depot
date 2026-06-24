@@ -86,7 +86,7 @@ export default function Navbar() {
             )}
             {/* Cart button */}
             <button
-              // onClick={() => dispatch({ type: "SET_OPEN", open: true })}
+              onClick={() => dispatch({ type: "SET_OPEN", open: true })}
               className="relative flex items-center gap-2 bg-brand-red hover:bg-brand-red/90 text-white p-2 text-sm font-medium transition-colors rounded-full"
             >
               <ShoppingCart size={20} />

@@ -1,6 +1,8 @@
 "use client";
 import { useState } from "react";
+import Image from "next/image";
 import { useCart } from "@/lib/cart";
+import { Minus, Plus, ShoppingBag, Trash, Trash2, X } from "lucide-react";
 
 type Step = "cart" | "info" | "payment" | "confirmation";
 
@@ -13,7 +15,6 @@ export default function CartPanel() {
     email: "",
     phone: "",
   });
-
   const close = () => {
     dispatch({ type: "SET_OPEN", open: false });
     setTimeout(() => setStep("cart"), 400);
@@ -33,15 +34,13 @@ export default function CartPanel() {
 
   return (
     <>
-      {/* Overlay */}
       <div
         className={`fixed inset-0 bg-black/60 z-40 overlay ${state.open ? "open" : ""}`}
         onClick={close}
       />
 
-      {/* Panel */}
       <div
-        className={`fixed top-0 right-0 bottom-0 w-full sm:w-[420px] bg-brand-charcoal z-50 flex flex-col cart-panel ${state.open ? "open" : ""}`}
+        className={`fixed top-0 right-0 bottom-0 w-full sm:w-3/5 bg-brand-charcoal z-50 flex flex-col cart-panel ${state.open ? "open" : ""}`}
       >
         {/* Header */}
         <div className="flex items-center justify-between px-6 py-4 border-b border-brand-gray">
@@ -62,16 +61,7 @@ export default function CartPanel() {
             onClick={close}
             className="text-brand-muted hover:text-white transition-colors"
           >
-            <svg
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-            >
-              <path d="M18 6L6 18M6 6l12 12" />
-            </svg>
+            <X />
           </button>
         </div>
 
@@ -100,25 +90,14 @@ export default function CartPanel() {
             <div className="flex flex-col h-full">
               {state.items.length === 0 ? (
                 <div className="flex flex-col items-center justify-center flex-1 gap-4 p-8 text-center">
-                  <svg
-                    width="48"
-                    height="48"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="#2A2A2A"
-                    strokeWidth="1.5"
-                  >
-                    <path d="M6 2 3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" />
-                    <line x1="3" y1="6" x2="21" y2="6" />
-                    <path d="M16 10a4 4 0 01-8 0" />
-                  </svg>
+                  <ShoppingBag className="w-16 h-16 text-brand-gray" />
                   <p className="font-display font-bold text-brand-mid uppercase">
                     Your cart is empty
                   </p>
                   <a
                     href="/#search-section"
                     onClick={close}
-                    className="font-mono text-xs text-brand-red uppercase tracking-widest"
+                    className="font-display font-semibold text-brand-red uppercase tracking-widest"
                   >
                     Start Shopping →
                   </a>
@@ -128,42 +107,37 @@ export default function CartPanel() {
                   <div className="flex flex-col divide-y divide-brand-gray">
                     {state.items.map(({ tire, qty }) => (
                       <div key={tire.id} className="flex gap-4 p-5">
-                        <div className="w-14 h-14 bg-brand-dark flex items-center justify-center flex-shrink-0">
-                          <svg
-                            width="36"
-                            height="36"
-                            viewBox="0 0 80 80"
-                            fill="none"
-                          >
-                            <circle
-                              cx="40"
-                              cy="40"
-                              r="34"
-                              stroke="#2A2A2A"
-                              strokeWidth="10"
-                            />
-                            <circle
-                              cx="40"
-                              cy="40"
-                              r="34"
-                              stroke="#E8161A"
-                              strokeWidth="10"
-                              strokeDasharray="30 10"
-                            />
-                            <circle cx="40" cy="40" r="8" fill="#1C1C1C" />
-                            <circle cx="40" cy="40" r="4" fill="#E8161A" />
-                          </svg>
+                        <div className="w-24 h-24 bg-white flex items-center justify-center flex-shrink-0">
+                          <Image
+                            src={tire.imageUrl}
+                            alt={tire.model}
+                            className="w-full h-full object-contain"
+                            width={64}
+                            height={64}
+                          />
                         </div>
                         <div className="flex-1 min-w-0">
-                          <p className="font-mono text-[10px] text-brand-muted">
-                            {tire.brand}
-                          </p>
-                          <p className="font-display font-bold text-sm text-white truncate">
-                            {tire.model}
-                          </p>
-                          <p className="font-mono text-xs text-brand-light">
-                            {tire.size}
-                          </p>
+                          <div className="flex justify-between items-start">
+                            <div className="flex flex-col gap-1 min-w-0">
+                              <p className="font-display text-sm text-brand-red">
+                                {tire.brand.toUpperCase()}
+                              </p>
+                              <p className="font-display font-semibold  text-white truncate">
+                                {tire.model}
+                              </p>
+                              <p className="font-display text-lg text-brand-light">
+                                {tire.size}
+                              </p>
+                            </div>
+                            <button
+                              onClick={() =>
+                                dispatch({ type: "REMOVE", id: tire.id })
+                              }
+                              className=" p-1.5 flex items-center justify-center text-brand-red bg-brand-gray hover:bg-brand-mid rounded-full transition-colors text-sm"
+                            >
+                              <Trash className="w-5 h-5" />
+                            </button>
+                          </div>
                           <div className="flex items-center justify-between mt-2">
                             <div className="flex items-center gap-2">
                               <button
@@ -178,7 +152,7 @@ export default function CartPanel() {
                                 }
                                 className="w-6 h-6 bg-brand-gray flex items-center justify-center text-white hover:bg-brand-red transition-colors text-sm"
                               >
-                                −
+                                <Minus className="w-3 h-3" />
                               </button>
                               <span className="font-mono text-sm text-white w-4 text-center">
                                 {qty}
@@ -193,31 +167,14 @@ export default function CartPanel() {
                                 }
                                 className="w-6 h-6 bg-brand-gray flex items-center justify-center text-white hover:bg-brand-red transition-colors text-sm"
                               >
-                                +
+                                <Plus className="w-3 h-3" />
                               </button>
                             </div>
-                            <span className="font-display font-bold text-white">
+                            <span className="font-display font-semibold text-2xl text-white">
                               ${(tire.price * qty).toLocaleString()}
                             </span>
                           </div>
                         </div>
-                        <button
-                          onClick={() =>
-                            dispatch({ type: "REMOVE", id: tire.id })
-                          }
-                          className="text-brand-mid hover:text-brand-red transition-colors self-start mt-1"
-                        >
-                          <svg
-                            width="14"
-                            height="14"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeWidth="2"
-                          >
-                            <path d="M18 6L6 18M6 6l12 12" />
-                          </svg>
-                        </button>
                       </div>
                     ))}
                   </div>
@@ -393,19 +350,17 @@ export default function CartPanel() {
             {step === "cart" && state.items.length > 0 && (
               <>
                 <div className="flex justify-between">
-                  <span className="font-mono text-xs text-brand-muted uppercase">
+                  <span className="font-mono text-sm text-brand-muted uppercase">
                     Total {totalItems} tires
                   </span>
-                  <span className="font-display font-bold text-lg text-white">
+                  <span className="font-display font-semibold text-xl text-white">
                     ${totalPrice.toLocaleString()}
                   </span>
                 </div>
-                <p className="font-mono text-[10px] text-brand-muted">
-                  In-Store Pickup · Memphis, TN
-                </p>
+
                 <button
-                  onClick={handleCheckout}
-                  className="w-full bg-brand-red hover:bg-[#cc1215] text-white py-3 font-display font-bold text-sm uppercase tracking-widest transition-colors"
+                  // onClick={handleCheckout}
+                  className="max-w-full mx-5 bg-brand-red hover:bg-brand-red/90 rounded-full text-white py-3 font-display font-bold text-sm uppercase tracking-widest transition-colors"
                 >
                   Proceed to Checkout
                 </button>

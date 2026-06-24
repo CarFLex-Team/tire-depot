@@ -207,6 +207,8 @@ export default function VehicleDetailsForm() {
               src="/tire-side.png"
               alt="Diagram of a tire sidewall showing where the width, aspect ratio, and wheel diameter numbers are printed"
               className="w-full h-auto mb-2"
+              width={300}
+              height={200}
             />
             <p className="text-brand-light/70 text-xs font-body">
               Look on the outer edge, near the rim — it reads like 225/40R18.

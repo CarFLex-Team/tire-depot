@@ -6,7 +6,7 @@ import { Star } from "lucide-react";
 import GoogleIcon from "./Icons/GoogleIcon";
 
 export default function AnimatedRating() {
-  const rating = 4.9;
+  const rating = 5.0;
   const totalStars = 5;
   const [displayRating, setDisplayRating] = useState(0);
   const [activeStars, setActiveStars] = useState<number>(0);
