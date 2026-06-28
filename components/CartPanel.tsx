@@ -1,12 +1,15 @@
 "use client";
-import { useState } from "react";
-import Image from "next/image";
+import { useEffect, useState } from "react";
 import { useCart } from "@/lib/cart";
-import { Minus, Plus, ShoppingBag, Trash, Trash2, X } from "lucide-react";
+import { X } from "lucide-react";
+import { authClient } from "@/lib/auth/auth-client";
+import CartInfoForm from "./Forms/CartInfoForm";
+import CartItems from "./Forms/CartItems";
 
 type Step = "cart" | "info" | "payment" | "confirmation";
 
 export default function CartPanel() {
+  const { data: session } = authClient.useSession();
   const { state, dispatch, totalItems, totalPrice } = useCart();
   const [step, setStep] = useState<Step>("cart");
   const [info, setInfo] = useState({
@@ -14,6 +17,11 @@ export default function CartPanel() {
     lastName: "",
     email: "",
     phone: "",
+    address1: "",
+    address2: "",
+    city: "",
+    state: "",
+    zip: "",
   });
   const close = () => {
     dispatch({ type: "SET_OPEN", open: false });
@@ -22,16 +30,42 @@ export default function CartPanel() {
 
   const handleCheckout = () => setStep("info");
   const handleInfoNext = () => {
-    if (!info.firstName || !info.email) return;
+    if (
+      !info.firstName ||
+      !info.email ||
+      !info.phone ||
+      !info.lastName ||
+      !info.address1 ||
+      !info.city ||
+      !info.state ||
+      !info.zip
+    )
+      return;
+    dispatch({ type: "SET_USER_INFO", userInfo: info });
     setStep("payment");
   };
+  const handleInfoBack = () => setStep("cart");
   const handlePay = () => setStep("confirmation");
   const handleReset = () => {
     dispatch({ type: "CLEAR" });
     setStep("cart");
     close();
   };
-
+  useEffect(() => {
+    if (session) {
+      setInfo({
+        firstName: session.user?.name?.split(" ")[0] || "",
+        lastName: session.user?.name?.split(" ")[1] || "",
+        email: session.user?.email || "",
+        phone: "",
+        address1: "",
+        address2: "",
+        city: "",
+        state: "",
+        zip: "",
+      });
+    }
+  }, [session]);
   return (
     <>
       <div
@@ -86,169 +120,16 @@ export default function CartPanel() {
         {/* Content */}
         <div className="flex-1 overflow-y-auto">
           {/* CART STEP */}
-          {step === "cart" && (
-            <div className="flex flex-col h-full">
-              {state.items.length === 0 ? (
-                <div className="flex flex-col items-center justify-center flex-1 gap-4 p-8 text-center">
-                  <ShoppingBag className="w-16 h-16 text-brand-gray" />
-                  <p className="font-display font-bold text-brand-mid uppercase">
-                    Your cart is empty
-                  </p>
-                  <a
-                    href="/#search-section"
-                    onClick={close}
-                    className="font-display font-semibold text-brand-red uppercase tracking-widest"
-                  >
-                    Start Shopping →
-                  </a>
-                </div>
-              ) : (
-                <div className="flex flex-col">
-                  <div className="flex flex-col divide-y divide-brand-gray">
-                    {state.items.map(({ tire, qty }) => (
-                      <div key={tire.id} className="flex gap-4 p-5">
-                        <div className="w-24 h-24 bg-white flex items-center justify-center flex-shrink-0">
-                          <Image
-                            src={tire.imageUrl}
-                            alt={tire.model}
-                            className="w-full h-full object-contain"
-                            width={64}
-                            height={64}
-                          />
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <div className="flex justify-between items-start">
-                            <div className="flex flex-col gap-1 min-w-0">
-                              <p className="font-display text-sm text-brand-red">
-                                {tire.brand.toUpperCase()}
-                              </p>
-                              <p className="font-display font-semibold  text-white truncate">
-                                {tire.model}
-                              </p>
-                              <p className="font-display text-lg text-brand-light">
-                                {tire.size}
-                              </p>
-                            </div>
-                            <button
-                              onClick={() =>
-                                dispatch({ type: "REMOVE", id: tire.id })
-                              }
-                              className=" p-1.5 flex items-center justify-center text-brand-red bg-brand-gray hover:bg-brand-mid rounded-full transition-colors text-sm"
-                            >
-                              <Trash className="w-5 h-5" />
-                            </button>
-                          </div>
-                          <div className="flex items-center justify-between mt-2">
-                            <div className="flex items-center gap-2">
-                              <button
-                                onClick={() =>
-                                  qty === 1
-                                    ? dispatch({ type: "REMOVE", id: tire.id })
-                                    : dispatch({
-                                        type: "UPDATE_QTY",
-                                        id: tire.id,
-                                        qty: qty - 1,
-                                      })
-                                }
-                                className="w-6 h-6 bg-brand-gray flex items-center justify-center text-white hover:bg-brand-red transition-colors text-sm"
-                              >
-                                <Minus className="w-3 h-3" />
-                              </button>
-                              <span className="font-mono text-sm text-white w-4 text-center">
-                                {qty}
-                              </span>
-                              <button
-                                onClick={() =>
-                                  dispatch({
-                                    type: "UPDATE_QTY",
-                                    id: tire.id,
-                                    qty: qty + 1,
-                                  })
-                                }
-                                className="w-6 h-6 bg-brand-gray flex items-center justify-center text-white hover:bg-brand-red transition-colors text-sm"
-                              >
-                                <Plus className="w-3 h-3" />
-                              </button>
-                            </div>
-                            <span className="font-display font-semibold text-2xl text-white">
-                              ${(tire.price * qty).toLocaleString()}
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-            </div>
-          )}
+          {step === "cart" && <CartItems handleCheckout={handleCheckout} />}
 
           {/* INFO STEP */}
           {step === "info" && (
-            <div className="p-6 flex flex-col gap-5">
-              <p className="font-body text-sm text-brand-muted">
-                Your info for order confirmation and pickup notification.
-              </p>
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <label className="font-mono text-[10px] text-brand-muted uppercase tracking-widest block mb-1">
-                    First Name *
-                  </label>
-                  <input
-                    className="w-full bg-brand-dark border border-brand-mid text-white text-sm px-3 py-2 focus:outline-none focus:border-brand-red"
-                    value={info.firstName}
-                    onChange={(e) =>
-                      setInfo({ ...info, firstName: e.target.value })
-                    }
-                  />
-                </div>
-                <div>
-                  <label className="font-mono text-[10px] text-brand-muted uppercase tracking-widest block mb-1">
-                    Last Name *
-                  </label>
-                  <input
-                    className="w-full bg-brand-dark border border-brand-mid text-white text-sm px-3 py-2 focus:outline-none focus:border-brand-red"
-                    value={info.lastName}
-                    onChange={(e) =>
-                      setInfo({ ...info, lastName: e.target.value })
-                    }
-                  />
-                </div>
-              </div>
-              <div>
-                <label className="font-mono text-[10px] text-brand-muted uppercase tracking-widest block mb-1">
-                  Email *
-                </label>
-                <input
-                  type="email"
-                  className="w-full bg-brand-dark border border-brand-mid text-white text-sm px-3 py-2 focus:outline-none focus:border-brand-red"
-                  value={info.email}
-                  onChange={(e) => setInfo({ ...info, email: e.target.value })}
-                />
-              </div>
-              <div>
-                <label className="font-mono text-[10px] text-brand-muted uppercase tracking-widest block mb-1">
-                  Phone *
-                </label>
-                <input
-                  type="tel"
-                  className="w-full bg-brand-dark border border-brand-mid text-white text-sm px-3 py-2 focus:outline-none focus:border-brand-red"
-                  value={info.phone}
-                  onChange={(e) => setInfo({ ...info, phone: e.target.value })}
-                />
-              </div>
-              <div className="bg-brand-dark border border-brand-gray p-4">
-                <p className="font-mono text-[10px] text-brand-red uppercase tracking-widest mb-1">
-                  Pickup Location
-                </p>
-                <p className="font-body text-sm text-brand-muted">
-                  Tire Depot — 5386 Pleasant View Rd, Memphis, TN 38134
-                </p>
-                <p className="font-body text-xs text-brand-muted mt-1">
-                  We&apos;ll call you when your order is ready for pickup!
-                </p>
-              </div>
-            </div>
+            <CartInfoForm
+              info={info}
+              setInfo={setInfo}
+              handleInfoNext={handleInfoNext}
+              handleInfoBack={handleInfoBack}
+            />
           )}
 
           {/* PAYMENT STEP */}
@@ -278,7 +159,7 @@ export default function CartPanel() {
                 </div>
               </div>
 
-              <div className="bg-brand-dark border border-brand-gray p-6 text-center">
+              {/* <div className="bg-brand-dark border border-brand-gray p-6 text-center">
                 <svg
                   className="mx-auto mb-3"
                   width="32"
@@ -297,7 +178,7 @@ export default function CartPanel() {
                 <p className="font-body text-xs text-brand-mid mt-1">
                   Your payment info is encrypted and secure
                 </p>
-              </div>
+              </div> */}
             </div>
           )}
 
@@ -345,54 +226,19 @@ export default function CartPanel() {
         </div>
 
         {/* Footer / action */}
-        {step !== "confirmation" && (
+        {step !== "confirmation" && step !== "info" && (
           <div className="border-t border-brand-gray p-5 flex flex-col gap-3">
-            {step === "cart" && state.items.length > 0 && (
-              <>
-                <div className="flex justify-between">
-                  <span className="font-mono text-sm text-brand-muted uppercase">
-                    Total {totalItems} tires
-                  </span>
-                  <span className="font-display font-semibold text-xl text-white">
-                    ${totalPrice.toLocaleString()}
-                  </span>
-                </div>
-
-                <button
-                  // onClick={handleCheckout}
-                  className="max-w-full mx-5 bg-brand-red hover:bg-brand-red/90 rounded-full text-white py-3 font-display font-bold text-sm uppercase tracking-widest transition-colors"
-                >
-                  Proceed to Checkout
-                </button>
-              </>
-            )}
-            {step === "info" && (
-              <div className="flex gap-3">
-                <button
-                  onClick={() => setStep("cart")}
-                  className="flex-1 border border-brand-mid text-brand-muted hover:text-white py-3 font-display font-bold text-sm uppercase tracking-widest transition-colors"
-                >
-                  Back
-                </button>
-                <button
-                  onClick={handleInfoNext}
-                  className="flex-2 bg-brand-red hover:bg-[#cc1215] text-white py-3 px-6 font-display font-bold text-sm uppercase tracking-widest transition-colors"
-                >
-                  Continue →
-                </button>
-              </div>
-            )}
             {step === "payment" && (
               <div className="flex gap-3">
                 <button
                   onClick={() => setStep("info")}
-                  className="flex-1 border border-brand-mid text-brand-muted hover:text-white py-3 font-display font-bold text-sm uppercase tracking-widest transition-colors"
+                  className="flex-2 border border-brand-mid text-brand-muted hover:text-white py-3 px-3 md:px-6 font-display font-bold text-sm uppercase tracking-widest transition-colors"
                 >
                   Back
                 </button>
                 <button
-                  onClick={handlePay}
-                  className="flex-2 bg-brand-red hover:bg-[#cc1215] text-white py-3 px-6 font-display font-bold text-sm uppercase tracking-widest transition-colors"
+                  // onClick={handlePay}
+                  className="flex-1 bg-brand-red hover:bg-brand-red/90 text-white py-3 px-3 md:px-6 font-display font-bold text-sm uppercase tracking-widest transition-colors"
                 >
                   Pay ${totalPrice.toLocaleString()}
                 </button>
