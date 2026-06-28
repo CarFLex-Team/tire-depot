@@ -15,6 +15,7 @@ type CartInfoFormProps = {
   setInfo: (info: CartInfo) => void;
   handleInfoNext: () => void;
   handleInfoBack: () => void;
+  emailDisabled: boolean;
 };
 const STATES = [
   "Alabama",
@@ -73,6 +74,7 @@ export default function CartInfoForm({
   setInfo,
   handleInfoNext,
   handleInfoBack,
+  emailDisabled,
 }: CartInfoFormProps) {
   return (
     <>
@@ -111,9 +113,10 @@ export default function CartInfoForm({
           <input
             required
             type="email"
-            className="w-full bg-brand-dark border border-brand-mid text-white text-sm px-3 py-2 focus:outline-none focus:border-brand-red"
+            className="w-full bg-brand-dark border border-brand-mid text-white text-sm px-3 py-2 focus:outline-none focus:border-brand-red disabled:bg-brand-gray disabled:text-brand-muted"
             value={info.email}
             onChange={(e) => setInfo({ ...info, email: e.target.value })}
+            disabled={emailDisabled}
           />
         </div>
         <div>

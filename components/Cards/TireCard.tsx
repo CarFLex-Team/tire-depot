@@ -48,7 +48,7 @@ export default function TireCard({ tire }: { tire: Tire }) {
 
       {/* Info */}
       <div className="flex flex-col gap-2 flex-1 justify-between">
-        <div className="flex items-start justify-between gap-2">
+        <div className="flex items-start justify-between gap-2 ">
           <div>
             <p className="font-display text-3xl text-brand-red uppercase ">
               {tire.brand}
@@ -63,7 +63,7 @@ export default function TireCard({ tire }: { tire: Tire }) {
             {tire.size} {tire.LoadIndex ? `${tire.LoadIndex}` : ""}
             {tire.speedRating ? `${tire.speedRating}` : ""}
           </p>
-          <div className="flex items-center gap-1 text-xs font-display font-semibold text-green-400">
+          <div className="flex items-center gap-1 text-xs font-display font-semibold text-green-400 whitespace-nowrap shrink-0">
             <div className="w-1.5 h-1.5 bg-green-400 rounded-full" />
             IN STOCK
           </div>

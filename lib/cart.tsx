@@ -1,5 +1,5 @@
 "use client";
-import React, { createContext, useContext, useReducer } from "react";
+import React, { createContext, useContext, useEffect, useReducer } from "react";
 import type { Tire } from "@/lib/tires";
 
 export interface CartItem {
@@ -7,7 +7,6 @@ export interface CartItem {
   qty: number;
 }
 
-// ✅ User info type
 export interface UserInfo {
   firstName: string;
   lastName: string;
@@ -23,7 +22,7 @@ export interface UserInfo {
 interface CartState {
   items: CartItem[];
   open: boolean;
-  userInfo: UserInfo | null; // ✅ Added
+  userInfo: UserInfo | null;
 }
 
 type Action =
@@ -32,8 +31,8 @@ type Action =
   | { type: "UPDATE_QTY"; id: string; qty: number }
   | { type: "CLEAR" }
   | { type: "SET_OPEN"; open: boolean }
-  | { type: "SET_USER_INFO"; userInfo: UserInfo } // ✅ Added
-  | { type: "CLEAR_USER_INFO" }; // ✅ Added
+  | { type: "SET_USER_INFO"; userInfo: UserInfo }
+  | { type: "CLEAR_USER_INFO" };
 
 function reducer(state: CartState, action: Action): CartState {
   switch (action.type) {
@@ -68,9 +67,9 @@ function reducer(state: CartState, action: Action): CartState {
       return { ...state, items: [] };
     case "SET_OPEN":
       return { ...state, open: action.open };
-    case "SET_USER_INFO": // ✅ Added
+    case "SET_USER_INFO":
       return { ...state, userInfo: action.userInfo };
-    case "CLEAR_USER_INFO": // ✅ Added
+    case "CLEAR_USER_INFO":
       return { ...state, userInfo: null };
     default:
       return state;
@@ -85,12 +84,20 @@ const CartContext = createContext<{
 } | null>(null);
 
 export function CartProvider({ children }: { children: React.ReactNode }) {
-  const [state, dispatch] = useReducer(reducer, {
-    items: [],
-    open: false,
-    userInfo: null, // ✅ Added
-  });
-
+  const [state, dispatch] = useReducer(
+    reducer,
+    (() => {
+      if (typeof window === "undefined")
+        return { items: [], open: false, userInfo: null };
+      const saved = localStorage.getItem("cart");
+      return saved
+        ? JSON.parse(saved)
+        : { items: [], open: false, userInfo: null };
+    })(),
+  );
+  useEffect(() => {
+    localStorage.setItem("cart", JSON.stringify(state));
+  }, [state]);
   const totalItems = state.items.reduce((sum, i) => sum + i.qty, 0);
   const totalPrice = state.items.reduce(
     (sum, i) => sum + i.tire.price * i.qty,

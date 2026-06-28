@@ -12,6 +12,7 @@ export default function CartPanel() {
   const { data: session } = authClient.useSession();
   const { state, dispatch, totalItems, totalPrice } = useCart();
   const [step, setStep] = useState<Step>("cart");
+  const [emailDisabled, setEmailDisabled] = useState(false);
   const [info, setInfo] = useState({
     firstName: "",
     lastName: "",
@@ -64,6 +65,7 @@ export default function CartPanel() {
         state: "",
         zip: "",
       });
+      setEmailDisabled(true);
     }
   }, [session]);
   return (
@@ -129,6 +131,7 @@ export default function CartPanel() {
               setInfo={setInfo}
               handleInfoNext={handleInfoNext}
               handleInfoBack={handleInfoBack}
+              emailDisabled={emailDisabled}
             />
           )}
 
