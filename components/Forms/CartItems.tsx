@@ -18,7 +18,7 @@ export default function CartItems({
             </p>
             <a
               href="/#search-section"
-              onClick={close}
+              onClick={() => dispatch({ type: "SET_OPEN", open: false })}
               className="font-display font-semibold text-brand-red uppercase tracking-widest"
             >
               Start Shopping →
