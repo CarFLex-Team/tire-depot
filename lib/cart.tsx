@@ -26,7 +26,7 @@ interface CartState {
 }
 
 type Action =
-  | { type: "ADD"; tire: Tire }
+  | { type: "ADD"; tire: Tire; qty: number }
   | { type: "REMOVE"; id: string }
   | { type: "UPDATE_QTY"; id: string; qty: number }
   | { type: "CLEAR" }
@@ -42,13 +42,15 @@ function reducer(state: CartState, action: Action): CartState {
         return {
           ...state,
           items: state.items.map((i) =>
-            i.tire.id === action.tire.id ? { ...i, qty: i.qty + 1 } : i,
+            i.tire.id === action.tire.id
+              ? { ...i, qty: i.qty + action.qty }
+              : i,
           ),
         };
       }
       return {
         ...state,
-        items: [...state.items, { tire: action.tire, qty: 1 }],
+        items: [...state.items, { tire: action.tire, qty: action.qty || 1 }],
       };
     }
     case "REMOVE":

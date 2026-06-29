@@ -3,13 +3,15 @@ import { useCart } from "@/lib/cart";
 import { Tire } from "@/lib/tires";
 import { useState } from "react";
 import Image from "next/image";
-
+import { useRouter } from "next/navigation";
 export default function TireCard({ tire }: { tire: Tire }) {
+  const router = useRouter();
   const { dispatch } = useCart();
   const [added, setAdded] = useState(false);
 
-  const handleAdd = () => {
-    dispatch({ type: "ADD", tire });
+  const handleAdd = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.stopPropagation();
+    dispatch({ type: "ADD", tire, qty: 1 });
     dispatch({ type: "SET_OPEN", open: true });
     setAdded(true);
     setTimeout(() => setAdded(false), 1500);
@@ -24,7 +26,12 @@ export default function TireCard({ tire }: { tire: Tire }) {
   };
 
   return (
-    <div className="tire-card bg-brand-charcoal border border-brand-gray hover:border-brand-mid p-5 flex flex-col sm:flex-row gap-4 rounded-2xl ">
+    <div
+      className="tire-card bg-brand-charcoal border border-brand-gray hover:border-brand-mid p-5 flex flex-col sm:flex-row gap-4 rounded-2xl cursor-pointer transition-all "
+      onClick={() => {
+        router.push(`/tires/${tire.id}`);
+      }}
+    >
       {/* Tire icon visual */}
       <div className="flex items-center justify-center h-1/3 w-full sm:h-64 sm:w-1/3  bg-white border border-brand-gray">
         {tire.imageUrl?.endsWith(".png") || tire.imageUrl?.endsWith(".jpg") ? (
