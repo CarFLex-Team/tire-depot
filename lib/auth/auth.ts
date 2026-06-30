@@ -6,7 +6,14 @@ import { sendResetPasswordEmail } from "../email";
 
 export const auth = betterAuth({
   database: db,
-
+  user: {
+    additionalFields: {
+      last_name: {
+        type: "string",
+        required: true,
+      },
+    },
+  },
   // Email & Password
   emailAndPassword: {
     enabled: true,

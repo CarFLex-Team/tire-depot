@@ -29,7 +29,8 @@ export default function SignUpPage() {
     setAuthError(null);
     setLoading(true);
     const { error } = await signUp.email({
-      name: data.name,
+      name: data.firstname,
+      last_name: data.lastname,
       email: data.email,
       password: data.password,
       callbackURL: "/",
@@ -67,13 +68,22 @@ export default function SignUpPage() {
 
         <form className="">
           <div className=" space-y-3">
-            <FormInput
-              label="Name"
-              type="text"
-              placeholder="Enter your name"
-              register={register("name")}
-              error={errors.name}
-            />
+            <div className="flex gap-3 justify-between">
+              <FormInput
+                label="First Name"
+                type="text"
+                placeholder="Enter your first name"
+                register={register("firstname")}
+                error={errors.firstname}
+              />
+              <FormInput
+                label="Last Name"
+                type="text"
+                placeholder="Enter your last name"
+                register={register("lastname")}
+                error={errors.lastname}
+              />
+            </div>
             <FormInput
               label="Email"
               type="email"

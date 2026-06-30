@@ -6,7 +6,9 @@ import { authClient } from "@/lib/auth/auth-client";
 import AnimatedLogo from "./AnimatedLogo";
 import { motion, AnimatePresence } from "framer-motion";
 import HamburgerX from "./HamburgerX";
+import { useRouter } from "next/navigation";
 export default function Navbar() {
+  const router = useRouter();
   const { data: session } = authClient.useSession();
 
   const { totalItems, dispatch } = useCart();
@@ -38,8 +40,6 @@ export default function Navbar() {
         }`}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 flex items-center justify-between h-16">
-          {/* Logo */}
-
           <AnimatedLogo />
 
           {/* Desktop Nav */}
@@ -65,15 +65,12 @@ export default function Navbar() {
             </a>
             {session ? (
               <div
-                onClick={async () => {
-                  await authClient.signOut();
-                }}
-                className="flex items-center gap-2 text-sm font-medium hover:text-brand-red text-white transition-colors"
+                onClick={() => router.push("/account")}
+                className="w-10 h-10 rounded-full bg-brand-charcoal border border-brand-mid/30 flex items-center justify-center font-display font-bold text-brand-red hover:text-white transition-colors cursor-pointer"
               >
-                <UserRound size={20} />
-                <button className=" max-[320px]:hidden">
-                  Hello, {session.user.name.split(" ")[0]}
-                </button>
+                {session.user?.name
+                  ? `${session.user.name[0] ?? ""}${session.user.last_name?.[0] ?? ""}`.toUpperCase()
+                  : "?"}
               </div>
             ) : (
               <div className=" flex items-center gap-2 text-sm font-medium hover:text-brand-red text-white transition-colors">

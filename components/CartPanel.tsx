@@ -56,7 +56,7 @@ export default function CartPanel() {
     if (session) {
       setInfo({
         firstName: session.user?.name?.split(" ")[0] || "",
-        lastName: session.user?.name?.split(" ")[1] || "",
+        lastName: session.user?.last_name || "",
         email: session.user?.email || "",
         phone: "",
         address1: "",

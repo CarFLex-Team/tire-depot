@@ -21,7 +21,7 @@ export default function FormInput({
   const isPassword = type === "password";
 
   return (
-    <div className="flex flex-col gap-1">
+    <div className="flex flex-col gap-1 w-full">
       <label className="text-sm text-gray-300">{label}</label>
 
       <div className="">
