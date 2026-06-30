@@ -55,11 +55,10 @@ export default function Navbar() {
             ))}
           </nav>
 
-          {/* Right */}
           <div className="flex items-center gap-4">
             <a
               href="tel:9017794183"
-              className="hidden sm:flex items-center gap-2 text-sm font-medium hover:text-brand-red text-white transition-colors"
+              className="hidden lg:flex  items-center gap-2 text-sm font-medium hover:text-brand-red text-white transition-colors"
             >
               <Phone size={14} />
               (901) 779-4183
@@ -84,7 +83,7 @@ export default function Navbar() {
                 </a>
               </div>
             )}
-            {/* Cart button */}
+
             <button
               onClick={() => dispatch({ type: "SET_OPEN", open: true })}
               className="relative flex items-center gap-2 bg-brand-red hover:bg-brand-red/90 text-white p-2 text-sm font-medium transition-colors rounded-full"

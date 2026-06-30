@@ -17,6 +17,9 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";
+import ZoomImage from "./UI/ZoomImage";
+import { getLoadCapacity, getSpeedRating } from "@/lib/getSpeedRating";
+import LoadingSkeleton from "./UI/LoadingSkeleton";
 
 interface Props {
   tire: Tire | null;
@@ -24,8 +27,6 @@ interface Props {
   error: boolean;
   onBack: () => void;
 }
-
-const PLACEHOLDER_IMG = "/placeholder-tire.png"; // swap with your asset
 
 function SpecBadge({
   label,
@@ -44,14 +45,6 @@ function SpecBadge({
       </div>
       <span className="font-display text-white text-xl font-bold">{value}</span>
     </div>
-  );
-}
-
-function SkeletonBlock({ className }: { className?: string }) {
-  return (
-    <div
-      className={`animate-pulse rounded-xl bg-brand-charcoal/60 ${className}`}
-    />
   );
 }
 
@@ -93,40 +86,39 @@ export default function TireDetailSection({
       </button>
 
       {loading ? (
-        /* ── Skeleton ── */
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-          <SkeletonBlock className="aspect-square w-full" />
+          <LoadingSkeleton className="aspect-square w-full" />
           <div className="flex flex-col gap-5">
-            <SkeletonBlock className="h-5 w-28" />
-            <SkeletonBlock className="h-10 w-3/4" />
-            <SkeletonBlock className="h-6 w-24" />
-            <SkeletonBlock className="h-px w-full" />
+            <LoadingSkeleton className="h-5 w-28" />
+            <LoadingSkeleton className="h-10 w-3/4" />
+            <LoadingSkeleton className="h-6 w-24" />
+            <LoadingSkeleton className="h-px w-full" />
             <div className="grid grid-cols-2 gap-3">
               {Array.from({ length: 6 }).map((_, i) => (
-                <SkeletonBlock key={i} className="h-20" />
+                <LoadingSkeleton key={i} className="h-20" />
               ))}
             </div>
-            <SkeletonBlock className="h-14 w-full mt-4" />
+            <LoadingSkeleton className="h-14 w-full mt-4" />
           </div>
         </div>
       ) : tire ? (
-        /* ── Content ── */
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-start">
-          {/* ── Left: image ── */}
-          <div className="relative aspect-square w-full rounded-2xl overflow-hidden bg-white border border-brand-mid/20 flex items-center justify-center">
+          <div className="relative">
             {tire.imageUrl ? (
-              <Image
+              <ZoomImage
                 src={tire.imageUrl}
                 alt={`${tire.brand} ${tire.model}`}
-                fill
-                className="object-contain p-8 drop-shadow-xl"
-                sizes="(max-width: 768px) 100vw, 50vw"
               />
             ) : (
-              <span className="font-mono text-brand-mid text-sm">No image</span>
+              <Image
+                src={"/logo.png"}
+                alt="Tire Icon"
+                width={120}
+                height={120}
+                className="object-contain h-full"
+              />
             )}
 
-            {/* Stock badge */}
             <div
               className={`absolute top-4 right-4 flex items-center gap-1.5 text-xs font-display font-bold uppercase tracking-widest px-3 py-1.5 rounded-full border ${
                 tire.inStock
@@ -146,9 +138,7 @@ export default function TireDetailSection({
             </div>
           </div>
 
-          {/* ── Right: info ── */}
           <div className="flex flex-col gap-6">
-            {/* Brand / model */}
             <div>
               <p className="font-display text-brand-red tracking-widest uppercase text-2xl mb-1">
                 {tire.brand}
@@ -163,23 +153,21 @@ export default function TireDetailSection({
               )}
             </div>
 
-            {/* Size */}
-            <p className="font-mono text-brand-muted text-lg">
+            <p className="font-mono text-brand-muted text-2xl sm:text-4xl tracking-widest">
               {tire.width}/{tire.aspectRatio}R{tire.diameter}
             </p>
 
             <hr className="border-brand-charcoal" />
 
-            {/* Specs grid */}
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
               <SpecBadge
                 label="Load Index"
-                value={tire.LoadIndex}
+                value={`${tire.LoadIndex} ${getLoadCapacity(tire.LoadIndex) ? `(${getLoadCapacity(tire.LoadIndex)} IBS)` : "N/A"}`}
                 icon={<Layers size={12} />}
               />
               <SpecBadge
                 label="Speed Rating"
-                value={tire.speedRating}
+                value={`${tire.speedRating} ${getSpeedRating(tire.speedRating) ? `(${getSpeedRating(tire.speedRating)?.maxSpeedMph} MPH)` : "N/A"}`}
                 icon={<Gauge size={12} />}
               />
               <SpecBadge
@@ -208,7 +196,6 @@ export default function TireDetailSection({
 
             <hr className="border-brand-charcoal" />
 
-            {/* Price */}
             <div>
               <div className="flex items-end gap-3 mb-2">
                 <span className="font-display text-5xl font-bold text-white">
@@ -224,7 +211,7 @@ export default function TireDetailSection({
                 </span>
               </div>
             </div>
-            {/* CTA */}
+
             <div className="flex flex-col sm:flex-row gap-3">
               {/* <div className="flex items-center gap-2">
                 <button
