@@ -22,7 +22,7 @@ export default function AnimatedLogo({
       />
       {withText && (
         <span
-          className={`font-mono font-900 text-${size === 1 ? "xl" : "2xl"} tracking-widest text-white uppercase`}
+          className={`font-mono font-900 text-${size === 1 ? "xl" : "2xl"} tracking-widest text-white uppercase min-w-fit`}
         >
           Tire <span className="text-brand-red">Depot</span>
         </span>

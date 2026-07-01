@@ -9,7 +9,7 @@ import HamburgerX from "./HamburgerX";
 import { useRouter } from "next/navigation";
 export default function Navbar() {
   const router = useRouter();
-  const { data: session } = authClient.useSession();
+  const { data: session, isPending } = authClient.useSession();
 
   const { totalItems, dispatch } = useCart();
 
@@ -58,7 +58,7 @@ export default function Navbar() {
           <div className="flex items-center gap-4">
             <a
               href="tel:9017794183"
-              className="hidden lg:flex  items-center gap-2 text-sm font-medium hover:text-brand-red text-white transition-colors"
+              className="hidden md:flex  items-center gap-2 text-sm font-medium hover:text-brand-red text-white transition-colors"
             >
               <Phone size={14} />
               (901) 779-4183
@@ -73,11 +73,12 @@ export default function Navbar() {
                   : "?"}
               </div>
             ) : (
-              <div className=" flex items-center gap-2 text-sm font-medium hover:text-brand-red text-white transition-colors">
+              <div
+                className=" flex items-center gap-2 text-sm font-medium hover:text-brand-red text-white transition-colors"
+                onClick={() => !isPending && router.push("/login")}
+              >
                 <UserRound size={20} />
-                <a href="/login" className=" max-[320px]:hidden">
-                  Sign In
-                </a>
+                <span className=" max-[320px]:hidden">Sign In</span>
               </div>
             )}
 

@@ -8,6 +8,7 @@ import {
   LogOut,
   Plus,
   ChevronRight,
+  ArrowRight,
 } from "lucide-react";
 import LoadingSkeleton from "./UI/LoadingSkeleton";
 
@@ -88,7 +89,7 @@ export default function AccountSection({
 
   const tabs: { key: Tab; label: string; icon: React.ReactNode }[] = [
     { key: "profile", label: "Profile", icon: <User size={16} /> },
-    { key: "addresses", label: "Addresses", icon: <MapPin size={16} /> },
+    // { key: "addresses", label: "Addresses", icon: <MapPin size={16} /> },
     { key: "orders", label: "Orders", icon: <Package size={16} /> },
   ];
 
@@ -181,7 +182,7 @@ export default function AccountSection({
       )}
 
       {/* ── Addresses tab ── */}
-      {tab === "addresses" && (
+      {/* {tab === "addresses" && (
         <div>
           <div className="flex items-center justify-between mb-6">
             <h2 className="font-display text-xs uppercase tracking-widest text-brand-muted">
@@ -223,11 +224,11 @@ export default function AccountSection({
                     {a.city}, {a.state} {a.postal_code}
                   </p>
                 </div>
-              ))}
+              ))} 
             </div>
           )}
         </div>
-      )}
+      )}*/}
 
       {/* ── Orders tab ── */}
       {tab === "orders" && (
@@ -243,8 +244,15 @@ export default function AccountSection({
               <LoadingSkeleton className="h-20" />
             </div>
           ) : orders.length === 0 ? (
-            <div className="text-center py-16 border border-dashed border-brand-mid/30 rounded-2xl">
+            <div className=" py-16 border border-dashed border-brand-mid/30 rounded-2xl flex flex-col gap-2 items-center">
               <p className="font-body text-brand-muted">No orders yet</p>
+              <a
+                href="/#search-section"
+                className="inline-flex items-center gap-3 bg-brand-red  hover:bg-brand-red/90  text-white px-8 py-4 font-display font-bold text-lg uppercase tracking-widest transition-transform duration-500 ease-out  rounded-full"
+              >
+                Shop Tires Now
+                <ArrowRight />
+              </a>
             </div>
           ) : (
             <div className="flex flex-col gap-3">
