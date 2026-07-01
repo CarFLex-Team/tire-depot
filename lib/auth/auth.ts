@@ -11,6 +11,8 @@ export const auth = betterAuth({
       last_name: {
         type: "string",
         required: true,
+        input: true,
+        fieldName: "last_name",
       },
     },
   },
