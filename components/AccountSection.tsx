@@ -61,7 +61,48 @@ export default function AccountSection({
 }) {
   const [tab, setTab] = useState<Tab>("profile");
   const [addresses, setAddresses] = useState<Address[]>([]);
-  const [orders, setOrders] = useState<OrderSummary[]>([]);
+  const [orders, setOrders] = useState<OrderSummary[]>([
+    // {
+    //   id: "1",
+    //   order_number: "123456",
+    //   status: "pending",
+    //   total: 100.0,
+    //   created_at: new Date().toISOString(),
+    //   item_count: 2,
+    // },
+    // {
+    //   id: "6",
+    //   order_number: "123456",
+    //   status: "pending",
+    //   total: 100.0,
+    //   created_at: new Date().toISOString(),
+    //   item_count: 2,
+    // },
+    // {
+    //   id: "7",
+    //   order_number: "1234564d548d",
+    //   status: "fulfilled",
+    //   total: 10000.0,
+    //   created_at: new Date().toISOString(),
+    //   item_count: 2,
+    // },
+    // {
+    //   id: "8",
+    //   order_number: "123456",
+    //   status: "pending",
+    //   total: 100.0,
+    //   created_at: new Date().toISOString(),
+    //   item_count: 2,
+    // },
+    // {
+    //   id: "9",
+    //   order_number: "123456",
+    //   status: "pending",
+    //   total: 100.0,
+    //   created_at: new Date().toISOString(),
+    //   item_count: 2,
+    // },
+  ]);
   const [addrLoading, setAddrLoading] = useState(true);
   const [isEditingProfile, setIsEditingProfile] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -315,7 +356,7 @@ export default function AccountSection({
                   className="flex items-center justify-between gap-4 bg-brand-charcoal/40 border border-brand-mid/20 rounded-2xl px-6 py-5 hover:border-brand-red/40 transition-colors"
                 >
                   <div className="min-w-0">
-                    <p className="font-mono text-white font-bold">
+                    <p className="font-display md:text-xl text-white font-bold">
                       {o.order_number}
                     </p>
                     <p className="font-body text-brand-muted text-sm mt-0.5">
@@ -324,7 +365,7 @@ export default function AccountSection({
                       {o.item_count !== 1 ? "s" : ""}
                     </p>
                   </div>
-                  <div className="flex items-center gap-4 flex-shrink-0">
+                  <div className="flex items-center flex-col sm:flex-row  gap-2 md:gap-4 flex-shrink-0">
                     <span
                       className={`font-display text-xs font-bold uppercase tracking-widest px-3 py-1.5 rounded-full border ${
                         STATUS_STYLES[o.status] ?? STATUS_STYLES.pending
@@ -332,10 +373,10 @@ export default function AccountSection({
                     >
                       {o.status}
                     </span>
-                    <span className="font-mono text-white font-bold w-20 text-right">
+                    <span className="font-display flex flex-row items-center gap-1 md:text-xl  text-white font-bold text-right">
                       ${o.total.toFixed(2)}
+                      <ChevronRight size={18} className="text-brand-muted" />
                     </span>
-                    <ChevronRight size={18} className="text-brand-muted" />
                   </div>
                 </a>
               ))}
