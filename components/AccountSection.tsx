@@ -11,6 +11,7 @@ import {
   ArrowRight,
 } from "lucide-react";
 import LoadingSkeleton from "./UI/LoadingSkeleton";
+import { updateUser } from "@/lib/auth/auth-client";
 
 interface AccountUser {
   name?: string;
@@ -62,6 +63,11 @@ export default function AccountSection({
   const [addresses, setAddresses] = useState<Address[]>([]);
   const [orders, setOrders] = useState<OrderSummary[]>([]);
   const [addrLoading, setAddrLoading] = useState(true);
+  const [isEditingProfile, setIsEditingProfile] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [updateLoading, setUpdateLoading] = useState(false);
+  const [firstName, setFirstName] = useState(user?.name || "");
+  const [lastName, setLastName] = useState(user?.last_name || "");
   const [ordersLoading, setOrdersLoading] = useState(true);
 
   useEffect(() => {
@@ -82,7 +88,25 @@ export default function AccountSection({
     }
     load();
   }, []);
+  useEffect(() => {
+    setFirstName(user?.name || "");
+    setLastName(user?.last_name || "");
+  }, [user]);
+  const onSubmit = async () => {
+    setError(null);
+    setUpdateLoading(true);
+    const { error } = await updateUser({
+      name: firstName,
+      last_name: lastName,
+    });
 
+    if (error) {
+      setError(error.message ?? "Invalid password.");
+    } else {
+      setIsEditingProfile(false);
+    }
+    setUpdateLoading(false);
+  };
   const initials = user?.name
     ? `${user.name[0] ?? ""}${user.last_name?.[0] ?? ""}`.toUpperCase()
     : "?";
@@ -146,37 +170,65 @@ export default function AccountSection({
       {/* ── Profile tab ── */}
       {tab === "profile" && (
         <div className="bg-brand-charcoal/40 border border-brand-mid/20 rounded-2xl p-8 max-w-xl">
-          <h2 className="font-display text-xs uppercase tracking-widest text-brand-muted mb-6">
-            Personal Information
-          </h2>
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="font-display text-xs md:text-sm uppercase tracking-widest text-brand-muted ">
+              Personal Information
+            </h2>
+
+            <a
+              href="/change-password"
+              className="flex items-center gap-0.5 text-xs md:text-sm font-display uppercase tracking-widest text-brand-red hover:underline"
+            >
+              Change Password <ArrowRight size={14} />
+            </a>
+          </div>
           <div className="flex flex-col gap-5">
             <div>
               <label className="font-display text-xs uppercase tracking-widest text-brand-muted block mb-1">
                 First Name
               </label>
-              <p className="font-mono text-white text-lg">
-                {user?.name || "—"}
-              </p>
+              <input
+                className={`font-mono text-white text-lg bg-transparent p-1 md:p-2 rounded-lg ${!isEditingProfile ? "border-none focus:outline-none" : "border border-brand-muted"} `}
+                value={firstName || "—"}
+                onChange={(e) => setFirstName(e.target.value)}
+                readOnly={!isEditingProfile}
+              />
             </div>
             <div>
               <label className="font-display text-xs uppercase tracking-widest text-brand-muted block mb-1">
                 Last Name
               </label>
-              <p className="font-mono text-white text-lg">
-                {user?.last_name || "—"}
-              </p>
+              <input
+                className={`font-mono text-white text-lg bg-transparent p-1 md:p-2 rounded-lg ${!isEditingProfile ? "border-none focus:outline-none" : "border border-brand-muted"} `}
+                value={lastName || "—"}
+                onChange={(e) => setLastName(e.target.value)}
+                readOnly={!isEditingProfile}
+              />
             </div>
             <div>
               <label className="font-display text-xs uppercase tracking-widest text-brand-muted block mb-1">
                 Email
               </label>
-              <p className="font-mono text-white text-lg">
+              <p className="font-mono text-white text-lg bg-transparent border-none focus:outline-none p-1 md:p-2 rounded-lg">
                 {user?.email || "—"}
               </p>
             </div>
           </div>
-          <button className="mt-8 px-6 py-3 font-display font-bold uppercase tracking-widest text-sm rounded-xl border border-brand-mid text-brand-light hover:border-brand-red hover:text-brand-red transition-colors">
-            Edit Profile
+          <button
+            className={`mt-8 px-6 py-3 font-display font-bold uppercase tracking-widest text-sm rounded-xl border text-brand-light  ${isEditingProfile ? "bg-brand-red border-brand-red hover:bg-brand-red/80" : "border-brand-mid hover:border-brand-red hover:text-brand-red"}  transition-colors`}
+            onClick={() => {
+              if (isEditingProfile) {
+                onSubmit();
+              } else {
+                setIsEditingProfile(true);
+              }
+            }}
+          >
+            {updateLoading
+              ? "Saving..."
+              : isEditingProfile
+                ? "Save Changes"
+                : "Edit Profile"}
           </button>
         </div>
       )}
