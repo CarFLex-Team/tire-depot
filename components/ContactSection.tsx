@@ -9,13 +9,13 @@ export default function ContactSection() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
         <div className="mb-12">
           <p className="font-display text-lg text-brand-red tracking-widest uppercase mb-2 ">
-            Pickup Location
+            Our Location
           </p>
           <h2 className="font-mono text-4xl sm:text-5xl text-white uppercase tracking-tight">
             Visit <span className="text-brand-red">Tire Depot</span>
           </h2>
           <p className="font-body text-brand-muted mt-2">
-            Order online and pick up your tires here
+            Order online and we'll deliver right to your location
           </p>
         </div>
 

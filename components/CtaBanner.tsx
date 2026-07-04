@@ -9,8 +9,8 @@ export default function CtaBanner() {
             Ready to Roll?
           </h2>
           <p className="font-body text-white/80 mt-6 text-lg">
-            Shop our full inventory online and pick up at our Memphis location
-            today.
+            Shop our full wholesale inventory online and get it delivered to
+            your location.
           </p>
         </div>
         <div className="flex flex-wrap gap-3">

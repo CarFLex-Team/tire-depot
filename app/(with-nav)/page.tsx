@@ -9,7 +9,8 @@ import MarqueeBrandBanner from "@/components/MarqueeBrandBanner";
 import SearchSection from "@/components/SearchSection";
 const typeItems = [
   "SHOP ONLINE",
-  "FREE PICKUP",
+  "DELIVERED TO YOU",
+  "TRUCK TIRES",
   "ALL-SEASON TIRES",
   "MUD-TERRAIN",
   "ALL-TERRAIN",

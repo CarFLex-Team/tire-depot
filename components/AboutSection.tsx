@@ -24,22 +24,22 @@ const brands = [
 const features = [
   {
     title: "Quality Guaranteed",
-    desc: "Every tire we sell meets our strict quality standards",
+    desc: "Every tire we sell meets our strict quality standards.",
     icon: <Shield size={24} />,
   },
   {
     title: "Best Prices in Memphis",
-    desc: "We match or beat any competitor's price, guaranteed",
+    desc: "We match or beat any competitor's price, guaranteed.",
     icon: <TicketPercent size={24} />,
   },
   {
     title: "Fast Service",
-    desc: "Most orders ready for pickup within 2 hours",
+    desc: "Most orders delivered within 2 days.",
     icon: <Clock size={24} />,
   },
   {
     title: "Expert Team",
-    desc: "Our knowledgeable staff is here to help you find the perfect tires",
+    desc: "Our knowledgeable staff is here to help you find the perfect tires.",
     icon: <Users size={24} />,
   },
 ];
@@ -65,7 +65,7 @@ export default function AboutSection() {
               Why Tire Depot?
             </p>
             <h2 className="font-mono  text-4xl sm:text-5xl text-white uppercase tracking-tight mb-6">
-              Memphis Trusts
+              AMERICA Trusts
               <span className="text-brand-red"> Tire Depot</span>
             </h2>
             <p className="font-body text-brand-muted leading-relaxed mb-10">

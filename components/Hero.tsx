@@ -36,7 +36,7 @@ export default function Hero() {
           <div className="inline-flex items-center gap-2 bg-brand-red/10 border border-brand-red/30 px-4 py-2 mb-6 rounded-full">
             <div className="w-2 h-2 bg-brand-red rounded-full animate-pulse" />
             <span className="font-anton text-xs text-brand-red tracking-widest uppercase ">
-              Memphis&apos;s #1 Tire Shop
+              AMERICA&apos;s #1 WHOLESALE TIRE SUPPLIER
             </span>
           </div>
 
@@ -45,12 +45,13 @@ export default function Hero() {
             <br />
             <span className="text-brand-red">Order Online.</span>
             <br />
-            Pick Up Today.
+            DELIVERED TO YOU.
           </h1>
 
           <p className="font-body text-lg text-brand-muted max-w-xl mb-10 leading-relaxed">
-            Browse our real inventory, add to cart, and check out online. Pick
-            up at our Memphis location — fast, easy, and at unbeatable prices.
+            Browse our real wholesale inventory, add to cart, and check out
+            online. We deliver straight to your location — fast, easy, and at
+            unbeatable prices.
           </p>
 
           <div className="flex flex-wrap gap-4 mb-16">
@@ -73,7 +74,7 @@ export default function Hero() {
 
           <div className="flex flex-wrap gap-12">
             {[
-              { value: 50, suffix: "+", label: "Tires In Stock" },
+              // { value: 50, suffix: "+", label: "Tires In Stock" },
               { value: 15, suffix: "+", label: "Tire Brands" },
               { value: 2000, suffix: "+", label: "Happy Customers" },
             ].map((stat) => (

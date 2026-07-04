@@ -65,13 +65,13 @@ export default function HowItWorks() {
       img: "/img1.png",
     },
     {
-      title: "Schedule Pickup",
-      desc: "At checkout, schedule your preferred pickup appointment time",
+      title: "Fill out your order",
+      desc: "At checkout, provide your shipping information and select your preferred delivery options.",
       img: "/img2.png",
     },
     {
-      title: "Pick Up",
-      desc: "Come pick up your tires at our Memphis shop. We'll have them ready for you!",
+      title: "Receive Delivery",
+      desc: "Get your tires delivered to your location — fast, easy, and at unbeatable prices.",
       img: "/img3.png",
     },
   ];
@@ -85,7 +85,8 @@ export default function HowItWorks() {
           How It Works
         </p>
         <h2 className="font-mono text-4xl sm:text-5xl text-white uppercase tracking-tight">
-          Order Online, <span className="text-brand-red">Pick Up</span> Today
+          Order Online, We <span className="text-brand-red">Deliver</span> To
+          You
         </h2>
         <p className="font-body text-brand-muted mt-3">
           Getting your tires has never been easier

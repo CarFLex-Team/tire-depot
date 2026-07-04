@@ -13,8 +13,8 @@ export default function Footer() {
               <AnimatedLogo />
             </div>
             <p className="font-body text-sm text-brand-muted leading-relaxed mb-5">
-              Memphis&apos;s trusted tire shop. Shop tires online, pick up at
-              our location. Quality tires, unbeatable prices.
+              America&apos;s trusted wholesale tire supplier — order online,
+              delivered to your door. Quality tires, unbeatable prices.
             </p>
             <div className="flex gap-3">
               <a
