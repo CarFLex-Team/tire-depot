@@ -6,9 +6,7 @@ export async function GET(
 ) {
   try {
     const { id } = await context.params;
-    const { rows } = await db.query("SELECT * FROM tires_new WHERE id = $1", [
-      id,
-    ]);
+    const { rows } = await db.query("SELECT * FROM tires WHERE id = $1", [id]);
     return NextResponse.json({ tire: rows[0] });
   } catch (err) {
     return NextResponse.json(

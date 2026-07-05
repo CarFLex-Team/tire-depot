@@ -17,14 +17,6 @@ export default function TireCard({ tire }: { tire: Tire }) {
     setTimeout(() => setAdded(false), 1500);
   };
 
-  const typeColors: Record<string, string> = {
-    Passenger: "text-blue-400 bg-blue-400/10 border-blue-400/20",
-    "All-Terrain": "text-green-400 bg-green-400/10 border-green-400/20",
-    "Mud-Terrain": "text-orange-400 bg-orange-400/10 border-orange-400/20",
-    Trailer: "text-purple-400 bg-purple-400/10 border-purple-400/20",
-    "All-Season": "text-cyan-400 bg-cyan-400/10 border-cyan-400/20",
-  };
-
   return (
     <div
       className="tire-card bg-brand-charcoal border border-brand-gray hover:border-brand-mid p-5 flex flex-col sm:flex-row gap-4 rounded-2xl cursor-pointer transition-all "
@@ -70,9 +62,13 @@ export default function TireCard({ tire }: { tire: Tire }) {
             {tire.size} {tire.LoadIndex ? `${tire.LoadIndex}` : ""}
             {tire.speedRating ? `${tire.speedRating}` : ""}
           </p>
-          <div className="flex items-center gap-1 text-xs font-display font-semibold text-green-400 whitespace-nowrap shrink-0">
-            <div className="w-1.5 h-1.5 bg-green-400 rounded-full" />
-            IN STOCK
+          <div
+            className={`flex items-center gap-1 text-xs font-display font-semibold ${tire.inStock ? "text-green-400" : "text-red-400"} whitespace-nowrap shrink-0`}
+          >
+            <div
+              className={`w-1.5 h-1.5 rounded-full ${tire.inStock ? "bg-green-400" : "bg-red-400"}`}
+            />
+            {tire.inStock ? "In Stock" : "Out of Stock"}
           </div>
         </div>
         <div className="border-brand-gray border-t pt-4  flex items-center gap-1">
@@ -103,14 +99,16 @@ export default function TireCard({ tire }: { tire: Tire }) {
         <div className="flex  justify-between  pt-4 border-t border-brand-gray">
           <button>{/* Specs button */}</button>
           <button
-            onClick={handleAdd}
+            onClick={tire.inStock ? handleAdd : undefined}
             className={`w-32 py-2 font-display font-bold text-sm uppercase tracking-widest transition-all rounded-full ${
               added
                 ? "bg-green-500 text-white"
-                : "bg-brand-red hover:bg-brand-red/90 text-white"
+                : tire.inStock
+                  ? "bg-brand-red hover:bg-brand-red/90 text-white"
+                  : "bg-brand-gray text-brand-muted cursor-not-allowed"
             }`}
           >
-            {added ? "✓ Added!" : "Add to Cart"}
+            {added ? "✓ Added!" : tire.inStock ? "Add to Cart" : "Out of Stock"}
           </button>
         </div>
       </div>

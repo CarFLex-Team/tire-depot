@@ -7,7 +7,7 @@ export async function GET(req: Request) {
   const diameter = url.searchParams.get("diameter");
   try {
     const { rows } = await db.query(
-      "SELECT * FROM tires_new WHERE width = $1 AND aspect_ratio = $2 AND rim_diameter = $3 ",
+      "SELECT * FROM tires WHERE width = $1 AND aspect_ratio = $2 AND rim_diameter = $3 ",
       [width, ratio + ".0", diameter],
     );
     return NextResponse.json({ tires: rows });

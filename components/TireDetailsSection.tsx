@@ -110,13 +110,15 @@ export default function TireDetailSection({
                 alt={`${tire.brand} ${tire.model}`}
               />
             ) : (
-              <Image
-                src={"/logo.png"}
-                alt="Tire Icon"
-                width={120}
-                height={120}
-                className="object-contain h-full"
-              />
+              <div className="flex items-center justify-center aspect-square w-full rounded-2xl overflow-hidden bg-brand-charcoal border border-brand-mid/20">
+                <Image
+                  src={"/logo.png"}
+                  alt="Tire Icon"
+                  width={120}
+                  height={120}
+                  className="object-contain h-full "
+                />
+              </div>
             )}
 
             <div

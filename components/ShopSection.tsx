@@ -190,14 +190,9 @@ export default function ShopSection() {
               <h2 className="font-mono text-4xl sm:text-5xl text-white uppercase tracking-tight">
                 {tireSize} Tires
               </h2>
-              <p className="font-body text-brand-muted mt-2">
-                Browse our real-time inventory — all prices shown per set unless
-                noted
-              </p>
             </div>
             <div className="font-display font-semibold text-sm text-brand-muted uppercase tracking-widest">
-              Showing {filtered.length} of {tires.length} tires · In-Store
-              Pickup Only
+              Showing {filtered.length} of {tires.length} tires
             </div>
           </div>
 

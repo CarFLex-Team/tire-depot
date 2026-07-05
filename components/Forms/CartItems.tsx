@@ -31,7 +31,7 @@ export default function CartItems({
                 <div key={tire.id} className="flex gap-4 p-5">
                   <div className="w-24 h-24 bg-white flex items-center justify-center flex-shrink-0">
                     <Image
-                      src={tire.imageUrl}
+                      src={tire.imageUrl ?? "/logo.png"}
                       alt={tire.model}
                       className="w-full h-full object-contain"
                       width={64}

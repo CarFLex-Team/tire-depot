@@ -90,9 +90,14 @@ export default function Hero() {
             ))}
           </div>
         </div>
-        <div className="relative z-10">
+        <a
+          className="relative z-10"
+          href="https://share.google/IFLw8BuiZzLPtmsfC"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
           <AnimatedRating />
-        </div>
+        </a>
       </div>
       {/* <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2">
         <div className="w-px h-12 bg-gradient-to-b from-brand-red to-transparent animate-bounce" />
