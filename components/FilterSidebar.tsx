@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 
-import { Tire } from "@/lib/tires";
+import { Tire } from "@/lib/api/tires";
 import { AccordionKey, AccordionSection } from "./UI/AccordionSection";
 import { CheckboxOption } from "./UI/CheckboxOptoin";
 import { PriceHistogram } from "./UI/PriceHistogram";

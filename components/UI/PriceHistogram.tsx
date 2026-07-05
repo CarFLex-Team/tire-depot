@@ -1,4 +1,4 @@
-import { Tire } from "@/lib/tires";
+import { Tire } from "@/lib/api/tires";
 import { useMemo } from "react";
 
 export function PriceHistogram({

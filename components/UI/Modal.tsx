@@ -10,7 +10,7 @@ interface ConfirmDialogProps {
   onClose: () => void;
 }
 
-export default function ConfirmDialog({
+export default function Modal({
   isOpen,
   //   title,
   onClose,

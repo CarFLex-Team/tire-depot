@@ -1,12 +1,13 @@
 "use client";
 import { useEffect, useMemo, useState } from "react";
 import TireCard from "./Cards/TireCard";
-import { Tire } from "@/lib/tires";
+import { getTires, Tire } from "@/lib/api/tires";
 import { useSearchParams } from "next/navigation";
 import FilterSidebar, { SortOption } from "./FilterSidebar";
 import { ListFilter } from "lucide-react";
 import Modal from "./UI/Modal";
 import LoadingSkeleton from "./UI/LoadingSkeleton";
+import { useQuery } from "@tanstack/react-query";
 
 export default function ShopSection() {
   const searchParams = useSearchParams();
@@ -15,8 +16,20 @@ export default function ShopSection() {
   const diameter = searchParams.get("diameter");
   // const loadIndex = searchParams.get("loadIndex");
   // const speedIndex = searchParams.get("speedIndex");
-  const [tires, setTires] = useState<Tire[]>([]);
-  const [loading, setLoading] = useState(true);
+  const {
+    data: tires,
+    isLoading,
+    error,
+  } = useQuery({
+    queryKey: ["tires", width, ratio, diameter],
+    queryFn: () =>
+      getTires(
+        parseInt(width || "0"),
+        parseInt(ratio || "0"),
+        parseInt(diameter || "0"),
+      ),
+  });
+
   const [selectedBrands, setSelectedBrands] = useState<string[]>([]);
   const [selectedTypes, setSelectedTypes] = useState<string[]>([]);
   const [selectedLoads, setSelectedLoads] = useState<string[]>([]);
@@ -34,12 +47,12 @@ export default function ShopSection() {
   // ── Filtered + sorted tires ────────────────────────────────────────────────
   const absoluteMinPrice = useMemo(
     () =>
-      tires.length ? Math.floor(Math.min(...tires.map((t) => t.price))) : 0,
+      tires?.length ? Math.floor(Math.min(...tires.map((t) => t.price))) : 0,
     [tires],
   );
   const absoluteMaxPrice = useMemo(
     () =>
-      tires.length ? Math.ceil(Math.max(...tires.map((t) => t.price))) : 1000,
+      tires?.length ? Math.ceil(Math.max(...tires.map((t) => t.price))) : 1000,
     [tires],
   );
   const priceMin =
@@ -57,7 +70,7 @@ export default function ShopSection() {
     (priceMinPct > 0 || priceMaxPct < 100 ? 1 : 0);
 
   const filtered = useMemo(() => {
-    let result = tires.filter((t) => {
+    let result = tires?.filter((t) => {
       if (selectedBrands.length && !selectedBrands.includes(t.brand))
         return false;
       if (selectedTypes.length && !selectedTypes.includes(t.terrain))
@@ -68,7 +81,7 @@ export default function ShopSection() {
       return true;
     });
 
-    result = [...result].sort((a, b) => {
+    result = [...(result || [])].sort((a, b) => {
       if (sort === "Price: Low - High") return a.price - b.price;
       if (sort === "Price: High - Low") return b.price - a.price;
       if (sort === "Size: Small - Large") return a.diameter - b.diameter;
@@ -98,43 +111,11 @@ export default function ShopSection() {
   };
   // ── Fetch ──────────────────────────────────────────────────────────────────
 
-  useEffect(() => {
-    async function fetchTires() {
-      if (!width || !ratio || !diameter) {
-        setLoading(false);
-        return;
-      }
-      setLoading(true);
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_APP_URL}/api/tires?width=${width}&ratio=${ratio}&diameter=${diameter}`,
-        {
-          cache: "no-store",
-        },
-      );
-      if (!res.ok) throw new Error("Failed to fetch tires");
-      const data = await res.json();
-      const fetchedTires = data.tires.map((t: any) => ({
-        ...t,
-        speedRating: t.speed_rating === null ? "other" : t.speed_rating,
-        supplierItemNo: t.supplier_item_no,
-        LoadIndex: t.load_index === null ? "other" : t.load_index,
-        imageUrl: t.image_url,
-        inStock: t.in_stock,
-        class: t.tire_class,
-        diameter: parseInt(t.rim_diameter),
-        price: parseFloat(t.public_price),
-      })) as Tire[];
-      setTires(fetchedTires);
-      setLoading(false);
-    }
-    fetchTires();
-  }, [width, ratio, diameter]);
-
   return (
     <>
       <Modal isOpen={showFilters} onClose={() => setShowFilters(false)}>
         <FilterSidebar
-          isLoading={loading}
+          isLoading={isLoading}
           tires={filtered}
           reset={reset}
           selectedBrands={selectedBrands}
@@ -158,7 +139,7 @@ export default function ShopSection() {
         {/* ── Desktop sidebar ── */}
         <div className="border-r-4 border-brand-charcoal rounded-2xl hidden md:flex md:flex-col sm:w-1/4 flex-shrink-0 bg-brand-charcoal/20 sticky top-20 h-screen overflow-hidden">
           <FilterSidebar
-            isLoading={loading}
+            isLoading={isLoading}
             tires={filtered}
             reset={reset}
             selectedBrands={selectedBrands}
@@ -192,7 +173,7 @@ export default function ShopSection() {
               </h2>
             </div>
             <div className="font-display font-semibold text-sm text-brand-muted uppercase tracking-widest">
-              Showing {filtered.length} of {tires.length} tires
+              Showing {filtered.length} of {tires?.length} tires
             </div>
           </div>
 
@@ -224,7 +205,7 @@ export default function ShopSection() {
           </div>
 
           {/* ── Grid ── */}
-          {loading ? (
+          {isLoading ? (
             <div className="grid grid-cols-1 gap-4 ">
               <div>
                 <LoadingSkeleton height={12} />

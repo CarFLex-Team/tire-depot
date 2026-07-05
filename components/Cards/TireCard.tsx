@@ -1,6 +1,6 @@
 "use client";
 import { useCart } from "@/lib/cart";
-import { Tire } from "@/lib/tires";
+import { Tire } from "@/lib/api/tires";
 import { useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";

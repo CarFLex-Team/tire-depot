@@ -2,10 +2,6 @@ import useSWR from "swr";
 import { useRouter } from "next/navigation";
 import { useEffect, useState, useRef } from "react";
 import Image from "next/image";
-const fetcher = (url: string) =>
-  fetch(url)
-    .then((res) => res.json())
-    .catch((err) => console.error(err));
 
 export default function TireSizeForm() {
   const [width, setWidth] = useState<string>("");
