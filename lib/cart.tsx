@@ -12,11 +12,7 @@ export interface UserInfo {
   lastName: string;
   email: string;
   phone: string;
-  address1: string;
-  address2: string;
-  city: string;
-  state: string;
-  zip: string;
+  addressId: string;
 }
 
 interface CartState {

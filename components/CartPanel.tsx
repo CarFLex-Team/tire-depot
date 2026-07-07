@@ -5,11 +5,14 @@ import { X } from "lucide-react";
 import { authClient } from "@/lib/auth/auth-client";
 import CartInfoForm from "./Forms/CartInfoForm";
 import CartItems from "./Forms/CartItems";
+import AddAddressForm from "./Forms/AddAddressForm";
+import Modal from "./UI/Modal";
 
 type Step = "cart" | "info" | "payment" | "confirmation";
 
 export default function CartPanel() {
-  const { data: session } = authClient.useSession();
+  const { data: session, isPending } = authClient.useSession();
+  const [addressModalOpen, setAddressModalOpen] = useState(false);
   const { state, dispatch, totalItems, totalPrice } = useCart();
   const [step, setStep] = useState<Step>("cart");
   const [emailDisabled, setEmailDisabled] = useState(false);
@@ -18,11 +21,7 @@ export default function CartPanel() {
     lastName: "",
     email: "",
     phone: "",
-    address1: "",
-    address2: "",
-    city: "",
-    state: "",
-    zip: "",
+    addressId: "",
   });
   const close = () => {
     dispatch({ type: "SET_OPEN", open: false });
@@ -36,10 +35,7 @@ export default function CartPanel() {
       !info.email ||
       !info.phone ||
       !info.lastName ||
-      !info.address1 ||
-      !info.city ||
-      !info.state ||
-      !info.zip
+      !info.addressId
     )
       return;
     dispatch({ type: "SET_USER_INFO", userInfo: info });
@@ -59,24 +55,29 @@ export default function CartPanel() {
         lastName: session.user?.last_name || "",
         email: session.user?.email || "",
         phone: "",
-        address1: "",
-        address2: "",
-        city: "",
-        state: "",
-        zip: "",
+        addressId: "",
       });
       setEmailDisabled(true);
     }
   }, [session]);
   return (
     <>
+      <Modal
+        isOpen={addressModalOpen}
+        onClose={() => setAddressModalOpen(false)}
+      >
+        <AddAddressForm
+          onClose={() => setAddressModalOpen(false)}
+          userId={session?.user?.id}
+        />
+      </Modal>
       <div
-        className={`fixed inset-0 bg-black/60 z-40 overlay ${state.open ? "open" : ""}`}
+        className={`fixed inset-0 bg-black/60 z- overlay ${state.open ? "open" : ""}`}
         onClick={close}
       />
 
       <div
-        className={`fixed top-0 right-0 bottom-0 w-full sm:w-3/5 bg-brand-charcoal z-50 flex flex-col cart-panel ${state.open ? "open" : ""}`}
+        className={`fixed top-0 right-0 bottom-0 w-full sm:w-3/5 bg-brand-charcoal z-40 flex flex-col cart-panel ${state.open ? "open" : ""}`}
       >
         {/* Header */}
         <div className="flex items-center justify-between px-6 py-4 border-b border-brand-gray">
@@ -128,10 +129,12 @@ export default function CartPanel() {
           {step === "info" && (
             <CartInfoForm
               info={info}
+              user={session?.user ?? null}
               setInfo={setInfo}
               handleInfoNext={handleInfoNext}
               handleInfoBack={handleInfoBack}
               emailDisabled={emailDisabled}
+              onAddAddress={() => setAddressModalOpen(true)}
             />
           )}
 

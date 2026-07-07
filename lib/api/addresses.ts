@@ -75,3 +75,19 @@ export async function getAddresses(userId: string) {
   if (!res.ok) throw new Error("Failed to fetch addresses");
   return res.json();
 }
+export async function deleteAddress(addressId: string) {
+  const res = await fetch(`/api/addresses/${addressId}`, {
+    method: "DELETE",
+  });
+  if (!res.ok) throw new Error("Failed to delete address");
+  return res.json();
+}
+export async function updateAddress(addressId: string, form: AddressForm) {
+  const res = await fetch(`/api/addresses/${addressId}`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(form),
+  });
+  if (!res.ok) throw new Error("Failed to update address");
+  return res.json();
+}
