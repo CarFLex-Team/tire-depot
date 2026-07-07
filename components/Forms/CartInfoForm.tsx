@@ -222,7 +222,7 @@ export default function CartInfoForm({
     if (savedAddresses.length > 0 && selectedAddressId === null) {
       applyAddress(savedAddresses[0]);
     }
-  }, [savedAddresses]);
+  }, [savedAddresses, selectedAddressId, applyAddress]);
 
   function applyAddress(a: SavedAddress) {
     setSelectedAddressId(a.id);

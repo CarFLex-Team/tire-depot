@@ -15,7 +15,7 @@ export default function ContactSection() {
             Visit <span className="text-brand-red">Tire Depot</span>
           </h2>
           <p className="font-body text-brand-muted mt-2">
-            Order online and we'll deliver right to your location
+            Order online and we&apos;ll deliver right to your location
           </p>
         </div>
 
