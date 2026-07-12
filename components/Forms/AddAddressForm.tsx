@@ -19,6 +19,7 @@ interface Props {
   onClose: () => void;
   noClose?: boolean;
   onSubmit?: () => void;
+  title?: string;
 }
 
 const inputClass =
@@ -32,6 +33,7 @@ export default function AddAddressForm({
   userId,
   noClose,
   onSubmit,
+  title,
 }: Props) {
   const [form, setForm] = useState<AddressForm>(EMPTY_FORM);
   const [validationError, setValidationError] = useState<string | null>(null);
@@ -75,7 +77,7 @@ export default function AddAddressForm({
             Addresses
           </p>
           <h2 className="font-mono text-white text-xl uppercase">
-            Add New Address
+            {title ? title : "Add New Address"}
           </h2>
         </div>
         <button

@@ -1,21 +1,30 @@
 "use client";
 import { useState, useEffect } from "react";
 import { useCart } from "@/lib/cart";
-import { Phone, ShoppingCart, UserRound } from "lucide-react";
+import { MapPin, Phone, ShoppingCart, UserRound } from "lucide-react";
 import { authClient } from "@/lib/auth/auth-client";
 import AnimatedLogo from "./AnimatedLogo";
 import { motion, AnimatePresence } from "framer-motion";
 import HamburgerX from "./HamburgerX";
 import { useRouter } from "next/navigation";
+import { useQuery } from "@tanstack/react-query";
+import { getAddresses } from "@/lib/api/addresses";
+import Modal from "./Modals/Modal";
+import AddAddressForm from "./Forms/AddAddressForm";
 export default function Navbar() {
   const router = useRouter();
-  const { data: session, isPending } = authClient.useSession();
 
   const { totalItems, dispatch } = useCart();
 
   const [mobileOpen, setMobileOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-
+  const [addrOpen, setAddrOpen] = useState(false);
+  const { data: session, isPending } = authClient.useSession();
+  const { data: addresses = [], isLoading: addrLoading } = useQuery({
+    queryKey: ["addresses", session?.user?.id],
+    queryFn: () => getAddresses(session?.user?.id || ""),
+    enabled: !!session?.user?.id,
+  });
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 40);
     window.addEventListener("scroll", handleScroll);
@@ -32,6 +41,17 @@ export default function Navbar() {
 
   return (
     <>
+      <Modal
+        isOpen={addrOpen}
+        onClose={() => {
+          setAddrOpen(false);
+        }}
+      >
+        <AddAddressForm
+          onClose={() => setAddrOpen(false)}
+          userId={session?.user?.id}
+        />
+      </Modal>
       <header
         className={`fixed top-0 left-0 right-0 z-20 transition-all duration-300 ${
           scrolled
@@ -56,13 +76,19 @@ export default function Navbar() {
           </nav>
 
           <div className="flex items-center gap-4">
-            <a
-              href="tel:9017794183"
-              className="hidden md:flex  items-center gap-2 text-sm font-medium hover:text-brand-red text-white transition-colors"
+            <div
+              onClick={() => {
+                addresses.length <= 0
+                  ? setAddrOpen(true)
+                  : router.push("/account");
+              }}
+              className="hidden md:flex  items-center gap-2 text-sm font-medium cursor-pointer hover:text-brand-red text-white transition-colors"
             >
-              <Phone size={14} />
-              (901) 779-4183
-            </a>
+              <MapPin size={14} />
+              {addresses.length > 0 && !addrLoading
+                ? addresses[0].postal_code
+                : ""}
+            </div>
             {session ? (
               <div
                 onClick={() => router.push("/account")}

@@ -153,6 +153,7 @@ export default function VehicleDetailsForm({
     <>
       <Modal isOpen={addrOpen} onClose={() => {}}>
         <AddAddressForm
+          title="Add Address to Search"
           onClose={() => setAddrOpen(false)}
           userId={user?.id}
           noClose={true}
