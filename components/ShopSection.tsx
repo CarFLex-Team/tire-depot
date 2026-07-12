@@ -8,8 +8,10 @@ import { ListFilter } from "lucide-react";
 import Modal from "./Modals/Modal";
 import LoadingSkeleton from "./UI/LoadingSkeleton";
 import { useQuery } from "@tanstack/react-query";
+import { authClient } from "@/lib/auth/auth-client";
 
 export default function ShopSection() {
+  const { data: session, isPending } = authClient.useSession();
   const searchParams = useSearchParams();
   const width = searchParams.get("width");
   const ratio = searchParams.get("ratio");
@@ -109,8 +111,19 @@ export default function ShopSection() {
     setPriceMaxPct(100);
     setSort("Price: Low - High");
   };
-  // ── Fetch ──────────────────────────────────────────────────────────────────
 
+  if (!session && !isPending) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-screen bg-brand-dark p-4">
+        <h1 className="mb-4 text-center text-4xl font-bold text-gray-100">
+          Please Sign In
+        </h1>
+        <p className="text-center text-gray-400">
+          You need to be signed in to view this page.
+        </p>
+      </div>
+    );
+  }
   return (
     <>
       <Modal isOpen={showFilters} onClose={() => setShowFilters(false)}>

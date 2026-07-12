@@ -200,6 +200,10 @@ export default function VehicleDetailsForm({
                               setWidth(size.front.tire_width.toString());
                               setRatio(size.front.tire_aspect_ratio.toString());
                               setDiameter(size.front.rim_diameter.toString());
+                              if (!user) {
+                                router.push("/login");
+                                return;
+                              }
                               if (user && addresses.length === 0) {
                                 setAddrOpen(true);
                                 return;

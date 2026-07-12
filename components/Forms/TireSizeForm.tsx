@@ -71,6 +71,10 @@ export default function TireSizeForm({
         onSubmit={(e) => {
           e.preventDefault();
           if (disabled) return;
+          if (!user) {
+            router.push("/login");
+            return;
+          }
           if (user && addresses.length === 0) {
             setAddrOpen(true);
             return;
