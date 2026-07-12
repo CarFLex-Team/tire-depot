@@ -3,8 +3,10 @@ import { useState } from "react";
 import ToggleButton from "./Buttons/ToggleButton";
 import VehicleDetailsForm from "./Forms/VehicleDetailsForm";
 import TireSizeForm from "./Forms/TireSizeForm";
+import { authClient } from "@/lib/auth/auth-client";
 // import VinForm from "../Forms/VinForm";
 export default function SearchFormContainer() {
+  const { data: session, isPending } = authClient.useSession();
   const [selectedTab, setSelectedTab] = useState("vehicle-details");
   return (
     <div className=" w-full flex flex-col items-center justify-center p-9  bg-brand-charcoal rounded-2xl mt-8">
@@ -36,9 +38,9 @@ export default function SearchFormContainer() {
       </div>
       <div className="w-full  mt-6">
         {selectedTab === "vehicle-details" ? (
-          <VehicleDetailsForm />
+          <VehicleDetailsForm user={session?.user ?? null} />
         ) : (
-          <TireSizeForm />
+          <TireSizeForm user={session?.user ?? null} />
           //   <VinForm /> //temporary until vin form is ready
         )}
       </div>

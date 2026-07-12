@@ -1,17 +1,24 @@
 import useSWR from "swr";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import Modal from "../UI/Modal";
+import Modal from "../Modals/Modal";
 import { CarIcon } from "lucide-react";
 import allMakes from "@/public/allMakes.json";
 import Image from "next/image";
 import { Combobox } from "./ComboBox";
+import AddAddressForm from "./AddAddressForm";
+import { getAddresses } from "@/lib/api/addresses";
+import { useQuery } from "@tanstack/react-query";
 const fetcher = (url: string) =>
   fetch(url)
     .then((res) => res.json())
     .catch((err) => console.error(err));
 
-export default function VehicleDetailsForm() {
+export default function VehicleDetailsForm({
+  user,
+}: {
+  user: { id: string } | null;
+}) {
   const [models, setModels] = useState<{ slug: string; name: string }[]>([]);
   const makes = allMakes.data;
   const [trims, setTrims] = useState<
@@ -28,6 +35,10 @@ export default function VehicleDetailsForm() {
       };
     }[]
   >([]);
+  const [width, setWidth] = useState<string>("");
+  const [ratio, setRatio] = useState<string>("");
+  const [diameter, setDiameter] = useState<string>("");
+  const [addrOpen, setAddrOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [showHelp, setShowHelp] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -65,6 +76,11 @@ export default function VehicleDetailsForm() {
       : null,
     fetcher,
   );
+  const { data: addresses = [], isLoading: addrLoading } = useQuery({
+    queryKey: ["addresses", user?.id],
+    queryFn: () => getAddresses(user?.id || ""),
+    enabled: !!user?.id,
+  });
   useEffect(() => {
     console.log("trimsData", trimsData);
     if (trimsData) setTrims(trimsData.data);
@@ -135,6 +151,25 @@ export default function VehicleDetailsForm() {
   }
   return (
     <>
+      <Modal isOpen={addrOpen} onClose={() => {}}>
+        <AddAddressForm
+          onClose={() => setAddrOpen(false)}
+          userId={user?.id}
+          noClose={true}
+          onSubmit={() => {
+            if (width && ratio && diameter) {
+              router.push(
+                "/tires?width=" +
+                  width +
+                  "&ratio=" +
+                  ratio +
+                  "&diameter=" +
+                  diameter,
+              );
+            }
+          }}
+        />
+      </Modal>
       {isModalOpen && (
         <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
           <div className="rounded-3xl rounded-r-none bg-brand-red p-8 text-white">
@@ -160,10 +195,17 @@ export default function VehicleDetailsForm() {
                           <button
                             key={i}
                             onClick={() => {
+                              setIsModalOpen(false);
+                              setWidth(size.front.tire_width.toString());
+                              setRatio(size.front.tire_aspect_ratio.toString());
+                              setDiameter(size.front.rim_diameter.toString());
+                              if (user && addresses.length === 0) {
+                                setAddrOpen(true);
+                                return;
+                              }
                               router.push(
                                 `/tires?width=${size.front.tire_width}&ratio=${size.front.tire_aspect_ratio}&diameter=${size.front.rim_diameter}`,
                               );
-                              setIsModalOpen(false);
                             }}
                             className="rounded-full border-2 border-white/40 px-3 py-2  md:text-lg font-semibold transition-colors hover:bg-white/10"
                           >

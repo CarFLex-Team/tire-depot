@@ -5,7 +5,7 @@ import { getTires, Tire } from "@/lib/api/tires";
 import { useSearchParams } from "next/navigation";
 import FilterSidebar, { SortOption } from "./FilterSidebar";
 import { ListFilter } from "lucide-react";
-import Modal from "./UI/Modal";
+import Modal from "./Modals/Modal";
 import LoadingSkeleton from "./UI/LoadingSkeleton";
 import { useQuery } from "@tanstack/react-query";
 

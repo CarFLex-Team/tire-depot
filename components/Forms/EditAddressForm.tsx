@@ -1,53 +1,42 @@
-"use client";
-
-import { useState } from "react";
-import { X } from "lucide-react";
+import { Address, STATES, updateAddress } from "@/lib/api/addresses";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { addAddress, AddressForm, STATES } from "@/lib/api/addresses";
-
-const EMPTY_FORM: AddressForm = {
-  label: "",
-  line1: "",
-  line2: "",
-  city: "",
-  state: "",
-  postal_code: "",
-};
-
-interface Props {
-  userId: string | undefined;
-  onClose: () => void;
-  noClose?: boolean;
-  onSubmit?: () => void;
-}
+import { X } from "lucide-react";
+import { useState } from "react";
 
 const inputClass =
   "w-full bg-brand-dark border border-brand-mid/40 rounded-xl px-4 py-3 font-body text-sm text-brand-light placeholder:text-brand-muted focus:outline-none focus:border-brand-red transition-colors";
-
 const labelClass =
   "block font-display text-xs uppercase tracking-widest text-brand-muted mb-1.5";
-
-export default function AddAddressForm({
+export default function EditAddressForm({
+  address,
   onClose,
   userId,
-  noClose,
-  onSubmit,
-}: Props) {
-  const [form, setForm] = useState<AddressForm>(EMPTY_FORM);
-  const [validationError, setValidationError] = useState<string | null>(null);
+}: {
+  address: Address;
+  onClose: () => void;
+  userId?: string;
+}) {
   const queryClient = useQueryClient();
+  const [form, setForm] = useState({
+    label: address.label ?? "",
+    line1: address.line1,
+    line2: address.line2 ?? "",
+    city: address.city,
+    state: address.state,
+    postal_code: address.postal_code,
+  });
+  const [error, setError] = useState<string | null>(null);
 
-  const { mutate, isPending, error } = useMutation({
-    mutationFn: addAddress,
+  const { mutate, isPending } = useMutation({
+    mutationFn: () => updateAddress(address.id, form),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["addresses", userId] });
-      setForm(EMPTY_FORM);
       onClose();
-      onSubmit?.();
     },
+    onError: () => setError("Something went wrong. Please try again."),
   });
 
-  function set(field: keyof AddressForm, value: string) {
+  function set(field: keyof typeof form, value: string) {
     setForm((f) => ({ ...f, [field]: value }));
   }
 
@@ -59,38 +48,36 @@ export default function AddAddressForm({
       !form.state ||
       !form.postal_code
     ) {
-      setValidationError("Please fill in all required fields.");
+      setError("Please fill in all required fields.");
       return;
     }
-    setValidationError(null);
-    mutate({ ...form, user_id: userId });
+    setError(null);
+    mutate();
   }
 
   return (
     <div className="w-full bg-brand-charcoal rounded-2xl border border-brand-mid/20 shadow-xl overflow-hidden flex flex-col max-h-[90vh]">
-      {/* Header */}
       <div className="flex items-center justify-between px-6 py-5 border-b border-brand-mid/20">
         <div>
           <p className="font-display text-brand-red tracking-widest uppercase text-xs mb-0.5">
             Addresses
           </p>
           <h2 className="font-mono text-white text-xl uppercase">
-            Add New Address
+            Edit Address
           </h2>
         </div>
         <button
-          onClick={noClose ? () => {} : onClose}
+          onClick={onClose}
           className="text-brand-muted hover:text-white transition-colors"
         >
           <X size={20} />
         </button>
       </div>
 
-      {/* Body */}
-      <div className="px-6 py-6 flex flex-col gap-4   overflow-y-auto">
+      <div className="px-6 py-6 flex flex-col gap-4 max-h-[70vh] overflow-y-auto">
         <div>
           <label className={labelClass}>
-            Label <span className="text-brand-red">*</span>{" "}
+            Label <span className="text-brand-red">*</span>
           </label>
           <input
             className={inputClass}
@@ -99,19 +86,16 @@ export default function AddAddressForm({
             onChange={(e) => set("label", e.target.value)}
           />
         </div>
-
         <div>
           <label className={labelClass}>
             Address line 1 <span className="text-brand-red">*</span>
           </label>
           <input
             className={inputClass}
-            placeholder="123 Main St"
             value={form.line1}
             onChange={(e) => set("line1", e.target.value)}
           />
         </div>
-
         <div>
           <label className={labelClass}>Address line 2</label>
           <input
@@ -121,7 +105,6 @@ export default function AddAddressForm({
             onChange={(e) => set("line2", e.target.value)}
           />
         </div>
-
         <div>
           <label className={labelClass}>
             City <span className="text-brand-red">*</span>
@@ -148,7 +131,7 @@ export default function AddAddressForm({
               <option value="" disabled>
                 Select a state
               </option>
-              {STATES.map((state) => (
+              {STATES.map((state: string) => (
                 <option key={state} value={state}>
                   {state}
                 </option>
@@ -168,19 +151,9 @@ export default function AddAddressForm({
           </div>
         </div>
 
-        {/* Validation error (client-side) */}
-        {validationError && (
-          <p className="font-body text-brand-red text-sm">{validationError}</p>
-        )}
-        {/* Server/network error (from useMutation) */}
-        {error && !validationError && (
-          <p className="font-body text-brand-red text-sm">
-            Something went wrong. Please try again.
-          </p>
-        )}
+        {error && <p className="font-body text-brand-red text-sm">{error}</p>}
       </div>
 
-      {/* Footer */}
       <div className="px-6 py-5 border-t border-brand-mid/20 flex gap-3">
         <button
           onClick={onClose}
@@ -193,7 +166,7 @@ export default function AddAddressForm({
           disabled={isPending}
           className="flex-1 py-3 font-display font-bold uppercase tracking-widest text-sm rounded-xl bg-brand-red text-white hover:brightness-110 active:scale-95 transition-all disabled:opacity-50 disabled:pointer-events-none"
         >
-          {isPending ? "Saving..." : "Save Address"}
+          {isPending ? "Saving..." : "Save Changes"}
         </button>
       </div>
     </div>

@@ -50,7 +50,7 @@ export const STATES = [
   "Wisconsin",
   "Wyoming",
 ];
-export interface AddressForm {
+export type AddressForm = {
   label: string;
   line1: string;
   line2: string;
@@ -59,7 +59,18 @@ export interface AddressForm {
   postal_code: string;
 
   user_id?: string;
-}
+};
+export type Address = {
+  id: string;
+  label?: string;
+  full_name: string;
+  line1: string;
+  line2?: string;
+  city: string;
+  state: string;
+  postal_code: string;
+  country: string;
+};
 
 export async function addAddress(form: AddressForm) {
   const res = await fetch("/api/addresses", {

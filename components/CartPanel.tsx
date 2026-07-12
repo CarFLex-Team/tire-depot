@@ -6,7 +6,7 @@ import { authClient } from "@/lib/auth/auth-client";
 import CartInfoForm from "./Forms/CartInfoForm";
 import CartItems from "./Forms/CartItems";
 import AddAddressForm from "./Forms/AddAddressForm";
-import Modal from "./UI/Modal";
+import Modal from "./Modals/Modal";
 
 type Step = "cart" | "info" | "payment" | "confirmation";
 
