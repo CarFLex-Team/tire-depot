@@ -75,7 +75,7 @@ export default function Navbar() {
             ))}
           </nav>
 
-          <div className="flex items-center gap-4">
+          <div className="flex items-center sm:gap-4 gap-1">
             <div
               onClick={() => {
                 addresses.length <= 0
@@ -87,7 +87,7 @@ export default function Navbar() {
               <MapPin size={14} />
               {addresses.length > 0 && !addrLoading
                 ? addresses[0].postal_code
-                : ""}
+                : "Add Address"}
             </div>
             {session ? (
               <div
@@ -157,12 +157,20 @@ export default function Navbar() {
                   {l.label}
                 </a>
               ))}
-              <a
-                href="tel:9017794183"
-                className="text-sm font-medium text-brand-red pt-2"
+
+              <div
+                onClick={() => {
+                  addresses.length <= 0
+                    ? setAddrOpen(true)
+                    : router.push("/account");
+                }}
+                className="text-sm font-medium text-brand-red pt-2 flex items-center gap-2 cursor-pointer hover:text-white transition-colors"
               >
-                (901) 779-4183
-              </a>
+                <MapPin size={14} />
+                {addresses.length > 0 && !addrLoading
+                  ? addresses[0].postal_code
+                  : "Add Address"}
+              </div>
             </motion.div>
           </motion.div>
         )}
