@@ -20,6 +20,9 @@ import { useState } from "react";
 import ZoomImage from "./UI/ZoomImage";
 import { getLoadCapacity, getSpeedRating } from "@/lib/getSpeedRating";
 import LoadingSkeleton from "./UI/LoadingSkeleton";
+import { authClient } from "@/lib/auth/auth-client";
+import { useCartUiStore } from "@/lib/store/cart-ui";
+import LoadingSpinner from "./UI/LoadingSpinner";
 
 interface Props {
   tire: Tire | null;
@@ -54,7 +57,11 @@ export default function TireDetailSection({
   error,
   onBack,
 }: Props) {
-  const { dispatch } = useCart();
+  const { data: session, isPending } = authClient.useSession();
+  const { addItemAsync, isUpdating, isLoading } = useCart(
+    session?.user?.id ?? "",
+  );
+  const { openCart } = useCartUiStore();
   const [qty, setQty] = useState(1);
   if (error) {
     return (
@@ -233,19 +240,32 @@ export default function TireDetailSection({
                 </button>
               </div> */}
               <button
-                onClick={(e) => {
+                onClick={async (e) => {
                   e.stopPropagation();
-                  dispatch({ type: "ADD", tire, qty });
-                  dispatch({ type: "SET_OPEN", open: true });
+
+                  try {
+                    await addItemAsync(tire, qty);
+                    openCart();
+                  } catch (error) {
+                    console.error("Unable to add tire to cart", error);
+                  }
                 }}
-                disabled={!tire.inStock}
-                className={`flex-1 py-4 font-display font-bold uppercase tracking-widest text-sm rounded-xl transition-all ${
+                disabled={isUpdating || !tire.inStock}
+                className={`flex-1 text-center py-4 font-display font-bold uppercase tracking-widest text-sm rounded-xl transition-all ${
                   tire.inStock
                     ? "bg-brand-red text-white hover:bg-brand-red/90 active:scale-95"
                     : "bg-brand-charcoal text-brand-muted cursor-not-allowed"
                 }`}
               >
-                {tire.inStock ? "Add to Cart" : "Out of Stock"}
+                {isUpdating ? (
+                  <div className="flex items-center justify-center gap-2">
+                    <LoadingSpinner width={5} height={5} />
+                  </div>
+                ) : tire.inStock ? (
+                  "Add to Cart"
+                ) : (
+                  "Out of Stock"
+                )}
               </button>
             </div>
           </div>

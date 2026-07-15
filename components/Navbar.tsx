@@ -11,15 +11,17 @@ import { useQuery } from "@tanstack/react-query";
 import { getAddresses } from "@/lib/api/addresses";
 import Modal from "./Modals/Modal";
 import AddAddressForm from "./Forms/AddAddressForm";
+import { useCartUiStore } from "@/lib/store/cart-ui";
 export default function Navbar() {
   const router = useRouter();
+  const { data: session, isPending } = authClient.useSession();
 
-  const { totalItems, dispatch } = useCart();
+  const { totalItems } = useCart(session?.user?.id ?? "");
+  const { openCart } = useCartUiStore();
 
   const [mobileOpen, setMobileOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [addrOpen, setAddrOpen] = useState(false);
-  const { data: session, isPending } = authClient.useSession();
   const { data: addresses = [], isLoading: addrLoading } = useQuery({
     queryKey: ["addresses", session?.user?.id],
     queryFn: () => getAddresses(session?.user?.id || ""),
@@ -109,7 +111,7 @@ export default function Navbar() {
             )}
 
             <button
-              onClick={() => dispatch({ type: "SET_OPEN", open: true })}
+              onClick={openCart}
               className="relative flex items-center gap-2 bg-brand-red hover:bg-brand-red/90 text-white p-2 text-sm font-medium transition-colors rounded-full"
             >
               <ShoppingCart size={20} />

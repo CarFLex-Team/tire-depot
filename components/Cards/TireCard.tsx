@@ -4,19 +4,33 @@ import { Tire } from "@/lib/api/tires";
 import { useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-export default function TireCard({ tire }: { tire: Tire }) {
+import { useCartUiStore } from "@/lib/store/cart-ui";
+import LoadingSpinner from "../UI/LoadingSpinner";
+export default function TireCard({
+  tire,
+  userId,
+}: {
+  tire: Tire;
+  userId: string;
+}) {
   const router = useRouter();
-  const { dispatch } = useCart();
+  const { addItemAsync, isUpdating, isLoading } = useCart(userId);
+  const { openCart } = useCartUiStore();
   const [added, setAdded] = useState(false);
 
-  const handleAdd = (e: React.MouseEvent<HTMLButtonElement>) => {
+  const handleAdd = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
-    dispatch({ type: "ADD", tire, qty: 1 });
-    dispatch({ type: "SET_OPEN", open: true });
-    setAdded(true);
-    setTimeout(() => setAdded(false), 1500);
-  };
 
+    try {
+      await addItemAsync(tire, 1);
+      openCart();
+
+      setAdded(true);
+      setTimeout(() => setAdded(false), 1500);
+    } catch (error) {
+      console.error("Unable to add tire to cart", error);
+    }
+  };
   return (
     <div
       className="tire-card bg-brand-charcoal border border-brand-gray hover:border-brand-mid p-5 flex flex-col sm:flex-row gap-4 rounded-2xl cursor-pointer transition-all "
@@ -100,6 +114,7 @@ export default function TireCard({ tire }: { tire: Tire }) {
           <button>{/* Specs button */}</button>
           <button
             onClick={tire.inStock ? handleAdd : undefined}
+            disabled={isUpdating || !tire.inStock}
             className={`w-32 py-2 font-display font-bold text-sm uppercase tracking-widest transition-all rounded-full ${
               added
                 ? "bg-green-500 text-white"
@@ -108,7 +123,17 @@ export default function TireCard({ tire }: { tire: Tire }) {
                   : "bg-brand-gray text-brand-muted cursor-not-allowed"
             }`}
           >
-            {added ? "✓ Added!" : tire.inStock ? "Add to Cart" : "Out of Stock"}
+            {isUpdating ? (
+              <div className="flex items-center justify-center gap-2">
+                <LoadingSpinner />
+              </div>
+            ) : added ? (
+              "✓ Added!"
+            ) : tire.inStock ? (
+              "Add to Cart"
+            ) : (
+              "Out of Stock"
+            )}
           </button>
         </div>
       </div>

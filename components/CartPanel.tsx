@@ -7,13 +7,16 @@ import CartInfoForm from "./Forms/CartInfoForm";
 import CartItems from "./Forms/CartItems";
 import AddAddressForm from "./Forms/AddAddressForm";
 import Modal from "./Modals/Modal";
+import { useCartUiStore } from "@/lib/store/cart-ui";
 
 type Step = "cart" | "info" | "payment" | "confirmation";
 
 export default function CartPanel() {
   const { data: session, isPending } = authClient.useSession();
   const [addressModalOpen, setAddressModalOpen] = useState(false);
-  const { state, dispatch, totalItems, totalPrice } = useCart();
+  const { isOpen, closeCart } = useCartUiStore();
+  const { items, totalItems, totalPrice, clearCart, setUserInfo, isLoading } =
+    useCart(session?.user?.id ?? "");
   const [step, setStep] = useState<Step>("cart");
   const [emailDisabled, setEmailDisabled] = useState(false);
   const [info, setInfo] = useState({
@@ -24,7 +27,7 @@ export default function CartPanel() {
     addressId: "",
   });
   const close = () => {
-    dispatch({ type: "SET_OPEN", open: false });
+    closeCart();
     setTimeout(() => setStep("cart"), 400);
   };
 
@@ -38,13 +41,13 @@ export default function CartPanel() {
       !info.addressId
     )
       return;
-    dispatch({ type: "SET_USER_INFO", userInfo: info });
+    setUserInfo(info);
     setStep("payment");
   };
   const handleInfoBack = () => setStep("cart");
   const handlePay = () => setStep("confirmation");
   const handleReset = () => {
-    dispatch({ type: "CLEAR" });
+    clearCart();
     setStep("cart");
     close();
   };
@@ -72,12 +75,12 @@ export default function CartPanel() {
         />
       </Modal>
       <div
-        className={`fixed inset-0 bg-black/60 z- overlay ${state.open ? "open" : ""}`}
-        onClick={close}
+        className={`fixed inset-0 bg-black/60 z- overlay ${isOpen ? "open" : ""}`}
+        onClick={closeCart}
       />
 
       <div
-        className={`fixed top-0 right-0 bottom-0 w-full sm:w-3/5 bg-brand-charcoal z-40 flex flex-col cart-panel ${state.open ? "open" : ""}`}
+        className={`fixed top-0 right-0 bottom-0 w-full sm:w-3/5 bg-brand-charcoal z-40 flex flex-col cart-panel ${isOpen ? "open" : ""}`}
       >
         {/* Header */}
         <div className="flex items-center justify-between px-6 py-4 border-b border-brand-gray">
@@ -123,7 +126,12 @@ export default function CartPanel() {
         {/* Content */}
         <div className="flex-1 overflow-y-auto">
           {/* CART STEP */}
-          {step === "cart" && <CartItems handleCheckout={handleCheckout} />}
+          {step === "cart" && (
+            <CartItems
+              handleCheckout={handleCheckout}
+              userId={session?.user?.id ?? ""}
+            />
+          )}
 
           {/* INFO STEP */}
           {step === "info" && (
@@ -145,7 +153,7 @@ export default function CartPanel() {
                 <p className="font-mono text-[10px] text-brand-muted uppercase tracking-widest mb-3">
                   Order Summary
                 </p>
-                {state.items.map(({ tire, qty }) => (
+                {items.map(({ tire, qty }) => (
                   <div key={tire.id} className="flex justify-between py-1">
                     <span className="font-body text-sm text-brand-muted">
                       {tire.brand} {tire.model} ×{qty}

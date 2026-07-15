@@ -16,6 +16,7 @@ export default function ShopSection() {
   const width = searchParams.get("width");
   const ratio = searchParams.get("ratio");
   const diameter = searchParams.get("diameter");
+  const zip = searchParams.get("zip");
   // const loadIndex = searchParams.get("loadIndex");
   // const speedIndex = searchParams.get("speedIndex");
   const {
@@ -111,7 +112,18 @@ export default function ShopSection() {
     setPriceMaxPct(100);
     setSort("Price: Low - High");
   };
-
+  if (!width || !ratio || !diameter || !zip) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-screen bg-brand-dark p-4">
+        <h1 className="mb-4 text-center text-4xl font-bold text-gray-100">
+          Invalid Tire Size Or Missing Address
+        </h1>
+        <a href="/" className="text-center text-gray-400">
+          Return to the home page
+        </a>
+      </div>
+    );
+  }
   if (!session && !isPending) {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen bg-brand-dark p-4">
@@ -254,7 +266,7 @@ export default function ShopSection() {
           ) : (
             <div className="grid grid-cols-1 gap-4">
               {filtered.map((tire) => (
-                <TireCard key={tire.id} tire={tire} />
+                <TireCard key={tire.id} tire={tire} userId={session?.user?.id ?? ""} />
               ))}
             </div>
           )}
