@@ -19,6 +19,7 @@ interface Props {
   onClose: () => void;
   noClose?: boolean;
   onSubmit?: () => void;
+  setAddedZip?: (zip: string) => void;
   title?: string;
 }
 
@@ -33,12 +34,13 @@ export default function AddAddressForm({
   userId,
   noClose,
   onSubmit,
+  setAddedZip,
   title,
 }: Props) {
   const [form, setForm] = useState<AddressForm>(EMPTY_FORM);
   const [validationError, setValidationError] = useState<string | null>(null);
   const queryClient = useQueryClient();
-
+  console.log("userId in AddAddressForm:", userId);
   const { mutate, isPending, error } = useMutation({
     mutationFn: addAddress,
     onSuccess: () => {
@@ -65,6 +67,7 @@ export default function AddAddressForm({
       return;
     }
     setValidationError(null);
+    setAddedZip?.(form.postal_code);
     mutate({ ...form, user_id: userId });
   }
 
@@ -80,12 +83,14 @@ export default function AddAddressForm({
             {title ? title : "Add New Address"}
           </h2>
         </div>
-        <button
-          onClick={noClose ? () => {} : onClose}
-          className="text-brand-muted hover:text-white transition-colors"
-        >
-          <X size={20} />
-        </button>
+        {!noClose && (
+          <button
+            onClick={onClose}
+            className="text-brand-muted hover:text-white transition-colors"
+          >
+            <X size={20} />
+          </button>
+        )}
       </div>
 
       {/* Body */}
@@ -184,12 +189,14 @@ export default function AddAddressForm({
 
       {/* Footer */}
       <div className="px-6 py-5 border-t border-brand-mid/20 flex gap-3">
-        <button
-          onClick={onClose}
-          className="flex-1 py-3 font-display font-bold uppercase tracking-widest text-sm rounded-xl border border-brand-mid text-brand-muted hover:border-brand-red hover:text-brand-red transition-colors"
-        >
-          Cancel
-        </button>
+        {!noClose && (
+          <button
+            onClick={onClose}
+            className="flex-1 py-3 font-display font-bold uppercase tracking-widest text-sm rounded-xl border border-brand-mid text-brand-muted hover:border-brand-red hover:text-brand-red transition-colors"
+          >
+            Cancel
+          </button>
+        )}
         <button
           onClick={handleSubmit}
           disabled={isPending}

@@ -95,7 +95,7 @@ export default function AccountSection({
       last_name: lastName,
     });
     if (error) {
-      setError(error.message ?? "Invalid password.");
+      setError(error.message ?? "Invalid profile information.");
     } else {
       setIsEditingProfile(false);
     }

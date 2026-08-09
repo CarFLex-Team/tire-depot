@@ -1,10 +1,10 @@
 "use client";
 import { useState, useEffect } from "react";
 import { useCart } from "@/lib/cart";
-import { MapPin, Phone, ShoppingCart, UserRound } from "lucide-react";
+import { MapPin, ShoppingCart, UserRound } from "lucide-react";
 import { authClient } from "@/lib/auth/auth-client";
 import AnimatedLogo from "./AnimatedLogo";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import HamburgerX from "./HamburgerX";
 import { useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
@@ -15,10 +15,8 @@ import { useCartUiStore } from "@/lib/store/cart-ui";
 export default function Navbar() {
   const router = useRouter();
   const { data: session, isPending } = authClient.useSession();
-
   const { totalItems } = useCart(session?.user?.id ?? "");
   const { openCart } = useCartUiStore();
-
   const [mobileOpen, setMobileOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [addrOpen, setAddrOpen] = useState(false);
@@ -27,6 +25,7 @@ export default function Navbar() {
     queryFn: () => getAddresses(session?.user?.id || ""),
     enabled: !!session?.user?.id,
   });
+  console.log("addresses in Navbar:", addresses);
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 40);
     window.addEventListener("scroll", handleScroll);
@@ -61,7 +60,7 @@ export default function Navbar() {
             : "bg-brand-dark/50"
         }`}
       >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 flex items-center justify-between h-16">
+        <div className=" mx-auto px-4 sm:px-6 flex items-center justify-between h-16">
           <AnimatedLogo />
 
           {/* Desktop Nav */}
@@ -88,7 +87,7 @@ export default function Navbar() {
             >
               <MapPin size={14} />
               {addresses.length > 0 && !addrLoading
-                ? addresses[0].postal_code
+                ? addresses[0].label
                 : "Add Address"}
             </div>
             {session ? (

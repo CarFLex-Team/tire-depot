@@ -203,16 +203,20 @@ export default function VehicleDetailsForm({
                               setRatio(size.front.tire_aspect_ratio.toString());
                               setDiameter(size.front.rim_diameter.toString());
                               if (!user) {
-                                router.push("/login");
+                                const redirectUrl = `/tires?width=${size.front.tire_width}&ratio=${size.front.tire_aspect_ratio}&diameter=${size.front.rim_diameter}`;
+                                router.push(
+                                  "/login?redirect=" +
+                                    encodeURIComponent(redirectUrl),
+                                );
                                 return;
                               }
                               if (user && addresses.length === 0) {
                                 setAddrOpen(true);
                                 return;
                               }
-                              router.push(
-                                `/tires?width=${size.front.tire_width}&ratio=${size.front.tire_aspect_ratio}&diameter=${size.front.rim_diameter}`,
-                              );
+                              // router.push(
+                              //   `/tires?width=${size.front.tire_width}&ratio=${size.front.tire_aspect_ratio}&diameter=${size.front.rim_diameter}`,
+                              // );
                             }}
                             className="rounded-full border-2 border-white/40 px-3 py-2  md:text-lg font-semibold transition-colors hover:bg-white/10"
                           >

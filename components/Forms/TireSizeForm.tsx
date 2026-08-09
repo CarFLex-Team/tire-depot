@@ -74,25 +74,27 @@ export default function TireSizeForm({
           e.preventDefault();
           if (disabled) return;
           if (!user) {
-            router.push("/login");
+            const redirectUrl = `/tires?width=${width}&ratio=${ratio}&diameter=${diameter}`;
+            router.push("/login?redirect=" + encodeURIComponent(redirectUrl));
+
             return;
           }
           if (user && addresses.length === 0) {
             setAddrOpen(true);
             return;
           }
-          if (width && ratio && diameter) {
-            router.push(
-              "/tires?width=" +
-                width +
-                "&ratio=" +
-                ratio +
-                "&diameter=" +
-                diameter +
-                "&zip=" +
-                addresses[0].postal_code,
-            );
-          }
+          // if (width && ratio && diameter) {
+          //   router.push(
+          //     "/tires?width=" +
+          //       width +
+          //       "&ratio=" +
+          //       ratio +
+          //       "&diameter=" +
+          //       diameter +
+          //       "&zip=" +
+          //       addresses[0].postal_code,
+          //   );
+          // }
         }}
       >
         <div className="flex items-end gap-2 relative">

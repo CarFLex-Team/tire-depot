@@ -42,7 +42,6 @@ export async function GET(req: Request) {
           diameter: Number(row.rim_diameter),
           class: row.tire_class,
           terrain: row.terrain,
-          // Use the price saved when the item was added to the cart:
           price: Number(row.unit_price),
           priceType: row.price_type,
           inStock: row.in_stock,

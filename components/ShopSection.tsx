@@ -7,8 +7,10 @@ import FilterSidebar, { SortOption } from "./FilterSidebar";
 import { ListFilter } from "lucide-react";
 import Modal from "./Modals/Modal";
 import LoadingSkeleton from "./UI/LoadingSkeleton";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { authClient } from "@/lib/auth/auth-client";
+import AddAddressForm from "./Forms/AddAddressForm";
+import { getAddresses } from "@/lib/api/addresses";
 
 export default function ShopSection() {
   const { data: session, isPending } = authClient.useSession();
@@ -16,7 +18,8 @@ export default function ShopSection() {
   const width = searchParams.get("width");
   const ratio = searchParams.get("ratio");
   const diameter = searchParams.get("diameter");
-  const zip = searchParams.get("zip");
+  const zipFromUrl = searchParams.get("zip");
+  const queryClient = useQueryClient();
   // const loadIndex = searchParams.get("loadIndex");
   // const speedIndex = searchParams.get("speedIndex");
   const {
@@ -32,11 +35,20 @@ export default function ShopSection() {
         parseInt(diameter || "0"),
       ),
   });
-
+  const { data: addresses, isLoading: addressLoading } = useQuery({
+    queryKey: ["addresses", session?.user?.id],
+    queryFn: () => getAddresses(session!.user.id),
+    enabled: !!session?.user?.id,
+  });
+  console.log("userAddresses in ShopSection:", addresses);
+  const zip =
+    zipFromUrl ||
+    (addresses && addresses.length > 0 ? addresses[0].postal_code : null);
   const [selectedBrands, setSelectedBrands] = useState<string[]>([]);
   const [selectedTypes, setSelectedTypes] = useState<string[]>([]);
   const [selectedLoads, setSelectedLoads] = useState<string[]>([]);
   const [selectedSpeeds, setSelectedSpeeds] = useState<string[]>([]);
+  const [addrOpen, setAddrOpen] = useState(false);
   const [priceMinPct, setPriceMinPct] = useState(0);
   const [priceMaxPct, setPriceMaxPct] = useState(100);
   const [sort, setSort] = useState<SortOption>("Price: Low - High");
@@ -44,6 +56,13 @@ export default function ShopSection() {
   const [tireSize, setTireSize] = useState(
     `${width || "???"}/${ratio || "???"}R${diameter || "???"}`,
   );
+  useEffect(() => {
+    if (!addressLoading && !zip) {
+      setAddrOpen(true);
+    } else {
+      setAddrOpen(false);
+    }
+  }, [zip, addressLoading]);
   const selectClass =
     "bg-brand-charcoal border border-brand-mid text-brand-light text-sm font-body px-4 py-2  focus:outline-none focus:border-brand-red transition-colors cursor-pointer rounded-full";
 
@@ -112,7 +131,7 @@ export default function ShopSection() {
     setPriceMaxPct(100);
     setSort("Price: Low - High");
   };
-  if (!width || !ratio || !diameter || !zip) {
+  if (!width || !ratio || !diameter) {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen bg-brand-dark p-4">
         <h1 className="mb-4 text-center text-4xl font-bold text-gray-100">
@@ -138,6 +157,22 @@ export default function ShopSection() {
   }
   return (
     <>
+      {!zip && (
+        <Modal isOpen={addrOpen} onClose={() => {}}>
+          <AddAddressForm
+            title="Add Address to Search"
+            onClose={() => setAddrOpen(false)}
+            userId={session?.user?.id}
+            noClose={true}
+            onSubmit={() => {
+              queryClient.invalidateQueries({
+                queryKey: ["addresses", session?.user?.id],
+              });
+              setAddrOpen(false);
+            }}
+          />
+        </Modal>
+      )}
       <Modal isOpen={showFilters} onClose={() => setShowFilters(false)}>
         <FilterSidebar
           isLoading={isLoading}
@@ -266,7 +301,11 @@ export default function ShopSection() {
           ) : (
             <div className="grid grid-cols-1 gap-4">
               {filtered.map((tire) => (
-                <TireCard key={tire.id} tire={tire} userId={session?.user?.id ?? ""} />
+                <TireCard
+                  key={tire.id}
+                  tire={tire}
+                  userId={session?.user?.id ?? ""}
+                />
               ))}
             </div>
           )}

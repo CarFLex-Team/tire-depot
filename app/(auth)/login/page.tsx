@@ -7,11 +7,13 @@ import AuthButton from "@/components/Auth/AuthButton";
 import { signinSchema, SigninFormData } from "@/lib/validations/signinSchema";
 import { signIn } from "@/lib/auth/auth-client";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import AnimatedLogo from "@/components/AnimatedLogo";
 
 export default function SignInPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const redirect = searchParams.get("redirect");
   const [authError, setAuthError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -31,14 +33,19 @@ export default function SignInPage() {
     const { error } = await signIn.email({
       email: data.email,
       password: data.password,
-      callbackURL: "/",
+      callbackURL: redirect || "/",
     });
 
     if (error) {
       setAuthError(error.message ?? "Invalid email or password.");
       setLoading(false);
     } else {
-      router.push("/");
+      if (redirect) {
+        console.log("Redirecting to:", redirect);
+        router.push(redirect);
+      } else {
+        router.push("/");
+      }
     }
   };
   async function handleGoogle() {
