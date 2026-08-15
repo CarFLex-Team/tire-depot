@@ -3,6 +3,8 @@
 import { authClient } from "@/lib/auth/auth-client";
 import { useRouter } from "next/navigation";
 import AccountSection from "@/components/AccountSection";
+import AnimatedLogo from "@/components/AnimatedLogo";
+import { Suspense } from "react";
 
 export default function AccountPage() {
   const { data: session, isPending } = authClient.useSession();
@@ -21,11 +23,19 @@ export default function AccountPage() {
   }
   return (
     <main className="bg-brand-dark min-h-screen">
-      <AccountSection
-        user={session?.user ?? null}
-        loading={isPending}
-        onLogout={handleLogout}
-      />
+      <Suspense
+        fallback={
+          <div className="flex justify-center items-center h-screen">
+            <AnimatedLogo withText={false} width={20} height={20} />
+          </div>
+        }
+      >
+        <AccountSection
+          user={session?.user ?? null}
+          loading={isPending}
+          onLogout={handleLogout}
+        />
+      </Suspense>
     </main>
   );
 }
