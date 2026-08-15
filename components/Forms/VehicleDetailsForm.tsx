@@ -47,8 +47,6 @@ export default function VehicleDetailsForm({
   const [make, setMake] = useState("");
   const [model, setModel] = useState("");
   const [trim, setTrim] = useState("");
-  const selectClass =
-    "bg-brand-charcoal border border-brand-mid text-brand-light w-full text-sm font-body px-4 py-2 pr-8 disabled:opacity-50 disabled:cursor-not-allowed  focus:outline-none focus:border-brand-red transition-colors cursor-pointer rounded-full";
   const router = useRouter();
   const years = Array.from({ length: 26 }, (_, i) => 2025 - i);
   useEffect(() => {
