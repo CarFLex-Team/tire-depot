@@ -198,7 +198,7 @@ export default function CheckoutSuccessClient({
         {/* Actions */}
         <div className="flex flex-col sm:flex-row gap-3">
           <a
-            href="/account"
+            href="/account?tab=orders"
             className="flex-1 flex items-center justify-center gap-2 py-4 font-display font-bold text-sm uppercase tracking-widest border border-brand-mid text-brand-muted hover:border-brand-red hover:text-brand-red transition-colors rounded-xl"
           >
             View Orders

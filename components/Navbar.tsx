@@ -81,7 +81,7 @@ export default function Navbar() {
               onClick={() => {
                 addresses.length <= 0
                   ? setAddrOpen(true)
-                  : router.push("/account");
+                  : router.push("/account?tab=addresses");
               }}
               className="hidden md:flex  items-center gap-2 text-sm font-medium cursor-pointer hover:text-brand-red text-white transition-colors"
             >
@@ -92,7 +92,7 @@ export default function Navbar() {
             </div>
             {session ? (
               <div
-                onClick={() => router.push("/account")}
+                onClick={() => router.push("/account?tab=profile")}
                 className="w-10 h-10 rounded-full bg-brand-charcoal border border-brand-mid/30 flex items-center justify-center font-display font-bold text-brand-red hover:text-white transition-colors cursor-pointer"
               >
                 {session.user?.name
@@ -163,7 +163,7 @@ export default function Navbar() {
                 onClick={() => {
                   addresses.length <= 0
                     ? setAddrOpen(true)
-                    : router.push("/account");
+                    : router.push("/account?tab=addresses");
                 }}
                 className="text-sm font-medium text-brand-red pt-2 flex items-center gap-2 cursor-pointer hover:text-white transition-colors"
               >

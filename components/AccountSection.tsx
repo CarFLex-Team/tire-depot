@@ -21,21 +21,14 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Address, deleteAddress, getAddresses } from "@/lib/api/addresses";
 import EditAddressForm from "./Forms/EditAddressForm";
 import DeleteConfirmForm from "./Forms/DeleteAddressForm";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { getOrders, Order } from "@/lib/api/orders";
 
 interface AccountUser {
   id: string;
   name?: string;
   last_name?: string;
   email?: string;
-}
-
-interface OrderSummary {
-  id: string;
-  order_number: string;
-  status: string;
-  total: number;
-  created_at: string;
-  item_count: number;
 }
 
 type Tab = "profile" | "addresses" | "orders";
@@ -57,7 +50,12 @@ export default function AccountSection({
   loading: boolean;
   onLogout: () => void;
 }) {
-  const [tab, setTab] = useState<Tab>("profile");
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const tabParam = searchParams.get("tab");
+  const tab: Tab =
+    tabParam === "orders" || tabParam === "addresses" ? tabParam : "profile";
   const [addrOpen, setAddrOpen] = useState(false);
   const [editingAddress, setEditingAddress] = useState<Address | null>(null);
   const [deletingAddress, setDeletingAddress] = useState<Address | null>(null);
@@ -73,12 +71,10 @@ export default function AccountSection({
     enabled: !!user?.id,
   });
 
-  const { data: orders = [], isLoading: ordersLoading } = useQuery({
-    queryKey: ["orders"],
-    queryFn: () =>
-      fetch("/api/orders")
-        .then((r) => r.json())
-        .then((d) => d.orders ?? []),
+  const { data: orders = [] as Order[], isLoading: ordersLoading } = useQuery({
+    queryKey: ["orders", user?.id],
+    queryFn: () => getOrders(user?.id || ""),
+
     enabled: !!user?.id,
   });
 
@@ -111,6 +107,12 @@ export default function AccountSection({
     { key: "orders", label: "Orders", icon: <Package size={16} /> },
     { key: "addresses", label: "Addresses", icon: <MapPin size={16} /> },
   ];
+
+  const selectTab = (nextTab: Tab) => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.set("tab", nextTab);
+    router.push(`${pathname}?${params.toString()}`);
+  };
 
   return (
     <>
@@ -175,7 +177,7 @@ export default function AccountSection({
           {tabs.map((t) => (
             <button
               key={t.key}
-              onClick={() => setTab(t.key)}
+              onClick={() => selectTab(t.key)}
               className={`flex items-center gap-2 px-4 py-3 font-display text-sm uppercase tracking-widest whitespace-nowrap border-b-2 transition-colors ${
                 tab === t.key
                   ? "border-brand-red text-white"
@@ -347,7 +349,7 @@ export default function AccountSection({
               </div>
             ) : (
               <div className="flex flex-col gap-3">
-                {orders.map((o: OrderSummary) => (
+                {orders.map((o: Order) => (
                   <a
                     key={o.id}
                     href={`/account/orders/${o.id}`}
@@ -369,7 +371,7 @@ export default function AccountSection({
                         {o.status}
                       </span>
                       <span className="font-display flex flex-row items-center gap-1 md:text-xl text-white font-bold text-right">
-                        ${o.total.toFixed(2)}
+                        ${o.total}
                         <ChevronRight size={18} className="text-brand-muted" />
                       </span>
                     </div>
