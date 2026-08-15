@@ -122,7 +122,7 @@ export default function OrderPage() {
             </h1>
 
             <p className="font-body text-brand-muted text-sm">
-              We couldn't find the order you're looking for.
+              We couldn&apos;t find the order you&apos;re looking for.
             </p>
           </div>
         </div>

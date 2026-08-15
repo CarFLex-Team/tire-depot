@@ -156,9 +156,9 @@ export function useCart(userId: string) {
     queryFn: getCart,
     enabled: !!userId,
   });
-
-  const items = cartQuery.data?.items ?? [];
-  // console.log("useCart items:", cartQuery.data);
+  const items = useMemo(() => {
+    return cartQuery.data?.items ?? [];
+  }, [cartQuery.data]);
 
   const addItem = useMutation({
     mutationFn: addCartItem,

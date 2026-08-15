@@ -55,7 +55,7 @@ export default function CheckoutSuccessClient({
     }
 
     verify();
-  }, [paymentIntentId]);
+  }, [paymentIntentId, clearCart]);
 
   // ── Loading ──
   if (loading) {
