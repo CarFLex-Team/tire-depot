@@ -40,7 +40,7 @@ export default function AddAddressForm({
   const [form, setForm] = useState<AddressForm>(EMPTY_FORM);
   const [validationError, setValidationError] = useState<string | null>(null);
   const queryClient = useQueryClient();
-  console.log("userId in AddAddressForm:", userId);
+  // console.log("userId in AddAddressForm:", userId);
   const { mutate, isPending, error } = useMutation({
     mutationFn: addAddress,
     onSuccess: () => {

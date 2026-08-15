@@ -40,7 +40,7 @@ export default function ShopSection() {
     queryFn: () => getAddresses(session!.user.id),
     enabled: !!session?.user?.id,
   });
-  console.log("userAddresses in ShopSection:", addresses);
+  // console.log("userAddresses in ShopSection:", addresses);
   const zip =
     zipFromUrl ||
     (addresses && addresses.length > 0 ? addresses[0].postal_code : null);

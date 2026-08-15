@@ -27,6 +27,7 @@ type CartInfoFormProps = {
   handleInfoBack: () => void;
   emailDisabled: boolean;
   onAddAddress: () => void;
+  isCheckoutLoading: boolean;
 };
 
 const inputClass =
@@ -42,6 +43,7 @@ export default function CartInfoForm({
   emailDisabled,
   onAddAddress,
   user,
+  isCheckoutLoading = false,
 }: CartInfoFormProps) {
   const [selectedAddressId, setSelectedAddressId] = useState<string | null>(
     null,
@@ -146,10 +148,10 @@ export default function CartInfoForm({
           </button>
           <button
             onClick={handleInfoNext}
-            disabled={!canContinue}
+            disabled={!canContinue || isCheckoutLoading}
             className="flex-1 bg-brand-red hover:bg-brand-red/90 text-white py-3 px-3 md:px-6 font-display font-bold text-sm uppercase tracking-widest transition-colors disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-brand-red"
           >
-            Continue to Payment
+            {isCheckoutLoading ? "Processing..." : "Continue to Payment"}
           </button>
         </div>
       </div>

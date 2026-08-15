@@ -25,7 +25,7 @@ export default function Navbar() {
     queryFn: () => getAddresses(session?.user?.id || ""),
     enabled: !!session?.user?.id,
   });
-  console.log("addresses in Navbar:", addresses);
+  // console.log("addresses in Navbar:", addresses);
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 40);
     window.addEventListener("scroll", handleScroll);

@@ -82,7 +82,7 @@ export default function VehicleDetailsForm({
     enabled: !!user?.id,
   });
   useEffect(() => {
-    console.log("trimsData", trimsData);
+    // console.log("trimsData", trimsData);
     if (trimsData) setTrims(trimsData.data);
   }, [trimsData]);
   const handleSubmit = async () => {
@@ -214,9 +214,9 @@ export default function VehicleDetailsForm({
                                 setAddrOpen(true);
                                 return;
                               }
-                              // router.push(
-                              //   `/tires?width=${size.front.tire_width}&ratio=${size.front.tire_aspect_ratio}&diameter=${size.front.rim_diameter}`,
-                              // );
+                              router.push(
+                                `/tires?width=${size.front.tire_width}&ratio=${size.front.tire_aspect_ratio}&diameter=${size.front.rim_diameter}`,
+                              );
                             }}
                             className="rounded-full border-2 border-white/40 px-3 py-2  md:text-lg font-semibold transition-colors hover:bg-white/10"
                           >

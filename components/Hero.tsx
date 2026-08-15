@@ -33,12 +33,12 @@ export default function Hero() {
       </div> */}
       <div className="flex flex-col md:flex-row pt-24 pb-16 px-6 sm:px-8 md:items-center justify-between gap-6">
         <div className="relative z-10 max-w-7xl   ">
-          <div className="inline-flex items-center gap-2 bg-brand-red/10 border border-brand-red/30 px-4 py-2 mb-6 rounded-full">
+          {/* <div className="inline-flex items-center gap-2 bg-brand-red/10 border border-brand-red/30 px-4 py-2 mb-6 rounded-full">
             <div className="w-2 h-2 bg-brand-red rounded-full animate-pulse" />
             <span className="font-anton text-xs text-brand-red tracking-widest uppercase ">
               AMERICA&apos;s #1 WHOLESALE TIRE SUPPLIER
             </span>
-          </div>
+          </div> */}
 
           <h1 className="font-mono  text-5xl sm:text-6xl lg:text-7xl text-white uppercase leading-none  mb-6">
             Shop Tires.

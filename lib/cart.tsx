@@ -158,7 +158,7 @@ export function useCart(userId: string) {
   });
 
   const items = cartQuery.data?.items ?? [];
-  console.log("useCart items:", cartQuery.data);
+  // console.log("useCart items:", cartQuery.data);
 
   const addItem = useMutation({
     mutationFn: addCartItem,
@@ -195,6 +195,7 @@ export function useCart(userId: string) {
   );
 
   return {
+    cartId: cartQuery.data?.id,
     items,
     totalItems,
     totalPrice,

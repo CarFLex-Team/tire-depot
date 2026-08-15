@@ -8,17 +8,23 @@ import CartItems from "./Forms/CartItems";
 import AddAddressForm from "./Forms/AddAddressForm";
 import Modal from "./Modals/Modal";
 import { useCartUiStore } from "@/lib/store/cart-ui";
+import { useRouter } from "next/navigation";
 
-type Step = "cart" | "info" | "payment" | "confirmation";
+type Step = "cart" | "info";
 
 export default function CartPanel() {
-  const { data: session, isPending } = authClient.useSession();
+  const { data: session } = authClient.useSession();
   const [addressModalOpen, setAddressModalOpen] = useState(false);
   const { isOpen, closeCart } = useCartUiStore();
-  const { items, totalItems, totalPrice, clearCart, setUserInfo, isLoading } =
+  const { items, totalItems, totalPrice, clearCart, setUserInfo, cartId } =
     useCart(session?.user?.id ?? "");
+  const router = useRouter();
+
   const [step, setStep] = useState<Step>("cart");
   const [emailDisabled, setEmailDisabled] = useState(false);
+  const [checkoutLoading, setCheckoutLoading] = useState(false);
+  const [checkoutError, setCheckoutError] = useState<string | null>(null);
+
   const [info, setInfo] = useState({
     firstName: "",
     lastName: "",
@@ -26,31 +32,12 @@ export default function CartPanel() {
     phone: "",
     addressId: "",
   });
+
   const close = () => {
     closeCart();
     setTimeout(() => setStep("cart"), 400);
   };
 
-  const handleCheckout = () => setStep("info");
-  const handleInfoNext = () => {
-    if (
-      !info.firstName ||
-      !info.email ||
-      !info.phone ||
-      !info.lastName ||
-      !info.addressId
-    )
-      return;
-    setUserInfo(info);
-    setStep("payment");
-  };
-  const handleInfoBack = () => setStep("cart");
-  const handlePay = () => setStep("confirmation");
-  const handleReset = () => {
-    clearCart();
-    setStep("cart");
-    close();
-  };
   useEffect(() => {
     if (session) {
       setInfo({
@@ -63,6 +50,50 @@ export default function CartPanel() {
       setEmailDisabled(true);
     }
   }, [session]);
+
+  const handleCheckout = () => setStep("info");
+  const handleInfoBack = () => setStep("cart");
+
+  async function handleInfoNext() {
+    if (
+      !info.firstName ||
+      !info.lastName ||
+      !info.email ||
+      !info.phone ||
+      !info.addressId
+    )
+      return;
+
+    setUserInfo(info);
+    setCheckoutLoading(true);
+    setCheckoutError(null);
+
+    try {
+      const res = await fetch("/api/checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          cartId,
+          addressId: info.addressId,
+          contact: {
+            userId: session?.user?.id,
+            email: info.email,
+            phone: info.phone,
+          },
+        }),
+      });
+
+      if (!res.ok) throw new Error("Failed to create payment intent");
+
+      closeCart();
+      router.push("/checkout");
+    } catch {
+      setCheckoutError("Something went wrong. Please try again.");
+    } finally {
+      setCheckoutLoading(false);
+    }
+  }
+
   return (
     <>
       <Modal
@@ -74,8 +105,9 @@ export default function CartPanel() {
           userId={session?.user?.id}
         />
       </Modal>
+
       <div
-        className={`fixed inset-0 bg-black/60 z- overlay ${isOpen ? "open" : ""}`}
+        className={`fixed inset-0 bg-black/60 z-30 overlay ${isOpen ? "open" : ""}`}
         onClick={closeCart}
       />
 
@@ -86,10 +118,7 @@ export default function CartPanel() {
         <div className="flex items-center justify-between px-6 py-4 border-b border-brand-gray">
           <div>
             <h2 className="font-display font-bold text-xl text-white uppercase tracking-wide">
-              {step === "cart" && `Your Cart`}
-              {step === "info" && "Your Info"}
-              {step === "payment" && "Payment"}
-              {step === "confirmation" && "Confirmed!"}
+              {step === "cart" ? "Your Cart" : "Your Info"}
             </h2>
             {step === "cart" && (
               <p className="font-mono text-xs text-brand-muted">
@@ -106,13 +135,13 @@ export default function CartPanel() {
         </div>
 
         {/* Steps indicator */}
-        {step !== "cart" && step !== "confirmation" && (
+        {step === "info" && (
           <div className="flex border-b border-brand-gray">
-            {(["info", "payment"] as Step[]).map((s, i) => (
+            {(["info", "payment"] as const).map((s, i) => (
               <div
                 key={s}
                 className={`flex-1 py-2 text-center font-mono text-[10px] uppercase tracking-widest ${
-                  step === s
+                  s === "info"
                     ? "text-brand-red border-b-2 border-brand-red"
                     : "text-brand-mid"
                 }`}
@@ -125,7 +154,6 @@ export default function CartPanel() {
 
         {/* Content */}
         <div className="flex-1 overflow-y-auto">
-          {/* CART STEP */}
           {step === "cart" && (
             <CartItems
               handleCheckout={handleCheckout}
@@ -133,133 +161,26 @@ export default function CartPanel() {
             />
           )}
 
-          {/* INFO STEP */}
           {step === "info" && (
-            <CartInfoForm
-              info={info}
-              user={session?.user ?? null}
-              setInfo={setInfo}
-              handleInfoNext={handleInfoNext}
-              handleInfoBack={handleInfoBack}
-              emailDisabled={emailDisabled}
-              onAddAddress={() => setAddressModalOpen(true)}
-            />
-          )}
-
-          {/* PAYMENT STEP */}
-          {step === "payment" && (
-            <div className="p-6 flex flex-col gap-5">
-              <div className="border border-brand-gray p-4">
-                <p className="font-mono text-[10px] text-brand-muted uppercase tracking-widest mb-3">
-                  Order Summary
+            <>
+              <CartInfoForm
+                info={info}
+                user={session?.user ?? null}
+                setInfo={setInfo}
+                handleInfoNext={handleInfoNext}
+                handleInfoBack={handleInfoBack}
+                emailDisabled={emailDisabled}
+                onAddAddress={() => setAddressModalOpen(true)}
+                isCheckoutLoading={checkoutLoading}
+              />
+              {checkoutError && (
+                <p className="font-body text-brand-red text-sm text-center px-6 pb-4">
+                  {checkoutError}
                 </p>
-                {items.map(({ tire, qty }) => (
-                  <div key={tire.id} className="flex justify-between py-1">
-                    <span className="font-body text-sm text-brand-muted">
-                      {tire.brand} {tire.model} ×{qty}
-                    </span>
-                    <span className="font-mono text-sm text-white">
-                      ${(tire.price * qty).toLocaleString()}
-                    </span>
-                  </div>
-                ))}
-                <div className="border-t border-brand-gray mt-3 pt-3 flex justify-between">
-                  <span className="font-display font-bold text-sm text-white uppercase">
-                    Total
-                  </span>
-                  <span className="font-display font-bold text-lg text-brand-red">
-                    ${totalPrice.toLocaleString()}
-                  </span>
-                </div>
-              </div>
-
-              {/* <div className="bg-brand-dark border border-brand-gray p-6 text-center">
-                <svg
-                  className="mx-auto mb-3"
-                  width="32"
-                  height="32"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="#6B6B6B"
-                  strokeWidth="1.5"
-                >
-                  <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
-                  <path d="M7 11V7a5 5 0 0110 0v4" />
-                </svg>
-                <p className="font-mono text-xs text-brand-muted">
-                  Secure payment powered by Square
-                </p>
-                <p className="font-body text-xs text-brand-mid mt-1">
-                  Your payment info is encrypted and secure
-                </p>
-              </div> */}
-            </div>
-          )}
-
-          {/* CONFIRMATION STEP */}
-          {step === "confirmation" && (
-            <div className="flex flex-col items-center justify-center h-full p-8 text-center gap-5 min-h-64">
-              <div className="w-16 h-16 bg-green-500/10 border border-green-500/30 flex items-center justify-center">
-                <svg
-                  width="32"
-                  height="32"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="#22c55e"
-                  strokeWidth="2"
-                >
-                  <path d="M20 6L9 17l-5-5" />
-                </svg>
-              </div>
-              <div>
-                <h3 className="font-display font-black text-2xl text-white uppercase mb-2">
-                  Order Placed!
-                </h3>
-                <p className="font-body text-sm text-brand-muted leading-relaxed">
-                  Thanks {info.firstName}! We&apos;ll call you at{" "}
-                  {info.phone || info.email} when your tires are ready for
-                  pickup at our Memphis location.
-                </p>
-              </div>
-              <div className="bg-brand-dark border border-brand-gray p-4 w-full text-left">
-                <p className="font-mono text-[10px] text-brand-red uppercase tracking-widest mb-1">
-                  Pickup At
-                </p>
-                <p className="font-body text-sm text-white">
-                  5386 Pleasant View Rd, Memphis, TN 38134
-                </p>
-              </div>
-              <button
-                onClick={handleReset}
-                className="font-mono text-xs text-brand-red uppercase tracking-widest hover:text-white transition-colors"
-              >
-                Close
-              </button>
-            </div>
+              )}
+            </>
           )}
         </div>
-
-        {/* Footer / action */}
-        {step !== "confirmation" && step !== "info" && (
-          <div className="border-t border-brand-gray p-5 flex flex-col gap-3">
-            {step === "payment" && (
-              <div className="flex gap-3">
-                <button
-                  onClick={() => setStep("info")}
-                  className="flex-2 border border-brand-mid text-brand-muted hover:text-white py-3 px-3 md:px-6 font-display font-bold text-sm uppercase tracking-widest transition-colors"
-                >
-                  Back
-                </button>
-                <button
-                  // onClick={handlePay}
-                  className="flex-1 bg-brand-red hover:bg-brand-red/90 text-white py-3 px-3 md:px-6 font-display font-bold text-sm uppercase tracking-widest transition-colors"
-                >
-                  Pay ${totalPrice.toLocaleString()}
-                </button>
-              </div>
-            )}
-          </div>
-        )}
       </div>
     </>
   );

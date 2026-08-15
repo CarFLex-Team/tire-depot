@@ -41,7 +41,7 @@ export default function SignInPage() {
       setLoading(false);
     } else {
       if (redirect) {
-        console.log("Redirecting to:", redirect);
+        // console.log("Redirecting to:", redirect);
         router.push(redirect);
       } else {
         router.push("/");
