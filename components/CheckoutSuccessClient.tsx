@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { useCart } from "@/lib/cart";
 import { authClient } from "@/lib/auth/auth-client";
@@ -30,34 +30,38 @@ export default function CheckoutSuccessClient({
   const [order, setOrder] = useState<Order | null>(null);
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(true);
-
+  const hasRun = useRef(false);
   useEffect(() => {
-    if (!paymentIntentId) {
-      setError(true);
-      setLoading(false);
+    if (!paymentIntentId || hasRun.current) {
       return;
     }
-
+    hasRun.current = true;
     async function verify() {
-      try {
-        const res = await fetch(
-          `/api/orders/by-payment?paymentIntentId=${paymentIntentId}`,
-        );
-        if (!res.ok) throw new Error();
-        const data = await res.json();
-        setOrder(data.order);
-        clearCart();
-      } catch {
-        setError(true);
-      } finally {
-        setLoading(false);
+      const delays = [500, 1000, 1500, 2000, 2500, 3000, 4000, 5000];
+      for (const delay of delays) {
+        await new Promise((r) => setTimeout(r, delay));
+
+        try {
+          const res = await fetch(
+            `/api/orders/by-payment?paymentIntentId=${paymentIntentId}`,
+          );
+
+          if (res.ok) {
+            const data = await res.json();
+            setOrder(data.order);
+            clearCart();
+            setLoading(false);
+            return;
+          }
+        } catch {}
       }
+      setError(true);
+      setLoading(false);
     }
 
     verify();
-  }, [paymentIntentId, clearCart]);
+  }, [paymentIntentId]);
 
-  // ── Loading ──
   if (loading) {
     return (
       <main className="bg-brand-dark min-h-screen flex items-center justify-center">
@@ -71,7 +75,6 @@ export default function CheckoutSuccessClient({
     );
   }
 
-  // ── Error ──
   if (error || !order) {
     return (
       <main className="bg-brand-dark min-h-screen flex items-center justify-center px-6">
@@ -100,7 +103,6 @@ export default function CheckoutSuccessClient({
     );
   }
 
-  // ── Success ──
   return (
     <main className="bg-brand-dark min-h-screen py-20 px-6">
       <div className="max-w-2xl mx-auto flex flex-col gap-8">
@@ -142,7 +144,6 @@ export default function CheckoutSuccessClient({
           </span>
         </div>
 
-        {/* Items + totals */}
         <div className="bg-brand-charcoal/40 border border-brand-mid/20 rounded-2xl p-6 flex flex-col gap-4">
           <p className="font-mono text-[10px] text-brand-muted uppercase tracking-widest">
             Order Summary
@@ -195,7 +196,6 @@ export default function CheckoutSuccessClient({
           </div>
         </div>
 
-        {/* Actions */}
         <div className="flex flex-col sm:flex-row gap-3">
           <a
             href="/account?tab=orders"

@@ -2,6 +2,7 @@ import Image from "next/image";
 import { Minus, Plus, ShoppingBag, Trash } from "lucide-react";
 import { useCart } from "@/lib/cart";
 import { useCartUiStore } from "@/lib/store/cart-ui";
+import AnimatedLogo from "../AnimatedLogo";
 export default function CartItems({
   handleCheckout,
   userId,
@@ -18,6 +19,16 @@ export default function CartItems({
     isUpdating,
   } = useCart(userId);
   const { closeCart } = useCartUiStore();
+  if (isUpdating) {
+    return (
+      <div className="flex flex-col justify-center items-center h-full">
+        <AnimatedLogo withText={false} width={20} height={20} />
+        <p className="font-display font-semibold text-white text-lg">
+          Updating cart...
+        </p>
+      </div>
+    );
+  }
   return (
     <>
       <div className="flex flex-col h-full">

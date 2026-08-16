@@ -118,7 +118,7 @@
 "use client";
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import type { Tire } from "@/lib/api/tires";
 import {
   addCartItem,
@@ -217,7 +217,9 @@ export function useCart(userId: string) {
         ? removeItem.mutateAsync(tireId)
         : updateQty.mutate({ tireId, qty }),
     removeItem: (tireId: string) => removeItem.mutate(tireId),
-    clearCart: () => clear.mutate(),
+    clearCart: useCallback(() => {
+      clear.mutate();
+    }, [clear.mutate]),
 
     isUpdating:
       addItem.isPending ||

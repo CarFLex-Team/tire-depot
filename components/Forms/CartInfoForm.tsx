@@ -5,6 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 
 import { getAddresses, Address } from "@/lib/api/addresses";
 import AddressPicker from "../UI/AddressPicker";
+import { Lock } from "lucide-react";
 
 type CartInfo = {
   firstName: string;
@@ -48,7 +49,17 @@ export default function CartInfoForm({
   const [selectedAddressId, setSelectedAddressId] = useState<string | null>(
     null,
   );
+  const [phoneError, setPhoneError] = useState<string | null>(null);
 
+  function handleNext() {
+    const digits = info.phone.replace(/\D/g, "");
+    if (digits.length !== 10) {
+      setPhoneError("Please enter a valid 10-digit US phone number.");
+      return;
+    }
+    setPhoneError(null);
+    handleInfoNext();
+  }
   const { data: savedAddresses = [], isLoading } = useQuery<Address[]>({
     queryKey: ["addresses", user?.id],
     queryFn: () => getAddresses(user?.id || ""),
@@ -72,7 +83,12 @@ export default function CartInfoForm({
     info.phone &&
     info.addressId
   );
-
+  function formatPhone(value: string): string {
+    const digits = value.replace(/\D/g, "").slice(0, 10);
+    if (digits.length <= 3) return digits;
+    if (digits.length <= 6) return `(${digits.slice(0, 3)}) ${digits.slice(3)}`;
+    return `(${digits.slice(0, 3)}) ${digits.slice(3, 6)}-${digits.slice(6)}`;
+  }
   return (
     <>
       <div className="p-6 flex flex-col gap-5 pb-32">
@@ -118,12 +134,20 @@ export default function CartInfoForm({
           <input
             required
             type="tel"
-            className={inputClass}
+            placeholder="(901) 555-1234"
+            className={`${inputClass} ${phoneError ? "border-brand-red" : ""}`}
             value={info.phone}
-            onChange={(e) => setInfo({ ...info, phone: e.target.value })}
+            onChange={(e) => {
+              setPhoneError(null);
+              setInfo({ ...info, phone: formatPhone(e.target.value) });
+            }}
           />
+          {phoneError && (
+            <p className="font-body text-brand-red text-xs mt-1">
+              {phoneError}
+            </p>
+          )}
         </div>
-
         {/* Address picker */}
         <div className="flex flex-col gap-2">
           <p className={labelClass}>Select Address</p>
@@ -147,11 +171,17 @@ export default function CartInfoForm({
             Back
           </button>
           <button
-            onClick={handleInfoNext}
+            onClick={handleNext}
             disabled={!canContinue || isCheckoutLoading}
             className="flex-1 bg-brand-red hover:bg-brand-red/90 text-white py-3 px-3 md:px-6 font-display font-bold text-sm uppercase tracking-widest transition-colors disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-brand-red"
           >
-            {isCheckoutLoading ? "Processing..." : "Continue to Payment"}
+            {isCheckoutLoading ? (
+              "Processing..."
+            ) : (
+              <span className="flex items-center justify-center gap-2">
+                <Lock size={16} /> Checkout
+              </span>
+            )}
           </button>
         </div>
       </div>

@@ -15,7 +15,8 @@ export async function GET(req: Request) {
           0
         )::int AS item_count
        FROM orders
-       WHERE user_id = $1`,
+       WHERE user_id = $1
+       ORDER BY created_at DESC`,
       [user_id],
     );
     return NextResponse.json(rows);
