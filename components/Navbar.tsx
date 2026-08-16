@@ -101,7 +101,7 @@ export default function Navbar() {
               </div>
             ) : (
               <div
-                className=" flex items-center gap-2 text-sm font-medium hover:text-brand-red text-white transition-colors"
+                className=" flex items-center gap-2 text-sm font-medium hover:text-brand-red text-white transition-colors cursor-pointer"
                 onClick={() => !isPending && router.push("/login")}
               >
                 <UserRound size={20} />

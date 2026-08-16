@@ -4,6 +4,7 @@ import { Tire } from "@/lib/api/tires";
 import { AccordionKey, AccordionSection } from "./UI/AccordionSection";
 import { CheckboxOption } from "./UI/CheckboxOptoin";
 import { PriceHistogram } from "./UI/PriceHistogram";
+import { X } from "lucide-react";
 export type SortOption = "Price: Low - High" | "Price: High - Low";
 
 export const TYPE_DESCRIPTIONS: Record<string, string> = {
@@ -33,6 +34,7 @@ export default function FilterSidebar({
   setPriceMinPct,
   setPriceMaxPct,
   isLoading,
+  onClose,
 }: {
   reset: () => void;
   tires: Tire[];
@@ -52,6 +54,7 @@ export default function FilterSidebar({
   setPriceMinPct: (pct: number) => void;
   setPriceMaxPct: (pct: number) => void;
   isLoading: boolean;
+  onClose?: () => void;
 }) {
   // Filter state
 
@@ -180,20 +183,30 @@ export default function FilterSidebar({
     <div className="flex flex-col h-full pb-6">
       {/* Header */}
       <div className="flex items-center justify-between px-6 py-4 border-b border-brand-charcoal sticky top-0 bg-brand-dark z-10">
-        <h3 className="font-display font-semibold text-xl text-white uppercase tracking-tight">
-          Filter by
-          {activeFilterCount !== undefined && activeFilterCount !== 0 && (
-            <span className="ml-1 text-sm text-brand-red">
-              ({activeFilterCount})
-            </span>
+        <div className="flex flex-col  gap-2">
+          <h3 className="font-display font-semibold text-xl text-white uppercase tracking-tight">
+            Filter by
+            {activeFilterCount !== undefined && activeFilterCount !== 0 && (
+              <span className="ml-1 text-sm text-brand-red">
+                ({activeFilterCount})
+              </span>
+            )}
+          </h3>
+          {hasActiveFilters && (
+            <button
+              onClick={reset}
+              className="font-display font-bold text-xs text-brand-red hover:underline uppercase tracking-widest transition-colors"
+            >
+              Reset filters
+            </button>
           )}
-        </h3>
-        {hasActiveFilters && (
+        </div>
+        {!!onClose && (
           <button
-            onClick={reset}
-            className="font-display font-bold text-xs text-brand-red hover:underline uppercase tracking-widest transition-colors"
+            onClick={onClose}
+            className="text-brand-muted hover:text-white transition-colors"
           >
-            Reset filters
+            <X size={20} />
           </button>
         )}
       </div>

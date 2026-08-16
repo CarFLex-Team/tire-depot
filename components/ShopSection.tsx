@@ -192,6 +192,7 @@ export default function ShopSection() {
           setPriceMaxPct={setPriceMaxPct}
           absoluteMinPrice={absoluteMinPrice}
           absoluteMaxPrice={absoluteMaxPrice}
+          onClose={() => setShowFilters(false)}
         />
       </Modal>
 
