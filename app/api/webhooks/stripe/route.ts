@@ -21,8 +21,8 @@ export async function POST(req: Request) {
   if (event.type === "payment_intent.succeeded") {
     const intent = event.data.object;
     const existing = await db.query(
-      `SELECT id FROM payments WHERE provider_payment_id = $1`,
-      [intent.id],
+      `SELECT id FROM payments WHERE provider_payment_id = $1 AND status = $2`,
+      [intent.id, "succeeded"],
     );
     if (existing.rows.length > 0) {
       return NextResponse.json({ received: true }, { status: 200 });

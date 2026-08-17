@@ -50,9 +50,6 @@ export async function POST(req: Request) {
     "checkout_session",
     JSON.stringify({
       clientSecret: paymentIntent.client_secret,
-      total: total / 100,
-      subtotal: subtotalInCents / 100,
-      tax: 0,
     }),
     {
       httpOnly: true,

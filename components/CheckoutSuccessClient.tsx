@@ -11,26 +11,42 @@ interface Order {
   order_number: string;
   total: number;
   status: string;
-}
-
-export default function CheckoutSuccessClient({
-  total,
-  subtotal,
-  tax,
-}: {
-  total: number;
   subtotal: number;
   tax: number;
-}) {
+}
+
+export default function CheckoutSuccessClient() {
   const searchParams = useSearchParams();
   const paymentIntentId = searchParams.get("payment_intent");
+  const redirectStatus = searchParams.get("redirect_status");
   const { data: session } = authClient.useSession();
-  const { items, clearCart } = useCart(session?.user?.id ?? "");
-
+  const { items:cartItems, clearCart } = useCart(session?.user?.id ?? "");
+  const [items, setItems] = useState(cartItems);
   const [order, setOrder] = useState<Order | null>(null);
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(true);
   const hasRun = useRef(false);
+  if (redirectStatus === "failed" || redirectStatus === "canceled") {
+    return (
+      <main className="bg-brand-dark min-h-screen flex items-center justify-center px-6">
+        <div className="text-center max-w-md">
+          <p className="font-display text-brand-red text-xl uppercase tracking-widest mb-3">
+            Payment Failed
+          </p>
+          <p className="font-body text-brand-muted text-sm mb-6">
+            Your payment was not completed. Please try again with a different
+            payment method.
+          </p>
+          <a
+            href="/checkout"
+            className="font-display font-bold text-sm uppercase tracking-widest bg-brand-red text-white px-6 py-3 rounded-xl hover:brightness-110 transition-all"
+          >
+            Try Again
+          </a>
+        </div>
+      </main>
+    );
+  }
   useEffect(() => {
     if (!paymentIntentId || hasRun.current) {
       return;
@@ -49,6 +65,7 @@ export default function CheckoutSuccessClient({
           if (res.ok) {
             const data = await res.json();
             setOrder(data.order);
+            setItems(cartItems);
             clearCart();
             setLoading(false);
             return;
@@ -86,8 +103,8 @@ export default function CheckoutSuccessClient({
             Something went wrong
           </p>
           <p className="font-body text-brand-muted text-sm leading-relaxed mb-2">
-            Your payment was successful but we had trouble confirming your
-            order. Please contact us with your payment reference:
+            We were unable to confirm your order. Please contact support if you
+            were charged and do not see your order in your account.
           </p>
           <p className="font-mono text-white text-xs bg-brand-charcoal border border-brand-mid/20 rounded-lg px-4 py-3 break-all">
             {paymentIntentId ?? "—"}
@@ -176,13 +193,13 @@ export default function CheckoutSuccessClient({
                 Subtotal
               </span>
               <span className="font-mono text-white text-sm">
-                ${subtotal.toLocaleString()}
+                ${order.subtotal.toLocaleString()}
               </span>
             </div>
             <div className="flex justify-between">
               <span className="font-body text-brand-muted text-sm">Tax</span>
               <span className="font-mono text-white text-sm">
-                ${tax.toLocaleString()}
+                ${order.tax.toLocaleString()}
               </span>
             </div>
             <div className="flex justify-between pt-2 border-t border-brand-mid/20 mt-1">
@@ -190,7 +207,7 @@ export default function CheckoutSuccessClient({
                 Total
               </span>
               <span className="font-display font-bold text-xl text-brand-red">
-                ${total.toLocaleString()}
+                ${order.total.toLocaleString()}
               </span>
             </div>
           </div>

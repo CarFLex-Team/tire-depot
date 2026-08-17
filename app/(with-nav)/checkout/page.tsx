@@ -6,14 +6,7 @@ export default function CheckoutPage() {
   const cookie = cookies().get("checkout_session");
   if (!cookie) redirect("/");
 
-  const { clientSecret, total, subtotal, tax } = JSON.parse(cookie.value);
+  const { clientSecret } = JSON.parse(cookie.value);
 
-  return (
-    <CheckoutClient
-      clientSecret={clientSecret}
-      total={total}
-      subtotal={subtotal}
-      tax={tax}
-    />
-  );
+  return <CheckoutClient clientSecret={clientSecret} />;
 }

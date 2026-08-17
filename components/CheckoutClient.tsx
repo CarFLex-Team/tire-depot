@@ -13,19 +13,15 @@ const stripePromise = loadStripe(
 
 export default function CheckoutClient({
   clientSecret,
-  total,
-  subtotal,
-  tax,
 }: {
   clientSecret: string;
-  total: number;
-  subtotal: number;
-  tax: number;
 }) {
   const router = useRouter();
   const { data: session } = authClient.useSession();
-  const { items } = useCart(session?.user?.id ?? "");
-
+  const { items, totalPrice } = useCart(session?.user?.id ?? "");
+  const subtotal = totalPrice;
+  const tax = subtotal * 0;
+  const total = subtotal + tax;
   return (
     <section className="bg-brand-dark min-h-screen py-20 px-6">
       <div className="max-w-5xl mx-auto">
