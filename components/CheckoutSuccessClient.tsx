@@ -26,29 +26,14 @@ export default function CheckoutSuccessClient() {
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(true);
   const hasRun = useRef(false);
-  if (redirectStatus === "failed" || redirectStatus === "canceled") {
-    return (
-      <main className="bg-brand-dark min-h-screen flex items-center justify-center px-6">
-        <div className="text-center max-w-md">
-          <p className="font-display text-brand-red text-xl uppercase tracking-widest mb-3">
-            Payment Failed
-          </p>
-          <p className="font-body text-brand-muted text-sm mb-6">
-            Your payment was not completed. Please try again with a different
-            payment method.
-          </p>
-          <a
-            href="/checkout"
-            className="font-display font-bold text-sm uppercase tracking-widest bg-brand-red text-white px-6 py-3 rounded-xl hover:brightness-110 transition-all"
-          >
-            Try Again
-          </a>
-        </div>
-      </main>
-    );
-  }
+
   useEffect(() => {
-    if (!paymentIntentId || hasRun.current) {
+    if (
+      redirectStatus === "failed" ||
+      redirectStatus === "canceled" ||
+      !paymentIntentId ||
+      hasRun.current
+    ) {
       return;
     }
     hasRun.current = true;
@@ -78,6 +63,28 @@ export default function CheckoutSuccessClient() {
 
     verify();
   }, [paymentIntentId]);
+
+  if (redirectStatus === "failed" || redirectStatus === "canceled") {
+    return (
+      <main className="bg-brand-dark min-h-screen flex items-center justify-center px-6">
+        <div className="text-center max-w-md">
+          <p className="font-display text-brand-red text-xl uppercase tracking-widest mb-3">
+            Payment Failed
+          </p>
+          <p className="font-body text-brand-muted text-sm mb-6">
+            Your payment was not completed. Please try again with a different
+            payment method.
+          </p>
+          <a
+            href="/checkout"
+            className="font-display font-bold text-sm uppercase tracking-widest bg-brand-red text-white px-6 py-3 rounded-xl hover:brightness-110 transition-all"
+          >
+            Try Again
+          </a>
+        </div>
+      </main>
+    );
+  }
 
   if (loading) {
     return (
