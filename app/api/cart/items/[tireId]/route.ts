@@ -25,7 +25,7 @@ export async function PATCH(req: Request, { params }: RouteContext) {
       { status: 400 },
     );
   }
-
+  // to be edited (need to check quantity first)
   try {
     const { rows } = await db.query(
       `

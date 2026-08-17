@@ -17,7 +17,7 @@ export async function GET(req: Request) {
         SELECT
           carts.id AS cart_id,
           cart_items.quantity AS cart_quantity,
-          cart_items.unit_price AS unit_price,
+          tires.public_price AS unit_price,
           tires.*
         FROM carts
         INNER JOIN cart_items ON cart_items.cart_id = carts.id

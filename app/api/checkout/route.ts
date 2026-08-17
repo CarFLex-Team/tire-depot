@@ -24,7 +24,10 @@ export async function POST(req: Request) {
   }
   // fetch cart items to calculate total
   const cartItems = await db.query(
-    `SELECT * FROM cart_items WHERE cart_id = $1`,
+    `SELECT cart_items.*,cart_items.unit_price AS cart_unit_price ,tires.public_price AS unit_price
+      FROM cart_items 
+      INNER JOIN tires ON tires.id=cart_items.tire_id
+      WHERE cart_id = $1`,
     [cartId],
   );
 

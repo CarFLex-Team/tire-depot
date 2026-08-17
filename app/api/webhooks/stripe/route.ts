@@ -32,7 +32,11 @@ export async function POST(req: Request) {
 
     // fetch cart items before deleting
     const cartItems = await db.query(
-      `SELECT *,cart_items.quantity as cart_quantity FROM cart_items JOIN tires ON cart_items.tire_id = tires.id WHERE cart_id = $1`,
+      `SELECT *,
+      cart_items.quantity as cart_quantity,
+      cart_items.unit_price as cart_unit_price,
+      tires.public_price AS unit_price  
+      FROM cart_items JOIN tires ON cart_items.tire_id = tires.id WHERE cart_id = $1`,
       [cartId],
     );
     if (parseInt(cartItems.rows[0].cart_quantity) === 0) {

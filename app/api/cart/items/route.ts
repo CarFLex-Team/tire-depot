@@ -9,7 +9,7 @@ export async function POST(req: Request) {
   if (!session?.user) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
-
+  // to be edited (need to check quantity before adding)
   const { tireId, qty } = await req.json();
   const userId = session.user.id;
   const client = await db.connect();
