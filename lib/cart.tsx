@@ -131,6 +131,7 @@ import {
 export interface CartItem {
   tire: Tire;
   qty: number;
+  original_unit_price: number;
 }
 
 export interface Cart {

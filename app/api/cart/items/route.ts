@@ -23,7 +23,7 @@ export async function POST(req: Request) {
       await client.query("INSERT INTO carts (user_id) VALUES ($1)", [userId]);
     }
     const { rows: itemRows } = await client.query(
-      "SELECT * FROM cart_items WHERE cart_id = (SELECT id FROM carts WHERE user_id = $1) AND tire_id = $2",
+      "SELECT *, cart_items.unit_price AS original_unit_price FROM cart_items WHERE cart_id = (SELECT id FROM carts WHERE user_id = $1) AND tire_id = $2",
       [userId, tireId],
     );
     if (itemRows.length === 0) {

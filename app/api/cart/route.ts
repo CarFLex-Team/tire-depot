@@ -17,6 +17,7 @@ export async function GET(req: Request) {
         SELECT
           carts.id AS cart_id,
           cart_items.quantity AS cart_quantity,
+          cart_items.unit_price AS original_unit_price,
           tires.public_price AS unit_price,
           tires.*
         FROM carts
@@ -31,6 +32,7 @@ export async function GET(req: Request) {
       id: rows[0]?.cart_id ?? null,
       items: rows.map((row) => ({
         qty: row.cart_quantity,
+        original_unit_price: Number(row.original_unit_price),
         tire: {
           id: row.id,
           brand: row.brand,

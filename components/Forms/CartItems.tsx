@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { Minus, Plus, ShoppingBag, Trash } from "lucide-react";
+import { Minus, Plus, ShoppingBag, Trash, TriangleAlert } from "lucide-react";
 import { useCart } from "@/lib/cart";
 import { useCartUiStore } from "@/lib/store/cart-ui";
 import AnimatedLogo from "../AnimatedLogo";
@@ -19,6 +19,9 @@ export default function CartItems({
     isUpdating,
   } = useCart(userId);
   const { closeCart } = useCartUiStore();
+  const hasPriceChanges = items.some(
+    ({ tire, original_unit_price }) => original_unit_price !== tire.price,
+  );
   if (isUpdating) {
     return (
       <div className="flex flex-col justify-center items-center h-full">
@@ -31,6 +34,14 @@ export default function CartItems({
   }
   return (
     <>
+      {hasPriceChanges && (
+        <div className="bg-amber-950/60 border border-amber-700 rounded-full px-4 py-2 m-3 ">
+          <span className="text-amber-400 text-xs font-display uppercase tracking-widest flex items-center gap-2">
+            <TriangleAlert size={16} /> Some prices in your cart have changed
+            since you added them
+          </span>
+        </div>
+      )}
       <div className="flex flex-col h-full">
         {items.length === 0 ? (
           <div className="flex flex-col items-center justify-center flex-1 gap-4 p-8 text-center">
@@ -108,7 +119,7 @@ export default function CartItems({
                         </button>
                       </div>
                       <span className="font-display font-semibold text-2xl text-white">
-                        ${(tire.price * qty).toLocaleString()}
+                        ${(tire.price * qty).toFixed(2).toLocaleString()}
                       </span>
                     </div>
                   </div>
