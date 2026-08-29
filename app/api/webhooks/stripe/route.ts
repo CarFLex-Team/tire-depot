@@ -123,7 +123,7 @@ export async function POST(req: Request) {
       await client.query("ROLLBACK");
       throw err;
     } finally {
-      client.release(); // always return connection to pool
+      client.release();
     }
   }
 

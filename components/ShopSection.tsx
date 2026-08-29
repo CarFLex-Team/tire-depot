@@ -22,19 +22,7 @@ export default function ShopSection() {
   const queryClient = useQueryClient();
   // const loadIndex = searchParams.get("loadIndex");
   // const speedIndex = searchParams.get("speedIndex");
-  const {
-    data: tires,
-    isLoading,
-    error,
-  } = useQuery({
-    queryKey: ["tires", width, ratio, diameter],
-    queryFn: () =>
-      getTires(
-        parseInt(width || "0"),
-        parseInt(ratio || "0"),
-        parseInt(diameter || "0"),
-      ),
-  });
+
   const { data: addresses, isLoading: addressLoading } = useQuery({
     queryKey: ["addresses", session?.user?.id],
     queryFn: () => getAddresses(session!.user.id),
@@ -65,17 +53,48 @@ export default function ShopSection() {
   }, [zip, addressLoading]);
   const selectClass =
     "bg-brand-charcoal border border-brand-mid text-brand-light text-sm font-body px-4 py-2  focus:outline-none focus:border-brand-red transition-colors cursor-pointer rounded-full";
-
+  const { data: shippingRate = 0 } = useQuery({
+    queryKey: ["shipping-rate", zip],
+    queryFn: () =>
+      fetch(`/api/shipping/rate?zip=${zip}&weight=25`)
+        .then((r) => r.json())
+        .then((d) => d.rate),
+    enabled: !!zip,
+    staleTime: 1000 * 60 * 10, // cache for 10 mins — rate won't change per session
+  });
+  const {
+    data: tires,
+    isLoading,
+    error,
+  } = useQuery({
+    queryKey: ["tires", width, ratio, diameter],
+    queryFn: () =>
+      getTires(
+        parseInt(width || "0"),
+        parseInt(ratio || "0"),
+        parseInt(diameter || "0"),
+      ),
+  });
+  const tiresWithShipping = tires?.map((tire) => ({
+    ...tire,
+    displayPrice: Number(tire.price) + Number(shippingRate),
+    shippingRate,
+  }));
+  console.log("tiresWithShipping", tiresWithShipping);
   // ── Filtered + sorted tires ────────────────────────────────────────────────
   const absoluteMinPrice = useMemo(
     () =>
-      tires?.length ? Math.floor(Math.min(...tires.map((t) => t.price))) : 0,
-    [tires],
+      tiresWithShipping?.length
+        ? Math.floor(Math.min(...tiresWithShipping.map((t) => t.displayPrice)))
+        : 0,
+    [tiresWithShipping],
   );
   const absoluteMaxPrice = useMemo(
     () =>
-      tires?.length ? Math.ceil(Math.max(...tires.map((t) => t.price))) : 1000,
-    [tires],
+      tiresWithShipping?.length
+        ? Math.ceil(Math.max(...tiresWithShipping.map((t) => t.displayPrice)))
+        : 1000,
+    [tiresWithShipping],
   );
   const priceMin =
     absoluteMinPrice +
@@ -301,7 +320,7 @@ export default function ShopSection() {
             </div>
           ) : (
             <div className="grid grid-cols-1 gap-4">
-              {filtered.map((tire) => (
+              {tiresWithShipping?.map((tire) => (
                 <TireCard
                   key={tire.id}
                   tire={tire}

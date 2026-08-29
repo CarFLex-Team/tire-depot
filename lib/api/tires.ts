@@ -16,6 +16,8 @@ export interface Tire {
   speedRating: string;
   imageUrl: string;
   LoadIndex: string;
+  displayPrice: number; // price + shipping
+  shippingRate?: number; // shipping rate for this tire
 }
 export async function getTires(
   width: number,

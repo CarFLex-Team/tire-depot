@@ -87,7 +87,7 @@ export default function TireCard({
         </div>
         <div className="border-brand-gray border-t pt-4  flex items-center gap-1">
           <span className="font-display font-semibold text-4xl text-white">
-            ${tire.price.toLocaleString()}
+            ${tire.displayPrice}
           </span>
           <span className="font-display text-sm text-brand-muted ml-1">
             /tire
