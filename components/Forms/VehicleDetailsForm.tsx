@@ -163,9 +163,7 @@ export default function VehicleDetailsForm({
                   "&ratio=" +
                   ratio +
                   "&diameter=" +
-                  diameter +
-                  "&zip=" +
-                  addresses[0].postal_code,
+                  diameter,
               );
             }
           }}

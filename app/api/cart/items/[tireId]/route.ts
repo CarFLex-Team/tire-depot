@@ -30,7 +30,7 @@ export async function PATCH(req: Request, { params }: RouteContext) {
     const { rows } = await db.query(
       `
         UPDATE cart_items AS cart_item
-        SET quantity = $1, unit_price = (SELECT public_price FROM tires WHERE id = $3)
+        SET quantity = $1, unit_price = (SELECT public_price FROM tires2 WHERE id = $3)
         FROM carts AS cart
         WHERE cart_item.cart_id = cart.id
           AND cart.user_id = $2

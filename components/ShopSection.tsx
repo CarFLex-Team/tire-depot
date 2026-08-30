@@ -53,13 +53,14 @@ export default function ShopSection() {
   }, [zip, addressLoading]);
   const selectClass =
     "bg-brand-charcoal border border-brand-mid text-brand-light text-sm font-body px-4 py-2  focus:outline-none focus:border-brand-red transition-colors cursor-pointer rounded-full";
-  const { data: shippingRate = 0 } = useQuery({
+  const { data: shippingRate = 0, isLoading: shippingRateLoading } = useQuery({
     queryKey: ["shipping-rate", zip],
     queryFn: () =>
       fetch(`/api/shipping/rate?zip=${zip}&weight=25`)
         .then((r) => r.json())
         .then((d) => d.rate),
     enabled: !!zip,
+
     staleTime: 1000 * 60 * 10, // cache for 10 mins — rate won't change per session
   });
   const {
@@ -67,7 +68,7 @@ export default function ShopSection() {
     isLoading,
     error,
   } = useQuery({
-    queryKey: ["tires", width, ratio, diameter],
+    queryKey: ["tires", width, ratio, diameter, zip],
     queryFn: () =>
       getTires(
         parseInt(width || "0"),
@@ -111,20 +112,20 @@ export default function ShopSection() {
     (priceMinPct > 0 || priceMaxPct < 100 ? 1 : 0);
 
   const filtered = useMemo(() => {
-    let result = tires?.filter((t) => {
+    let result = tiresWithShipping?.filter((t) => {
       if (selectedBrands.length && !selectedBrands.includes(t.brand))
         return false;
       if (selectedTypes.length && !selectedTypes.includes(t.terrain))
         return false;
       if (selectedLoads.length && !selectedLoads.includes(t.LoadIndex))
         return false;
-      if (t.price < priceMin || t.price > priceMax) return false;
+      if (t.displayPrice < priceMin || t.displayPrice > priceMax) return false;
       return true;
     });
 
     result = [...(result || [])].sort((a, b) => {
-      if (sort === "Price: Low - High") return a.price - b.price;
-      if (sort === "Price: High - Low") return b.price - a.price;
+      if (sort === "Price: Low - High") return a.displayPrice - b.displayPrice;
+      if (sort === "Price: High - Low") return b.displayPrice - a.displayPrice;
       if (sort === "Size: Small - Large") return a.diameter - b.diameter;
       if (sort === "Size: Large - Small") return b.diameter - a.diameter;
       if (sort === "Brand: A - Z") return a.brand.localeCompare(b.brand);
@@ -194,7 +195,7 @@ export default function ShopSection() {
       )}
       <Modal isOpen={showFilters} onClose={() => setShowFilters(false)}>
         <FilterSidebar
-          isLoading={isLoading}
+          isLoading={isLoading || shippingRateLoading}
           tires={filtered}
           reset={reset}
           selectedBrands={selectedBrands}
@@ -219,7 +220,7 @@ export default function ShopSection() {
         {/* ── Desktop sidebar ── */}
         <div className="border-r-4 border-brand-charcoal rounded-2xl hidden md:flex md:flex-col sm:w-1/4 flex-shrink-0 bg-brand-charcoal/20 sticky top-20 h-screen overflow-hidden">
           <FilterSidebar
-            isLoading={isLoading}
+            isLoading={isLoading || shippingRateLoading}
             tires={filtered}
             reset={reset}
             selectedBrands={selectedBrands}
@@ -285,7 +286,7 @@ export default function ShopSection() {
           </div>
 
           {/* ── Grid ── */}
-          {isLoading ? (
+          {isLoading || shippingRateLoading ? (
             <div className="grid grid-cols-1 gap-4 ">
               <div>
                 <LoadingSkeleton height={12} />
@@ -320,7 +321,7 @@ export default function ShopSection() {
             </div>
           ) : (
             <div className="grid grid-cols-1 gap-4">
-              {tiresWithShipping?.map((tire) => (
+              {filtered?.map((tire) => (
                 <TireCard
                   key={tire.id}
                   tire={tire}

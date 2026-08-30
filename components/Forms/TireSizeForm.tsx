@@ -60,9 +60,7 @@ export default function TireSizeForm({
                   "&ratio=" +
                   ratio +
                   "&diameter=" +
-                  diameter +
-                  "&zip=" +
-                  addresses[0].postal_code,
+                  diameter,
               );
             }
           }}
@@ -90,9 +88,7 @@ export default function TireSizeForm({
                 "&ratio=" +
                 ratio +
                 "&diameter=" +
-                diameter +
-                "&zip=" +
-                addresses[0].postal_code,
+                diameter,
             );
           }
         }}

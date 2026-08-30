@@ -208,7 +208,7 @@ export default function TireDetailSection({
             <div>
               <div className="flex items-end gap-3 mb-2">
                 <span className="font-display text-5xl font-bold text-white">
-                  ${tire.price.toFixed(2)}
+                  ${Number(tire.displayPrice).toFixed(2).toLocaleString()}
                 </span>
                 <span className="font-body text-brand-muted mb-1 text-sm">
                   per tire

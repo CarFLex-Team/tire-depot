@@ -27,7 +27,7 @@ export function PriceHistogram({
     tires.forEach((t) => {
       const idx = Math.min(
         BAR_COUNT - 1,
-        Math.floor(((t.price - absoluteMin) / range) * BAR_COUNT),
+        Math.floor(((t.displayPrice - absoluteMin) / range) * BAR_COUNT),
       );
       buckets[idx]++;
     });

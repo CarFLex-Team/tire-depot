@@ -28,12 +28,12 @@ export async function POST(req: Request) {
     );
     if (itemRows.length === 0) {
       await client.query(
-        "INSERT INTO cart_items (cart_id, tire_id, quantity, unit_price) VALUES ((SELECT id FROM carts WHERE user_id = $1), $2, $3, (SELECT public_price FROM tires WHERE id = $2))",
+        "INSERT INTO cart_items (cart_id, tire_id, quantity, unit_price) VALUES ((SELECT id FROM carts WHERE user_id = $1), $2, $3, (SELECT public_price FROM tires2 WHERE id = $2))",
         [userId, tireId, qty],
       );
     } else {
       await client.query(
-        "UPDATE cart_items SET quantity = $1, unit_price = (SELECT public_price FROM tires WHERE id = $3) WHERE cart_id = (SELECT id FROM carts WHERE user_id = $2) AND tire_id = $3",
+        "UPDATE cart_items SET quantity = $1, unit_price = (SELECT public_price FROM tires2 WHERE id = $3) WHERE cart_id = (SELECT id FROM carts WHERE user_id = $2) AND tire_id = $3",
         [qty + itemRows[0].quantity, userId, tireId],
       );
     }
